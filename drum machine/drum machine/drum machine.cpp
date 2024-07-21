@@ -2,19 +2,20 @@
 //
 
 #include <iostream>
+#include <Windows.h>
+#include "resource.h"
+
+#pragma comment(lib, "winmm.lib")
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    PlaySound(MAKEINTRESOURCE(IDR_WAVE1), NULL, SND_RESOURCE | SND_ASYNC); //idr_wave is the imported sound id wave1: kick wave2: snare wave3: hihat
+    //first parameter: sound file to play
+    //second: leave as null most of the time
+    //third: flags for where or how to play the sound
+
+    Sleep(1000);//sleep to let sound play while program is running
+    return 0;
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
 
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file

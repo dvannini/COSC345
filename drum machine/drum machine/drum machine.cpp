@@ -16,18 +16,18 @@ int main()
         2 - Snare
     */
     
-    int sequence[] = { 1, 0, 1, 0, 0, 1, 1, 0 };
+    int sequence[] = { 1, 1, 2, 1, 1, 1, 2, 0 };
     for (int i = 0; i < 100; i++) {
         // Switch case for drum selection
         switch (sequence[i % 8]) {
         case 0:
             break;
         case 1:
-            PlaySound(MAKEINTRESOURCE(IDR_WAVE1), NULL, SND_RESOURCE | SND_NOWAIT);
+            PlaySound(L"../Assets/Kick 70s 1.wav", NULL, SND_FILENAME | SND_ASYNC);
             std::cout << "played kick.";
             break;
         case 2:
-            PlaySound(MAKEINTRESOURCE(IDR_WAVE2), NULL, SND_RESOURCE | SND_NOWAIT);
+            PlaySound(L"../Assets/Snare 70s MPC 3.wav", NULL, SND_FILENAME | SND_ASYNC);
             std::cout << "played snare.";
             break;
         }

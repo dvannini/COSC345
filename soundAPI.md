@@ -9,4 +9,4 @@ This library is higher level than WASAPI but unlike the 'playsound' function. on
 However, this library should be more reliable than playsound.
 
 # 23/08/2024
-We plan on using TDD once we start properly producing the application, (https://learn.microsoft.com/en-us/visualstudio/test/writing-unit-tests-for-c-cpp?view=vs-2022)[this link] may be useful.
+We plan on using TDD once we start properly producing the application, [this link](https://learn.microsoft.com/en-us/visualstudio/test/writing-unit-tests-for-c-cpp?view=vs-2022) may be useful.

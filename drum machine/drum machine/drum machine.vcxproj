@@ -131,15 +131,18 @@
     <ClCompile Include="drum machine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Media Include="..\..\..\..\..\Desktop\Samples\One Shots\Drums\Hihat\Hihat Closed 56 TL.wav" />
+    <Media Include="..\..\..\..\..\Desktop\Samples\One Shots\Drums\Kick\Kick 70s 3.wav" />
+    <Media Include="..\..\..\..\..\Desktop\Samples\One Shots\Drums\Snare\Snare 70s MPC 1.wav" />
+    <Media Include="..\Assets\Hihat Closed 80s UK Disco Vinyl.wav" />
+    <Media Include="..\Assets\Kick 70s 1.wav" />
+    <Media Include="..\Assets\Snare 70s MPC 3.wav" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Media Include="..\..\..\..\..\Desktop\Samples\One Shots\Drums\Hihat\Hihat Closed 56 TL.wav" />
-    <Media Include="..\..\..\..\..\Desktop\Samples\One Shots\Drums\Kick\Kick 70s 3.wav" />
-    <Media Include="..\..\..\..\..\Desktop\Samples\One Shots\Drums\Snare\Snare 70s MPC 1.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <Windows.h>
 #include "resource.h"
-
+#include <thread>
 #pragma comment(lib, "winmm.lib")
 
 int main()
@@ -15,17 +15,20 @@ int main()
         1 - Kick
         2 - Snare
     */
-    int sequence[] = { 1, 0, 2, 0, 0, 1, 2, 0 };
+    
+    int sequence[] = { 1, 0, 1, 0, 0, 1, 1, 0 };
     for (int i = 0; i < 100; i++) {
         // Switch case for drum selection
         switch (sequence[i % 8]) {
         case 0:
             break;
         case 1:
-            PlaySound(MAKEINTRESOURCE(IDR_WAVE1), NULL, SND_RESOURCE | SND_ASYNC);
+            PlaySound(MAKEINTRESOURCE(IDR_WAVE1), NULL, SND_RESOURCE | SND_NOWAIT);
+            std::cout << "played kick.";
             break;
         case 2:
-            PlaySound(MAKEINTRESOURCE(IDR_WAVE2), NULL, SND_RESOURCE | SND_ASYNC);
+            PlaySound(MAKEINTRESOURCE(IDR_WAVE2), NULL, SND_RESOURCE | SND_NOWAIT);
+            std::cout << "played snare.";
             break;
         }
         //idr_wave is the imported sound id wave1: kick wave2: snare wave3: hihat
@@ -33,7 +36,7 @@ int main()
         //second: leave as null most of the time
         //third: flags for where or how to play the sound
 
-        Sleep(500);//sleep to let sound play while program is running
+        Sleep(1000);//sleep to let sound play while program is running
     }
     return 0;
 }

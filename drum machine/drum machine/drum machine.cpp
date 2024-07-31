@@ -113,8 +113,8 @@ int main() {
             int sound;
             std::cin >> sound;
             additionalSequence.push_back(sound);
-            std::cout << "Current Additional Sequence: ";
-            displaySequence(additionalSequence);
+            std::cout << "Current Additional Sequence: "; // need to make it so if we add a new sound it creates a new array which can 
+            displaySequence(additionalSequence);            // display it as an array.
             break;
         }
         case 3: {

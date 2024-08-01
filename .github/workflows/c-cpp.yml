@@ -13,8 +13,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Install cmake
-      run: sudo apt-get install -y cmake make #install cmake to build
+    # - name: Install cmake
+    #   run: sudo apt-get install -y cmake make #install cmake to build
       
     - name: Set up MSVC
       uses: ilammy/msvc-dev-cmd@v1

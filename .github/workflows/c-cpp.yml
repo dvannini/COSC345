@@ -15,12 +15,8 @@ jobs:
     - uses: actions/checkout@v4
     - name: Install dependencies
       run: sudo apt-get install -y cmake make #install cmake to build
-    - name: Build
-      run: |
-        mkdir build
-        cd build
-        cmake ..
-        make
+    - name: make
+      run: make
     - name: make check
       run: make check
     - name: make distcheck

@@ -5,4 +5,4 @@ project(COSC345)
 set(CMAKE_CXX_STANDARD 14)
 
 # Add the main project executable
-add_executable(COSC345 drum_machine/drum_machine/drum_machine.cpp)
+add_executable(COSC345 drum machine/drum machine/drum machine.cpp)

@@ -1,7 +1,10 @@
 name: C/C++ CI
 
-
-on: [push, pull_request]
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -9,25 +12,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Set up C++ environment
-      uses: actions/setup-cpp@v1
-      with:
-        compiler: gcc # You can change this to clang if you prefer
-
-    - name: Install dependencies
-      run: sudo apt-get install -y cmake make
-
-    - name: Build
-      run: |
-        mkdir build
-        cd build
-        cmake ..
-        make
-
-    - name: Run tests
-      run: |
-        cd build
-        ctest # or the command to run your tests
+    - uses: actions/checkout@v4
+    - name: make
+      run: make
+    - name: make check
+      run: make check
+    - name: make distcheck
+      run: make distcheck

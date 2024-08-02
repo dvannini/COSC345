@@ -6,6 +6,8 @@
 #include <Windows.h>
 #include "resource.h"
 #include <thread>
+#include <algorithm>
+
 #pragma comment(lib, "winmm.lib")
 int bpm = 1000;
 
@@ -117,23 +119,25 @@ int main() {
             displaySequence(additionalSequence);            // display it as an array.
             break;
         }
-        case 3: {
-            int mainLength = mainSequence.size();
-            int additionalLength = additionalSequence.size();
-            if (mainLength == 0 || additionalLength == 0) {
-                std::cout << "Both sequences must have at least one sound.\n";
+            case 3: {
+                int mainLength = mainSequence.size();
+                int additionalLength = additionalSequence.size();
+                if (mainLength != 0) { // functionality so user knows that he needs to have at least 1 sound  for sequence to play
+                    std::cout << "Playing sequences...\n";
+                    for (int i = 0; i < 100; i++) {
+
+                        playSound(mainSequence[i % mainLength]);
+                        Sleep(bpm); // half of the total sleep duration
+                        playSound(additionalSequence[i % additionalLength]);
+                        Sleep(bpm); // half of the total sleep duration
+                    }
+                }else{
+                    std::cout << "Main sequence needs to have at least 1 sound.Press enter to re-try";
+                    std::cin.ignore(); // Ignore any leftover newline characters in the input buffer
+                    std::cin.get(); // Wait for the user to press Enter                
+                }
                 break;
             }
-
-            std::cout << "Playing sequences...\n";
-            for (int i = 0; i < 100; i++) {
-                playSound(mainSequence[i % mainLength]);
-                Sleep(bpm); // half of the total sleep duration
-                playSound(additionalSequence[i % additionalLength]);
-                Sleep(bpm); // half of the total sleep duration
-            }
-            break;
-        }
         case 5: {
             setBpm();
             break;
@@ -145,7 +149,7 @@ int main() {
         default:
             std::cout << "Invalid choice. Please try again.\n";
         }
-    }
+        }
 
     return 0;
 }

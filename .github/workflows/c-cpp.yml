@@ -30,7 +30,7 @@ jobs:
         arch: x64
         
     - name: Configure CMake
-      run: cmake --build -H
+      run: cmake --build ${{github.workspace}}/build
       
     
       #change to run tests from a tests.cpp file instead

@@ -1,11 +1,8 @@
 // drum machine.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 #include <vector>
-#pragma comment(lib, "winmm.lib")
 #include <iostream>
 #include <Windows.h>
-#include "resource.h"
-#include <thread>
 #pragma comment(lib, "winmm.lib")
 int bpm = 1000;
 
@@ -34,18 +31,17 @@ void playSound(int sound) { // plays a sound according to the sequencer
 
 void displayMenu() {// maybe menu which will display before user start adding sequence
 
-    std::cout << "\nMusic Sequencer Menu:\n";
-    std::cout << "1. Add Sound to Main Sequence\n";
-    std::cout << "2. Add Sound to Additional Sequence\n";
-    std::cout << "3. Play Sequences\n";
-    std::cout << "5. Choose BPM\n";
+    std::cout << "\nDrum Machine Menu:\n";
+    std::cout << "1. Edit\n";
+    std::cout << "2. Play\n";
+    std::cout << "3. Change BPM\n";
     std::cout << "4. Exit\n";
     std::cout << "Enter your choice: ";
 }
 
 void displaySoundOptions() {
-    std::cout << "Current Sequence: ";
-    std::cout << "Sound Options:\n";
+    std::cout << "Sequence: ";
+    std::cout << "Sounds:\n";
     std::cout << "0. Nothing\n";
     std::cout << "1. Kick\n";
     std::cout << "2. Snare\n";
@@ -91,7 +87,7 @@ int main() {
     bool exit = false;
 
     while (!exit) {
-        clearScreen();
+        //clearScreen();
         displaySequence(mainSequence);
         displaySequence(additionalSequence);
         displayMenu();
@@ -108,15 +104,7 @@ int main() {
             displaySequence(mainSequence);
             break;
         }
-        case 2: {
-            displaySoundOptions();
-            int sound;
-            std::cin >> sound;
-            additionalSequence.push_back(sound);
-            std::cout << "Current Additional Sequence: "; // need to make it so if we add a new sound it creates a new array which can 
-            displaySequence(additionalSequence);            // display it as an array.
-            break;
-        }
+        
         case 3: {
             int mainLength = mainSequence.size();
             int additionalLength = additionalSequence.size();

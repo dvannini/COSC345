@@ -18,9 +18,6 @@
     <ClCompile Include="drum machine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="soundTest.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Media Include="..\..\..\..\..\Desktop\Samples\One Shots\Drums\Kick\Kick 70s 3.wav">

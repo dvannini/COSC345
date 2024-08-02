@@ -129,7 +129,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="drum machine.cpp" />
-    <ClCompile Include="soundTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="..\..\..\..\..\Desktop\Samples\One Shots\Drums\Hihat\Hihat Closed 56 TL.wav" />

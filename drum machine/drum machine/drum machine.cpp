@@ -5,7 +5,6 @@
 #pragma comment(lib, "winmm.lib")
 #include <iostream>
 #include <Windows.h>
-#include "resource.h"
 #include <thread>
 #pragma comment(lib, "winmm.lib")
 
@@ -14,7 +13,7 @@ void playSound(int sound) { // plays a sound according to the sequencer
     case 0:
         break;
     case 1:
-        PlaySound(L"../Assets/Kick 70s 1.wav", NULL, SND_FILENAME | SND_ASYNC);
+        PlaySound(L"..Assets/Kick 70s 1.wav", NULL, SND_FILENAME | SND_ASYNC);
         std::cout << "played kick." << std::endl;
         break;
     case 2:

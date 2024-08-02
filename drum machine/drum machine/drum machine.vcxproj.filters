@@ -18,6 +18,9 @@
     <ClCompile Include="drum machine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="soundTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Media Include="..\..\..\..\..\Desktop\Samples\One Shots\Drums\Kick\Kick 70s 3.wav">
@@ -38,15 +41,5 @@
     <Media Include="..\Assets\Hihat Closed 80s UK Disco Vinyl.wav">
       <Filter>Resource Files</Filter>
     </Media>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Resource.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
   </ItemGroup>
 </Project>

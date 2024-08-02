@@ -9,7 +9,7 @@ on:
 jobs:
   build:
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
@@ -22,7 +22,7 @@ jobs:
         arch: x64
         
     - name: Configure CMake
-      run: cmake -Bbuild -H -G "Visual Studio 17 2022" -A x64
+      run: cmake --build -H -G "Visual Studio 17 2022" -A x64
       
     
       #change to run tests from a tests.cpp file instead

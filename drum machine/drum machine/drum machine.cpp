@@ -1,12 +1,12 @@
 // drum machine.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
-
 #include <vector>
 #pragma comment(lib, "winmm.lib")
 #include <iostream>
 #include <Windows.h>
 #include <thread>
 #pragma comment(lib, "winmm.lib")
+int bpm = 1000;
 
 void playSound(int sound) { // plays a sound according to the sequencer
     switch (sound) {
@@ -37,6 +37,7 @@ void displayMenu() {// maybe menu which will display before user start adding se
     std::cout << "1. Add Sound to Main Sequence\n";
     std::cout << "2. Add Sound to Additional Sequence\n";
     std::cout << "3. Play Sequences\n";
+    std::cout << "5. Choose BPM\n";
     std::cout << "4. Exit\n";
     std::cout << "Enter your choice: ";
 }
@@ -68,17 +69,30 @@ void displaySequence(const std::vector<int>& sequence) {
 void clearScreen() {
     system("cls");
 }
+void setBpm() {
+    int newBpm;
+    std::cout << "Enter new BPM: ";
+    std::cin >> newBpm;
 
+    if (newBpm > 0) {
+        bpm = 60000 / newBpm; // Convert BPM to milliseconds per beat
+        std::cout << "BPM set to " << newBpm << " (" << bpm << " milliseconds per beat)." << std::endl;
+    }
+    else {
+        std::cout << "Invalid BPM. BPM must be greater than 0." << std::endl;
+    }
+}
 int main() {
 
     std::vector<int> mainSequence;
-    std::vector<int> additionalSequence(16,0);
+    std::vector<int> additionalSequence;
 
     bool exit = false;
 
     while (!exit) {
         clearScreen();
         displaySequence(mainSequence);
+        displaySequence(additionalSequence);
         displayMenu();
         int choice;
         std::cin >> choice;
@@ -98,8 +112,8 @@ int main() {
             int sound;
             std::cin >> sound;
             additionalSequence.push_back(sound);
-            std::cout << "Current Additional Sequence: ";
-            displaySequence(additionalSequence);
+            std::cout << "Current Additional Sequence: "; // need to make it so if we add a new sound it creates a new array which can 
+            displaySequence(additionalSequence);            // display it as an array.
             break;
         }
         case 3: {
@@ -113,10 +127,14 @@ int main() {
             std::cout << "Playing sequences...\n";
             for (int i = 0; i < 100; i++) {
                 playSound(mainSequence[i % mainLength]);
-                Sleep(250); // half of the total sleep duration
+                Sleep(bpm); // half of the total sleep duration
                 playSound(additionalSequence[i % additionalLength]);
-                Sleep(250); // half of the total sleep duration
+                Sleep(bpm); // half of the total sleep duration
             }
+            break;
+        }
+        case 5: {
+            setBpm();
             break;
         }
         case 4: {

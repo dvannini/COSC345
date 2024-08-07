@@ -21,6 +21,7 @@ jobs:
     - name: Set up Make
       run: |
         choco install make
+        Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
         refreshenv
 
     - name: Build

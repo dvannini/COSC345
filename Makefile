@@ -1,20 +1,22 @@
-# Specify the compiler
-CC = g++
+# Specify the MSBuild path
+MSBUILD = "C:\Program Files\Microsoft Visual Studio\2022\BuildTools\MSBuild\Current\Bin\MSBuild.exe"
 
-# Compiler flags
-CFLAGS = -Wall -g
+# Specify the solution file
+SOLUTION_FILE = "drum machine/drum machine.sln"
 
-# Source files
-SRCS = drum_machine.cpp
+# Build configuration (Debug/Release)
+CONFIGURATION = Release
 
-# Output executable
-TARGET = CMDrum
+# Target executable
+TARGET = "drum machine/drum machine/Release/CMDrum.exe"
 
-all: $(TARGET)
+all: build
 
-$(TARGET): $(SRCS)
-	$(CC) $(CFLAGS) -o $(TARGET) $(SRCS)
+build:
+	$(MSBUILD) $(SOLUTION_FILE) /p:Configuration=$(CONFIGURATION)
 
 clean:
-	rm -f $(TARGET)
+	$(MSBUILD) $(SOLUTION_FILE) /t:Clean /p:Configuration=$(CONFIGURATION)
 
+run:
+	./$(TARGET)

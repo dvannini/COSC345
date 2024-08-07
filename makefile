@@ -2,13 +2,13 @@
 MSBUILD = $(MSBUILD_PATH)
 
 # Specify the solution file
-SOLUTION_FILE = "/drum machine/drum machine.sln"
+SOLUTION_FILE = "drum machine/drum machine.sln"
 
 # Build configuration (Debug/Release)
 CONFIGURATION = Release
 
 # Target executable
-TARGET = "/drum machine/drum machine/Release/CMDrum.exe"
+TARGET = "drum machine/drum machine/Release/CMDrum.exe"
 
 all: build
 

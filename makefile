@@ -1,5 +1,5 @@
 # Specify the MSBuild path
-#MSBUILD = $(MSBUILD_PATH)
+MSBUILD = $(MSBUILD_PATH)
 
 # Specify the solution file
 SOLUTION_FILE = "/drum machine/drum machine.sln"

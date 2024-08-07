@@ -1,5 +1,5 @@
 # Specify the MSBuild path
-MSBUILD = "C:\Program Files\Microsoft Visual Studio\2022\BuildTools\MSBuild\Current\Bin\MSBuild.exe"
+MSBUILD = $(MSBUILD_PATH)
 
 # Specify the solution file
 SOLUTION_FILE = "drum machine/drum machine.sln"

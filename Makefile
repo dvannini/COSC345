@@ -13,10 +13,10 @@ TARGET = "drum machine/drum machine/Release/CMDrum.exe"
 all: build
 
 build:
-	$(MSBUILD) $(SOLUTION_FILE) /p:Configuration=$(CONFIGURATION)
+	"$(MSBUILD)" "$(SOLUTION_FILE)" /p:Configuration=$(CONFIGURATION)
 
 clean:
-	$(MSBUILD) $(SOLUTION_FILE) /t:Clean /p:Configuration=$(CONFIGURATION)
+	"$(MSBUILD)" "$(SOLUTION_FILE)" /t:Clean /p:Configuration=$(CONFIGURATION)
 
 run:
 	./$(TARGET)

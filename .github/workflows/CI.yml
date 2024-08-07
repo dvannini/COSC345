@@ -16,7 +16,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Set up MSBuild
-      uses: microsoft/setup-msbuild@v
+      uses: microsoft/setup-msbuild@v1
       
     - name: Build
       shell: cmd

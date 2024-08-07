@@ -5,10 +5,10 @@ CC = g++
 CFLAGS = -Wall -g
 
 # Source files
-SRCS = main.cpp
+SRCS = drum_machine.cpp
 
 # Output executable
-TARGET = MyProject
+TARGET = CMDrum
 
 all: $(TARGET)
 

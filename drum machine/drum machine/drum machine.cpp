@@ -1,4 +1,4 @@
-// drum machine.cpp : This file contains the 'main' function. Program execution begins and ends there.
+// drum machine.cpp : This is the 'main' function
 //
 #include <vector>
 #include <iostream>

@@ -8,5 +8,8 @@ I'd want to test a prototype to see if this is the move first. If it doesn't imp
 This library is higher level than WASAPI but unlike the 'playsound' function. only reads audio buffer data meaning we would need to make a WAV file reader helper function to open WAV files. 
 However, this library should be more reliable than playsound.
 
-# 23/08/2024
+# 23/07/2024 - alex
 We plan on using TDD once we start properly producing the application, [this link](https://learn.microsoft.com/en-us/visualstudio/test/writing-unit-tests-for-c-cpp?view=vs-2022) may be useful.
+
+# 7/08/2024 - ben
+We've established some more branches for different development componenets for our project. I'm still in the process of setting continuous integration up

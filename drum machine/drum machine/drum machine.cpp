@@ -104,7 +104,15 @@ int main() {
             displaySequence(mainSequence);
             break;
         }
-        
+        case 2: {
+            displaySoundOptions();
+            int sound;
+            std::cin >> sound;
+            additionalSequence.push_back(sound);
+            std::cout << "Current Additional Sequence: "; // need to make it so if we add a new sound it creates a new array which can 
+            displaySequence(additionalSequence);            // display it as an array.
+            break;
+        }
         case 3: {
             int mainLength = mainSequence.size();
             int additionalLength = additionalSequence.size();
@@ -133,7 +141,7 @@ int main() {
         default:
             std::cout << "Invalid choice. Please try again.\n";
         }
-    }
+        }
 
     return 0;
 }

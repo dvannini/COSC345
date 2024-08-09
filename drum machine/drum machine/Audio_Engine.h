@@ -3,7 +3,7 @@
 class Audio_Engine
 {
 public:
-	void Audio_Engine(); //constructor class
+	Audio_Engine(); //constructor class
 	void loadSound(char* sound); // load sounds into virtual memory
 	void play();
 

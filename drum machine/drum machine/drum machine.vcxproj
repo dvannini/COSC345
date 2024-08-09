@@ -128,7 +128,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Audio_Engine.cpp" />
     <ClCompile Include="drum machine.cpp" />
+    <ClCompile Include="Interface.cpp" />
+    <ClCompile Include="Keyboard.cpp" />
+    <ClCompile Include="Timeline.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="..\..\..\..\..\Desktop\Samples\One Shots\Drums\Hihat\Hihat Closed 56 TL.wav" />
@@ -137,6 +141,12 @@
     <Media Include="..\Assets\Hihat Closed 80s UK Disco Vinyl.wav" />
     <Media Include="..\Assets\Kick 70s 1.wav" />
     <Media Include="..\Assets\Snare 70s MPC 3.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Audio_Engine.h" />
+    <ClInclude Include="Interface.h" />
+    <ClInclude Include="Keyboard.h" />
+    <ClInclude Include="Timeline.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\benad\OneDrive\Desktop\drum_machine_main\drum machine\drum machine\drum machine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\benad\OneDrive\Desktop\drum_machine_main\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{2006B650-FA42-3DD6-9999-0F2F7D70F644}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

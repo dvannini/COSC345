@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <Windows.h>
+#include <chrono>
 #pragma comment(lib, "winmm.lib")
 int bpm = 1000;
 
@@ -122,11 +123,25 @@ int main() {
             }
 
             std::cout << "Playing sequences...\n";
-            for (int i = 0; i < 100; i++) {
-                playSound(mainSequence[i % mainLength]);
-                Sleep(bpm); // half of the total sleep duration
-                playSound(additionalSequence[i % additionalLength]);
-                Sleep(bpm); // half of the total sleep duration
+            // Time at beginning of loop
+            uint64_t startTime = std::chrono::duration_cast<std::chrono::milliseconds>(
+                std::chrono::system_clock::now().time_since_epoch()
+            ).count();
+            while(true) {
+                // Time at current point in loop
+                uint64_t currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
+                ).count();
+                int soundIndex = 0;
+                // Once the timer is greater than or equal to the bpm (sneaky name, is actually the number of ms per beat) 
+                if (currentTime - startTime >= bpm) {
+                    // Play the sound and increment the index variable
+                    playSound(mainSequence[soundIndex % mainLength]);
+                    soundIndex++;
+                    // Add the bpm to the start time (actually the ms per beat)
+                    startTime += bpm;
+                }
+                Sleep(0.001);
             }
             break;
         }

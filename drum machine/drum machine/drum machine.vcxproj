@@ -132,6 +132,7 @@
     <ClCompile Include="drum machine.cpp" />
     <ClCompile Include="Interface.cpp" />
     <ClCompile Include="Keyboard.cpp" />
+    <ClCompile Include="Sequence.cpp" />
     <ClCompile Include="Timeline.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -146,6 +147,7 @@
     <ClInclude Include="Audio_Engine.h" />
     <ClInclude Include="Interface.h" />
     <ClInclude Include="Keyboard.h" />
+    <ClInclude Include="Sequence.h" />
     <ClInclude Include="Timeline.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

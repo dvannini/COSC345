@@ -4,39 +4,20 @@
 #include <iostream>
 #include <Windows.h>
 #include <chrono>
+
+#include "Sequence.h"
+
 #pragma comment(lib, "winmm.lib")
 int bpm = 1000;
-
-void playSound(int sound) { // plays a sound according to the sequencer
-    switch (sound) {
-    case 0:
-        break;
-    case 1:
-        PlaySound(L"../Assets/Kick 70s 1.wav", NULL, SND_FILENAME | SND_ASYNC);
-        std::cout << "played kick." << std::endl;
-        break;
-    case 2:
-        PlaySound(L"../Assets/Snare 70s MPC 3.wav", NULL, SND_FILENAME | SND_ASYNC);
-        std::cout << "played snare." << std::endl;
-        break;
-    case 3:
-        PlaySound(L"../Assets/Hihat Closed 80s UK Disco Vinyl.wav", NULL, SND_FILENAME | SND_ASYNC);
-        std::cout << "played HiHat." << std::endl;
-        break;
-    case 4:
-        PlaySound(L"../Assets/very-fat-808.wav", NULL, SND_FILENAME | SND_ASYNC);
-        std::cout << "played 808." << std::endl;
-        break;
-    }
-}
 
 void displayMenu() {// maybe menu which will display before user start adding sequence
 
     std::cout << "\nDrum Machine Menu:\n";
-    std::cout << "1. Edit\n";
-    std::cout << "2. Play\n";
-    std::cout << "3. Change BPM\n";
+    std::cout << "1. Edit Sequence\n";
+    std::cout << "2. Edit Sequence 2 (not being used currently)\n";
+    std::cout << "3. Play\n";
     std::cout << "4. Exit\n";
+    std::cout << "5. Set BPM\n";
     std::cout << "Enter your choice: ";
 }
 
@@ -115,34 +96,19 @@ int main() {
             break;
         }
         case 3: {
+            Sequence seq;
             int mainLength = mainSequence.size();
-            int additionalLength = additionalSequence.size();
-            if (mainLength == 0 || additionalLength == 0) {
-                std::cout << "Both sequences must have at least one sound.\n";
-                break;
+            if (mainLength == 0) 
+            {
+                seq = Sequence::Sequence();
+            }
+            else 
+            {
+                seq = Sequence::Sequence(mainSequence);
             }
 
             std::cout << "Playing sequences...\n";
-            // Time at beginning of loop
-            uint64_t startTime = std::chrono::duration_cast<std::chrono::milliseconds>(
-                std::chrono::system_clock::now().time_since_epoch()
-            ).count();
-            while(true) {
-                // Time at current point in loop
-                uint64_t currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(
-                    std::chrono::system_clock::now().time_since_epoch()
-                ).count();
-                int soundIndex = 0;
-                // Once the timer is greater than or equal to the bpm (sneaky name, is actually the number of ms per beat) 
-                if (currentTime - startTime >= bpm) {
-                    // Play the sound and increment the index variable
-                    playSound(mainSequence[soundIndex % mainLength]);
-                    soundIndex++;
-                    // Add the bpm to the start time (actually the ms per beat)
-                    startTime += bpm;
-                }
-                Sleep(0.001);
-            }
+            seq.playSequence(bpm);
             break;
         }
         case 5: {

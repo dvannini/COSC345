@@ -20,6 +20,7 @@ void Sequence::playSequence(int msPerBeat)
     ).count();
 
     int soundIndex = 0;
+    engine.Preload("./Assets/Hihat Closed 56 TL.wav", "hat");
     while (true) {
         // Time at current point in loop
         uint64_t currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -29,7 +30,7 @@ void Sequence::playSequence(int msPerBeat)
         if (currentTime - startTime >= msPerBeat) {
             std::cout << soundIndex << std::endl;
             // Play the sound and increment the index variable
-            engine.play(sequence[soundIndex % sequence.size()]);
+            engine.PlaySound_("hat");//sequence[soundIndex % sequence.size()]);
             soundIndex++;
             // Add the ms per beat to the start time
             startTime += msPerBeat;

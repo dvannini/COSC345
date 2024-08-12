@@ -20,7 +20,7 @@ void Sequence::playSequence(int msPerBeat)
     ).count();
 
     int soundIndex = 0;
-    engine.Preload("./Assets/Hihat Closed 56 TL.wav", "hat");
+    engine.Preload("../Assets/Snare 70s MPC 3.wav", "hat");
     while (true) {
         // Time at current point in loop
         uint64_t currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(

@@ -8,7 +8,7 @@
 #include "Sequence.h"
 
 #pragma comment(lib, "winmm.lib")
-int bpm = 1000;
+int bpm = 100;
 
 void displayMenu() {// maybe menu which will display before user start adding sequence
 
@@ -75,7 +75,7 @@ int main() {
         displayMenu();
         int choice;
         std::cin >> choice;
-
+        //Sequence seq = Sequence::Sequence();
         switch (choice) {
         case 1: {
             displaySoundOptions();

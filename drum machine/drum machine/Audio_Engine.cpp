@@ -61,7 +61,7 @@ void Audio_Engine::PlaySound_(std::string id) {
 
     // Wait until the sound finishes playing
     while (!(waveHeader.dwFlags & WHDR_DONE)) {
-        Sleep(1);//replace with Alex's timekeeping function
+        Sleep(500);//replace with Alex's timekeeping function
     }
 
     // Clean up

@@ -20,7 +20,10 @@ void Sequence::playSequence(int msPerBeat)
     ).count();
 
     int soundIndex = 0;
-    engine.Preload("../Assets/Snare 70s MPC 3.wav", "hat");
+    engine.Preload("../Assets/Snare 70s MPC 3.wav", "snare");
+    engine.Preload("../Assets/Kick 70s 1.wav", "kick");
+    engine.Preload("../Assets/Hihat Closed 80s UK Disco Vinyl.wav", "hat");
+    std::vector<const char*> t = {"kick", "hat", "kick", "hat", "kick", "hat", "kick", "kick"};
     while (true) {
         // Time at current point in loop
         uint64_t currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -30,7 +33,7 @@ void Sequence::playSequence(int msPerBeat)
         if (currentTime - startTime >= msPerBeat) {
             std::cout << soundIndex << std::endl;
             // Play the sound and increment the index variable
-            engine.PlaySound_("hat");//sequence[soundIndex % sequence.size()]);
+            engine.PlaySound_(t[soundIndex % sequence.size()]);//sequence[soundIndex % sequence.size()]);
             soundIndex++;
             // Add the ms per beat to the start time
             startTime += msPerBeat;

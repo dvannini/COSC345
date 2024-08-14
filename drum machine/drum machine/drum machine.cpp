@@ -8,7 +8,7 @@
 #include "Sequence.h"
 
 #pragma comment(lib, "winmm.lib")
-int bpm = 100;
+int bpm = 200;
 
 void displayMenu() {// maybe menu which will display before user start adding sequence
 

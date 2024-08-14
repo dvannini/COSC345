@@ -13,10 +13,16 @@ public:
     ~Audio_Engine();
     void Preload(const std::string& filename, std::string id);
     void PlaySound_(std::string id);
+    int _test();
 
 private:
+    static const int NUM_BUFFERS = 8;
+    static const int BUFFER_SIZE = 8192; //in bytes
+
     HWAVEOUT hWaveOut;
-    WAVEHDR waveHeader;
+    std::vector<WAVEHDR> waveHeaders; //store multiple wave headers
+    int currentBufferIndex;
+
     struct WaveData {
         WAVEFORMATEX waveFormat;
         std::vector<BYTE> audioData;

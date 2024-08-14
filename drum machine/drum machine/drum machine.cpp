@@ -3,7 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <Windows.h>
-#include <chrono>
+#include <conio.h>
 
 #include "Sequence.h"
 
@@ -22,13 +22,13 @@ void displayMenu() {// maybe menu which will display before user start adding se
 }
 
 void displaySoundOptions() {
-    std::cout << "Sequence: ";
     std::cout << "Sounds:\n";
     std::cout << "0. Nothing\n";
     std::cout << "1. Kick\n";
     std::cout << "2. Snare\n";
     std::cout << "3. HiHat\n";
     std::cout << "4. 808\n";
+    std::cout << "Press any other key to save\n";
     std::cout << "Enter your choice: ";
 }
 
@@ -78,12 +78,23 @@ int main() {
 
         switch (choice) {
         case 1: {
+            clearScreen();
             displaySoundOptions();
-            int sound;
-            std::cin >> sound;
-            mainSequence.push_back(sound);
             std::cout << "Current Main Sequence: ";
             displaySequence(mainSequence);
+            int sound = _getch();
+
+            while (sound >= 48 && sound <= 52) {
+                mainSequence.push_back(sound - 48);
+
+                clearScreen();
+                displaySoundOptions();
+                std::cout << "Current Main Sequence: ";
+                displaySequence(mainSequence);
+
+                sound = _getch();
+            }
+            clearScreen();
             break;
         }
         case 2: {

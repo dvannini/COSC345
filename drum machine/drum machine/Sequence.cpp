@@ -1,16 +1,29 @@
 #include "Sequence.h"
 
-// Default initializer (generic dnb sequence)
+/**
+ * Default Constructor function
+ * Takes no input, and uses a basic DNB kick and snare sequence.
+ */
 Sequence::Sequence()
 {
     sequence = { 1, 0, 2, 0, 0, 1, 2, 0 };
 }
 
+/**
+ * Constructor function
+ *
+ * \param sequenceIn an Int vector which contains the 1-based index of each sound to play (0 is nothing).
+ */
 Sequence::Sequence(std::vector<int> sequenceIn)
 {
 	sequence = sequenceIn;
 }
 
+/**
+ * Plays the saved sequence indefinitely, with the BPM decided by the msPerBeat variable
+ *
+ * \param msPerBeat how many milliseconds per beat, which essentially determines the BPM of playback.
+ */
 void Sequence::playSequence(int msPerBeat)
 {
     Audio_Engine engine = Audio_Engine::Audio_Engine();

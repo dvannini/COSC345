@@ -18,4 +18,22 @@ jobs:
       uses: mattnotmitt/doxygen-action@1.9.8
       with:
         doxyfile-path: './Doxyfile'
+      
+    - name: Configure Git
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+    - name: Add generated files
+      run: |
+        git add .
+    - name: Commit changes if any
+      run: |
+        git diff-index --quiet HEAD || git commit -m "Automated docs generation"
+
+
+    - name: Push changes
+      run: git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

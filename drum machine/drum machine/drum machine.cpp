@@ -13,7 +13,7 @@
 #include <iostream>
 #include <Windows.h>
 #include <conio.h>
-
+#include "Keyboard.h"
 #include "Sequence.h"
 
 #pragma comment(lib, "winmm.lib")
@@ -71,7 +71,7 @@ void setBpm() {
     }
 }
 int main() {
-
+    Keyboard keyboard;
     std::vector<int> mainSequence;
     std::vector<int> additionalSequence;
 
@@ -91,18 +91,7 @@ int main() {
             displaySoundOptions();
             std::cout << "Current Main Sequence: ";
             displaySequence(mainSequence);
-            int sound = _getch();
-
-            while (sound >= 48 && sound <= 52) {
-                mainSequence.push_back(sound - 48);
-
-                clearScreen();
-                displaySoundOptions();
-                std::cout << "Current Main Sequence: ";
-                displaySequence(mainSequence);
-
-                sound = _getch();
-            }
+            keyboard.handleKeyboardInput(mainSequence);
             clearScreen();
             break;
         }

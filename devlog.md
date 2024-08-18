@@ -13,3 +13,6 @@ We plan on using TDD once we start properly producing the application, [this lin
 
 # 7/08/2024 - ben
 We've established some more branches for different development componenets for our project. I'm still in the process of setting continuous integration up
+
+# 19/08/2024 - ben
+The audio engine is ready to be presented in an alpha release with placeholder code for improved functionality later down the track. We have separted most components into classes and still develeping the way these classes interact together. We have a basic CI pipeline, local and cloud doxygen generation and implementing tests into each class in our program.

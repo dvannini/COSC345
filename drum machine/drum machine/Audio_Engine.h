@@ -13,10 +13,19 @@ public:
     ~Audio_Engine();
     void Preload(const std::string& filename, std::string id);
     void PlaySound_(std::string id);
+    int _test();
 
 private:
+    static const int NUM_BUFFERS = 8; //8 sound events simulataneously max
+    static const int BUFFER_SIZE = 8192; //in bytes
+
     HWAVEOUT hWaveOut;
-    WAVEHDR waveHeader;
+
+
+
+    std::vector<WAVEHDR> waveHeaders; //contains multiple sound events
+    int currentBufferIndex;
+
     struct WaveData {
         WAVEFORMATEX waveFormat;
         std::vector<BYTE> audioData;
@@ -25,6 +34,10 @@ private:
     std::unordered_map<std::string, WaveData> sounds_;
 
     WaveData LoadWave(const std::string& filename);
+
+    void mixData(std::vector<WAVEHDR> q, WAVEHDR* sumHeader); //sum simultaneous audio events into one audio stream, if just one sound, just leave unmodified
+
+    void Process_(std::vector<WAVEHDR> q); //audio events are sent here to then be sent to the wave out device
 };
 
 #endif // AUDIO_ENGINE_H

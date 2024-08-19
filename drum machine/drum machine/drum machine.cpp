@@ -1,5 +1,5 @@
 // drum machine.cpp : This is the 'main' function
-//
+//test for codacy 
 
 /*! \mainpage CMDrum Docs
  *

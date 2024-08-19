@@ -1,10 +1,19 @@
 // drum machine.cpp : This is the 'main' function
 //
+
+/*! \mainpage CMDrum Docs
+ *
+ * \section intro_sec Introduction
+ *
+ * CMDrum is a simple command-line drum sequencer.
+ * 
+ * To view details about the structure and functionality of the source code, <a href="./annotated.html">view the class list.</a>
+ */
 #include <vector>
 #include <iostream>
 #include <Windows.h>
-#include <chrono>
-
+#include <conio.h>
+#include "Keyboard.h"
 #include "Sequence.h"
 
 #pragma comment(lib, "winmm.lib")
@@ -22,13 +31,13 @@ void displayMenu() {// maybe menu which will display before user start adding se
 }
 
 void displaySoundOptions() {
-    std::cout << "Sequence: ";
     std::cout << "Sounds:\n";
     std::cout << "0. Nothing\n";
     std::cout << "1. Kick\n";
     std::cout << "2. Snare\n";
     std::cout << "3. HiHat\n";
     std::cout << "4. 808\n";
+    std::cout << "Press any other key to save\n";
     std::cout << "Enter your choice: ";
 }
 
@@ -62,7 +71,7 @@ void setBpm() {
     }
 }
 int main() {
-
+    Keyboard keyboard;
     std::vector<int> mainSequence;
     std::vector<int> additionalSequence;
 
@@ -73,17 +82,18 @@ int main() {
         displaySequence(mainSequence);
         displaySequence(additionalSequence);
         displayMenu();
+
         int choice;
         std::cin >> choice;
         //Sequence seq = Sequence::Sequence();
         switch (choice) {
         case 1: {
+            clearScreen();
             displaySoundOptions();
-            int sound;
-            std::cin >> sound;
-            mainSequence.push_back(sound);
             std::cout << "Current Main Sequence: ";
             displaySequence(mainSequence);
+            keyboard.handleKeyboardInput(mainSequence);
+            clearScreen();
             break;
         }
         case 2: {
@@ -108,7 +118,7 @@ int main() {
             }
 
             std::cout << "Playing sequences...\n";
-            seq.playSequence(bpm);
+            seq.playSequence(bpm, 1);
             break;
         }
         case 5: {

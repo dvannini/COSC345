@@ -1,14 +1,47 @@
-name: Codacy Analysis CLI
+name: CI
 
-on: ["push"]
+# Define when this workflow should run
+on: [push, pull_request]
 
 jobs:
-  codacy-analysis-cli:
-    name: Codacy Analysis CLI
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@main
+  build:
+    runs-on: ubuntu-latest  # The environment in which the workflow will run
 
-      - name: Run Codacy Analysis CLI
-        uses: codacy/codacy-analysis-cli-action@master
+    steps:
+    
+    # Step 1: Checkout the code from your repository
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # Step 2: Install necessary dependencies, including the C++ compiler and coverage tools
+    - name: Set up dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y g++-9 lcov gcovr
+
+    # Step 3: Compile your code with coverage flags enabled
+    - name: Build with coverage
+      run: |
+        g++-9 -fprofile-arcs -ftest-coverage -o your_program your_program.cpp
+
+    # Step 4: Run your tests
+    - name: Run tests
+      run: ./your_program
+
+    # Step 5: Capture the coverage data and create a coverage report
+    - name: Generate coverage report
+      run: |
+        lcov --capture --directory . --output-file coverage.info
+        lcov --remove coverage.info '/usr/*' --output-file coverage.info
+        lcov --list coverage.info
+
+    # Step 6: Convert the coverage report to XML format (required by Codacy)
+    - name: Convert to XML
+      run: gcovr -r . --xml-pretty -o coverage.xml
+
+    # Step 7: Upload the coverage report to Codacy
+    - name: Upload coverage to Codacy
+      run: |
+        bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coverage.xml
+      env:
+        CODACY_REPOSITORY_TOKEN: ${{ secrets.CODACY_REPOSITORY_TOKEN }}  # Replace with your secret token

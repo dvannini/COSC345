@@ -1,13 +1,16 @@
 // drum machine.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
+//test line for CODACY TEST
 #include <vector>
 #pragma comment(lib, "winmm.lib")
 #include <iostream>
+#include <map>
 #include <Windows.h>
 #include <thread>
 #pragma comment(lib, "winmm.lib")
 int bpm = 1000;
-
+std::string sounds[4];
+std::map<std::string, std::array<bool, 8>> sequences;
 void playSound(int sound) { // plays a sound according to the sequencer
     switch (sound) {
     case 0:
@@ -32,7 +35,12 @@ void playSound(int sound) { // plays a sound according to the sequencer
 }
 
 void displayMenu() {// maybe menu which will display before user start adding sequence
-
+    
+        clearScreen();
+        for (const auto& pair : sequences) {
+            displaySequence(pair.first); // Corrected line
+        }
+    
     std::cout << "\nMusic Sequencer Menu:\n";
     std::cout << "1. Add Sound to Main Sequence\n";
     std::cout << "2. Add Sound to Additional Sequence\n";
@@ -65,6 +73,21 @@ void displaySequence(const std::vector<int>& sequence) {
         std::cout << sound << " ";
     }
     std::cout << std::endl;
+}
+
+void displaySequence(const std::string& name){
+    auto sequence = sequences.find(name);
+    std::cout << name;
+    for (size_t i = 0; i < sequence->second.size(); i++) {
+        if (sequence->second[i]) {
+            std::cout << "0";
+        }
+        else {
+            std::cout << "_";
+        }
+    }
+    std::cout << "\n";
+    return;
 }
 void clearScreen() {
     system("cls");

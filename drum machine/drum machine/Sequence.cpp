@@ -20,11 +20,32 @@ Sequence::Sequence(std::vector<int> sequenceIn)
 }
 
 /**
- * Plays the saved sequence indefinitely, with the BPM decided by the msPerBeat variable
+ * Getter function for sequence variable
+ *
+ * \return sequence variable
+ */
+std::vector<int> Sequence::getSequence()
+{
+    return sequence;
+}
+
+/**
+ * Setter function for sequence variable
+ *
+ * \param sequence variable to be updated
+ */
+void Sequence::setSequence(std::vector<int> sequenceIn)
+{
+    sequence = sequenceIn;
+}
+
+/**
+ * Plays the saved sequence until the numberOfLoops is reached, with the BPM decided by the msPerBeat variable
  *
  * \param msPerBeat how many milliseconds per beat, which essentially determines the BPM of playback.
+ * \param numberOfLoops how many times the loop will play.
  */
-void Sequence::playSequence(int msPerBeat)
+void Sequence::playSequence(int msPerBeat, int numberOfLoops)
 {
     Audio_Engine engine = Audio_Engine::Audio_Engine();
     // Time at beginning of loop
@@ -34,7 +55,7 @@ void Sequence::playSequence(int msPerBeat)
 
     int soundIndex = 0;
     engine.Preload("./Assets/Hihat Closed 56 TL.wav", "hat");
-    while (true) {
+    while (soundIndex / sequence.size() < numberOfLoops) {
         // Time at current point in loop
         uint64_t currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now().time_since_epoch()
@@ -49,4 +70,32 @@ void Sequence::playSequence(int msPerBeat)
             startTime += msPerBeat;
         }
     }
+}
+
+
+/**
+ * Test function
+ *
+ * \return 0 if all tests pass.\n 1 if default constructor (or getter) fails\n 2 if constructor fails\n 3 if setter function fails\n 4 if playSequence fails.
+ */
+int Sequence::test_()
+{
+    std::vector<int> testSequence = { 0,1,2,3 };
+    Sequence testDefaultCon = Sequence::Sequence();
+    Sequence testCon = Sequence::Sequence(testSequence);
+    // test default constructor (and getter)
+    if (testDefaultCon.getSequence().size() != 8) return 1;
+    // test constructor with given sequence
+    if (testCon.getSequence().size() != 4) return 2;
+    // test setter function
+    testDefaultCon.setSequence(testSequence);
+    if (testDefaultCon.getSequence().size() != 4) return 3;
+    // ensure playSequence runs without errors
+    try {
+        testCon.playSequence(1000, 1);
+    }
+    catch (...) {
+        return 4;
+    }
+    return 0;
 }

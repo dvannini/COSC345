@@ -82,6 +82,7 @@ int main() {
         displaySequence(mainSequence);
         displaySequence(additionalSequence);
         displayMenu();
+
         int choice;
         std::cin >> choice;
 
@@ -117,7 +118,7 @@ int main() {
             }
 
             std::cout << "Playing sequences...\n";
-            seq.playSequence(bpm);
+            seq.playSequence(bpm, 1);
             break;
         }
         case 5: {

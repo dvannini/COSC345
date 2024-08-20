@@ -5,7 +5,7 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # The environment in which the workflow will run
+    runs-on: windows-latest  # The environment in which the workflow will run
 
     steps:
     
@@ -13,27 +13,26 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    # Step 2: Install necessary dependencies, including the C++ compiler and coverage tools
+    # Step 2: Set up dependencies, using choco (Chocolatey) to install necessary tools
     - name: Set up dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install -y g++-9 lcov gcovr
+        choco install llvm --version 16.0.1  # Install LLVM and Clang
+        choco install gcovr  # Install gcovr for coverage report
 
     # Step 3: Compile your code with coverage flags enabled
     - name: Build with coverage
       run: |
-        g++-9 -fprofile-arcs -ftest-coverage -o "drum machine" "drum machine/drum machine/drum machine.cpp"
+        clang++ -fprofile-instr-generate -fcoverage-mapping -o "drum machine.exe" "drum machine/drum machine/drum machine.cpp"
 
     # Step 4: Run your tests
     - name: Run tests
-      run: ./"drum machine"
+      run: ./"drum machine.exe"
 
     # Step 5: Capture the coverage data and create a coverage report
     - name: Generate coverage report
       run: |
-        lcov --capture --directory . --output-file coverage.info
-        lcov --remove coverage.info '/usr/*' --output-file coverage.info
-        lcov --list coverage.info
+        llvm-profdata merge -sparse default.profraw -o default.profdata
+        llvm-cov export -format=lcov "drum machine.exe" -instr-profile=default.profdata > coverage.info
 
     # Step 6: Convert the coverage report to XML format (required by Codacy)
     - name: Convert to XML

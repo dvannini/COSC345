@@ -28,7 +28,13 @@ jobs:
       
     - name: Install ReportGenerator
       run: dotnet tool install -g dotnet-reportgenerator-globaltool
-
+      
+    - name: Install C++ Build Tools
+      run: |
+        vs_buildtools.exe --quiet --wait --norestart --nocache \
+        --add Microsoft.VisualStudio.Workload.VCTools \
+        --add Microsoft.VisualStudio.Component.Windows10SDK.19041 \
+        --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64
     - name: Run tests and generate code coverage report
       run: |
         dotnet test "drum machine/drum machine.sln" --no-build --collect:"XPlat Code Coverage" --results-directory ./coverage

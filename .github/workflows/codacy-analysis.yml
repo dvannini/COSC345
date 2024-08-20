@@ -22,11 +22,11 @@ jobs:
     # Step 3: Compile your code with coverage flags enabled
     - name: Build with coverage
       run: |
-        g++-9 -fprofile-arcs -ftest-coverage -o your_program your_program.cpp
+        g++-9 -fprofile-arcs -ftest-coverage -o drum machine drum machine.cpp
 
     # Step 4: Run your tests
     - name: Run tests
-      run: ./your_program
+      run: ./drum machine
 
     # Step 5: Capture the coverage data and create a coverage report
     - name: Generate coverage report

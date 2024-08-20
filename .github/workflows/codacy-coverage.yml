@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   codacy-coverage:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code

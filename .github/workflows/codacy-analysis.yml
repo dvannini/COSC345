@@ -22,7 +22,7 @@ jobs:
     # Step 3: Compile your code with coverage flags enabled
     - name: Build with coverage
       run: |
-        g++-9 -fprofile-arcs -ftest-coverage -o "drum machine" "drum machine.cpp"
+        g++-9 -fprofile-arcs -ftest-coverage -o "drum machine" "drum machine/drum machine/drum machine.cpp"
 
     # Step 4: Run your tests
     - name: Run tests

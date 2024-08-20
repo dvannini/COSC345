@@ -26,7 +26,7 @@ jobs:
 
     # Step 4: Run your tests
     - name: Run tests
-      run: ./drum machine
+      run: ./"drum machine"
 
     # Step 5: Capture the coverage data and create a coverage report
     - name: Generate coverage report

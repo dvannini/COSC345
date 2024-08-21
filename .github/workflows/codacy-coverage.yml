@@ -3,24 +3,9 @@ name: codacy-coverage
 on: [push, pull_request]
 
 jobs:
-  build:
-  
-    runs-on: windows-latest
-    
-    steps:
-    
-    - name: Checkout code
-      uses: actions/checkout@v2
-      
-    - name: Set up msbuild
-      uses: microsoft/setup-msbuild@v1.0.2
-
-    - name: Build
-      run: msbuild "drum machine/drum machine.sln" /p:Configuration=Release
-      
   codacy-coverage:
     runs-on: windows-latest
-    needs: build
+    
     
     steps:
     - name: Checkout code
@@ -28,6 +13,11 @@ jobs:
       
     - name: Install ReportGenerator
       run: dotnet tool install -g dotnet-reportgenerator-globaltool
+    - name: Set up msbuild
+      uses: microsoft/setup-msbuild@v1.0.2
+
+    - name: Build
+      run: msbuild "drum machine/drum machine.sln" /p:Configuration=Release
       
     - name: Run tests and generate code coverage report
       run: |

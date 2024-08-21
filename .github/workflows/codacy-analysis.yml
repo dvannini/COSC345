@@ -16,8 +16,8 @@ jobs:
     # Step 2: Set up dependencies, using choco (Chocolatey) to install necessary tools
     - name: Set up dependencies
       run: |
-        choco install llvm --version 16.0.1  # Install LLVM and Clang
-        choco install gcovr  # Install gcovr for coverage report
+        choco install llvm   # Install LLVM and Clang
+        pip install gcovr  # Install gcovr for coverage report
 
     # Step 3: Compile your code with coverage flags enabled
     - name: Build with coverage

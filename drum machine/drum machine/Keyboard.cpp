@@ -4,6 +4,7 @@
 #include "utils.h"  // Include the header where clearScreen is declared
 #include <vector>
 #include <Windows.h>
+
 void Keyboard::handleKeyboardInput(std::vector<int>& sequence) {
     int sound = _getch();
 
@@ -24,7 +25,7 @@ void Keyboard::handleKeyboardInput(std::vector<int>& sequence) {
     }
 }
 
-void testKeyboardInvalidInput() {
+void Keyboard::testKeyboardInvalidInput() {
     // Create an instance of Keyboard
     Keyboard keyboard;
     // Initialize a sequence vector
@@ -45,7 +46,7 @@ void testKeyboardInvalidInput() {
     std::cout << std::endl;
 }
 
-void testKeyboardValidInput() {
+void Keyboard::testKeyboardValidInput() {
     // Create an instance of Keyboard
     Keyboard keyboard;
     // Initialize a sequence vector
@@ -68,7 +69,7 @@ void testKeyboardValidInput() {
 
 
 
-void runKeyBoardTests() {
+void Keyboard::runKeyBoardTests() {
     testKeyboardInvalidInput();
     testKeyboardValidInput();
 }

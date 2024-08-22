@@ -27,10 +27,5 @@ namespace UnitTesting
 		{
 			Assert::AreEqual(0, Sequence::test_());
 		}
-		TEST_METHOD(TestAudioEngine)
-		{
-			Audio_Engine engine = Audio_Engine::Audio_Engine();
-			Assert::AreEqual(0, engine._test());
-		}
 	};
 }

@@ -30,7 +30,7 @@ jobs:
       - name: Generate Report
         id: generate_test_report
         shell: cmd
-        run: OpenCppCoverage.exe --sources "drum machine\drum machine" --export_type cobertura:DrumMachine.xml -- "vstest.console.exe" "drum machine\x64\Debug\UnitTesting.dll"
+        run: OpenCppCoverage.exe --sources "drum machine\drum machine" --modules "drum machine" --export_type cobertura:DrumMachine.xml -- "vstest.console.exe" "drum machine\x64\Debug\UnitTesting.dll"
       - name: Upload Report to Codecov
         uses: codecov/codecov-action@v1.3.2
         with:

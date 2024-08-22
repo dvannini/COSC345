@@ -9,4 +9,15 @@
 
 // add headers that you want to pre-compile here
 
+#include <iostream>
+#include <fstream>
+#include <stdexcept>
+#include <cstring>
+#include <assert.h>
+#include <vector>
+#include <chrono>
+#include <windows.h>
+#include <mmsystem.h>
+#include <string>
+#include <unordered_map>
 #endif //PCH_H

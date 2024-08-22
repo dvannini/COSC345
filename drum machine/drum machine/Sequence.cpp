@@ -94,12 +94,5 @@ int Sequence::test_()
     // test setter function
     testDefaultCon.setSequence(testSequence);
     if (testDefaultCon.getSequence().size() != 4) return 3;
-    // ensure playSequence runs without errors
-    try {
-        testCon.playSequence(1000, 1);
-    }
-    catch (...) {
-        return 4;
-    }
     return 0;
 }

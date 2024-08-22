@@ -70,8 +70,8 @@ void setBpm() {
     }
 }
 int main() {
-    runKeyBoardTests();
     Keyboard keyboard;
+    keyboard.runKeyBoardTests();
     std::vector<int> mainSequence;
     std::vector<int> additionalSequence;
 

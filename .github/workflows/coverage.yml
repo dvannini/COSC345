@@ -33,6 +33,8 @@ jobs:
         run: OpenCppCoverage.exe --sources "drum machine\drum machine" --continue_after_cpp_exception --modules "drum machine" --export_type cobertura:DrumMachine.xml -- "vstest.console.exe" "drum machine\x64\Debug\UnitTesting.dll"
       - name: Upload Report to Codecov
         uses: codecov/codecov-action@v1.3.2
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
           files: ./DrumMachine.xml
           fail_ci_if_error: true

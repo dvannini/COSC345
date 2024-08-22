@@ -13,9 +13,12 @@ jobs:
       - name: Setup MSBuild and add to PATH
         uses: microsoft/setup-msbuild@v1.0.2
         id: setup_msbuild
+      - name: Restore NuGet packages
+        #working-directory: ${{env.GITHUB_WORKSPACE}}
+        run: nuget restore "drum machine\drum machine.sln"
       - name: Run MSBuild
         id: run_msbuild
-        run: msbuild /p:Configuration=Debug /p:Platform=x86 "drum machine\drum machine.sln"
+        run: msbuild /p:Configuration=Debug /p:Platform=x64 "drum machine\drum machine.sln"
       - name: Setup VSTest and add to PATH
         uses: darenm/Setup-VSTest@v1
         id: setup_vstest
@@ -27,7 +30,7 @@ jobs:
       - name: Generate Report
         id: generate_test_report
         shell: cmd
-        run: OpenCppCoverage.exe --sources "drum machine\drum machine" --export_type cobertura:DrumMachine.xml -- "vstest.console.exe" "drum machine\Debug\HelloTest.dll"
+        run: OpenCppCoverage.exe --sources "drum machine\drum machine" --continue_after_cpp_exception --modules "drum machine" --export_type cobertura:DrumMachine.xml -- "vstest.console.exe" "drum machine\x64\Debug\UnitTesting.dll"
       - name: Upload Report to Codecov
         uses: codecov/codecov-action@v1.3.2
         with:

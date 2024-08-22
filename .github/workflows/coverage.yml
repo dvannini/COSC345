@@ -13,6 +13,9 @@ jobs:
       - name: Setup MSBuild and add to PATH
         uses: microsoft/setup-msbuild@v1.0.2
         id: setup_msbuild
+      - name: Restore NuGet packages
+        #working-directory: ${{env.GITHUB_WORKSPACE}}
+        run: nuget restore "drum machine\drum machine.sln"
       - name: Run MSBuild
         id: run_msbuild
         run: msbuild /p:Configuration=Debug /p:Platform=x86 "drum machine\drum machine.sln"

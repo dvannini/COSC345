@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "CppUnitTest.h"
 #include "../drum machine/Sequence.cpp"
 #include "../drum machine/Audio_Engine.cpp"

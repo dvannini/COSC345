@@ -9,6 +9,7 @@
  * 
  * To view details about the structure and functionality of the source code, <a href="./annotated.html">view the class list.</a>
  */
+#include "utils.h"  // Include the header where clearScreen is declared
 #include <vector>
 #include <iostream>
 #include <Windows.h>
@@ -19,6 +20,7 @@
 
 #pragma comment(lib, "winmm.lib")
 int bpm = 178;
+
 
 void displayMenu() {// maybe menu which will display before user start adding sequence
 
@@ -55,9 +57,7 @@ void displaySequence(const std::vector<int>& sequence) {
     }
     std::cout << std::endl;
 }
-void clearScreen() {
-    system("cls");
-}
+
 void setBpm() {
     int newBpm;
     std::cout << "Enter new BPM: ";
@@ -82,6 +82,7 @@ int main() {
     engine.Preload("../Assets/Hihat Closed 80s UK Disco Vinyl.wav", 3);
 
     Keyboard keyboard;
+    keyboard.runKeyBoardTests();
     std::vector<int> mainSequence;
     std::vector<int> additionalSequence;
 
@@ -89,7 +90,7 @@ int main() {
     bool playing = false;
 
     while (!exit) {
-        //clearScreen();
+        clearScreen();
         displaySequence(mainSequence);
         displaySequence(additionalSequence);
         displayMenu();

@@ -71,6 +71,8 @@ void setBpm() {
         std::cout << "Invalid BPM. BPM must be greater than 0." << std::endl;
     }
 }
+
+
 int main() {
     Audio_Engine engine = Audio_Engine::Audio_Engine();
     Clock c = Clock::Clock(bpm);

@@ -63,11 +63,14 @@ Audio_Engine::~Audio_Engine() {
  * \param filename the sound to preload into memory
  * \param id the identification to reference the sound data
  */
-void Audio_Engine::Preload(const std::string& filename, std::string id) {
+void Audio_Engine::Preload(const std::string& filename, int id) {
     sounds_[id] = LoadWave(filename);
     return;
 }
-void Audio_Engine::PlaySound_(std::string id) {
+void Audio_Engine::PlaySound_(int id) {
+    if (id == 0) {
+        return;
+    }
     if (waveOutReset(hWaveOut) != MMSYSERR_NOERROR) { // stop waveform and reset waveform playhead to beginning
         std::cout << "could not stop playback successfully.";
         throw std::runtime_error("program has carked it");

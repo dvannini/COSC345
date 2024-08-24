@@ -24,7 +24,7 @@
     <ClCompile Include="Keyboard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Timeline.cpp">
+    <ClCompile Include="Clock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Sequence.cpp">
@@ -61,7 +61,7 @@
     <ClInclude Include="Keyboard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Timeline.h">
+    <ClInclude Include="Clock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Audio_Engine.h">

@@ -133,7 +133,7 @@
     <ClCompile Include="Interface.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Sequence.cpp" />
-    <ClCompile Include="Timeline.cpp" />
+    <ClCompile Include="Clock.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="..\..\..\..\..\Desktop\Samples\One Shots\Drums\Hihat\Hihat Closed 56 TL.wav" />
@@ -148,7 +148,7 @@
     <ClInclude Include="Interface.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Sequence.h" />
-    <ClInclude Include="Timeline.h" />
+    <ClInclude Include="Clock.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

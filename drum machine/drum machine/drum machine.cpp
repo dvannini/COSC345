@@ -15,9 +15,10 @@
 #include <conio.h>
 #include "Keyboard.h"
 #include "Sequence.h"
+#include "Clock.h"
 
 #pragma comment(lib, "winmm.lib")
-int bpm = 200;
+int bpm = 178;
 
 void displayMenu() {// maybe menu which will display before user start adding sequence
 
@@ -71,11 +72,21 @@ void setBpm() {
     }
 }
 int main() {
+    Audio_Engine engine = Audio_Engine::Audio_Engine();
+    Clock c = Clock::Clock(bpm);
+    Sequence seq = Sequence::Sequence();
+    
+
+    engine.Preload("../Assets/Snare 70s MPC 3.wav", 2);
+    engine.Preload("../Assets/Kick 70s 1.wav", 1);
+    engine.Preload("../Assets/Hihat Closed 80s UK Disco Vinyl.wav", 3);
+
     Keyboard keyboard;
     std::vector<int> mainSequence;
     std::vector<int> additionalSequence;
 
     bool exit = false;
+    bool playing = false;
 
     while (!exit) {
         //clearScreen();
@@ -106,19 +117,26 @@ int main() {
             break;
         }
         case 3: {
-            Sequence seq;
-            int mainLength = mainSequence.size();
-            if (mainLength == 0) 
-            {
-                seq = Sequence::Sequence();
-            }
-            else 
-            {
-                seq = Sequence::Sequence(mainSequence);
-            }
-
+            
+            int playhead = 0; //index of playhead in sequence data
+            playing = true;
             std::cout << "Playing sequences...\n";
-            seq.playSequence(bpm, 1);
+            c.startClock();
+            while (playing == true) {
+
+                if (c.interval()) {
+                    std::vector<int> data = seq.getColumn(playhead); //get the sounds to play at the playhead position
+                    for (int i = 0; i < 3; i++) {
+                        if (data[i] != 0) {
+                            engine.PlaySound_(data[i]);
+                        }
+                        
+                    }
+                    playhead += 1;
+                    playhead = playhead % 8;
+                }
+                
+            }
             break;
         }
         case 5: {

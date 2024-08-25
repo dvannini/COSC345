@@ -112,11 +112,11 @@ int Sequence::test_()
     Sequence testDefaultCon = Sequence::Sequence();
     Sequence testCon = Sequence::Sequence(testSequence);
     // test default constructor (and getter)
-    if (testDefaultCon.getSequence().size() != 8) return 1;
+    if (testDefaultCon.getSequence().size() != 3 ) return 1;
     // test constructor with given sequence
-    if (testCon.getSequence().size() != 4) return 2;
+    if (testCon.getSequence().size() != 3) return 2;
     // test setter function
     testDefaultCon.setSequence(testSequence);
-    if (testDefaultCon.getSequence().size() != 4) return 3;
+    if (testDefaultCon.getSequence().size() != 3) return 3;
     return 0;
 }

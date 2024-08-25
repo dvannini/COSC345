@@ -146,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio_Engine.h" />
+    <ClInclude Include="Clock.h" />
     <ClInclude Include="Interface.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Sequence.h" />

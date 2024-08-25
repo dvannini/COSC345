@@ -1,14 +1,46 @@
-name: Codacy Analysis CLI
+name: CI
 
-on: ["push"]
+# Define when this workflow should run
+on: [push, pull_request]
 
 jobs:
-  codacy-analysis-cli:
-    name: Codacy Analysis CLI
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@main
+  build:
+    runs-on: windows-latest  # The environment in which the workflow will run
 
-      - name: Run Codacy Analysis CLI
-        uses: codacy/codacy-analysis-cli-action@master
+    steps:
+    
+    # Step 1: Checkout the code from your repository
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # Step 2: Set up dependencies, using choco (Chocolatey) to install necessary tools
+    - name: Set up dependencies
+      run: |
+        choco install llvm   # Install LLVM and Clang
+        pip install gcovr  # Install gcovr for coverage report
+
+    # Step 3: Compile your code with coverage flags enabled
+    - name: Build with coverage
+      run: |
+        clang++ -fprofile-instr-generate -fcoverage-mapping -o "drum machine.exe" "drum machine/drum machine/drum machine.cpp"
+
+    # Step 4: Run your tests
+    - name: Run tests
+      run: ./"drum machine.exe"
+
+    # Step 5: Capture the coverage data and create a coverage report
+    - name: Generate coverage report
+      run: |
+        llvm-profdata merge -sparse default.profraw -o default.profdata
+        llvm-cov export -format=lcov "drum machine.exe" -instr-profile=default.profdata > coverage.info
+
+    # Step 6: Convert the coverage report to XML format (required by Codacy)
+    - name: Convert to XML
+      run: gcovr -r . --xml-pretty -o coverage.xml
+
+    # Step 7: Upload the coverage report to Codacy
+    - name: Upload coverage to Codacy
+      run: |
+        bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coverage.xml
+      env:
+        CODACY_REPOSITORY_TOKEN: ${{ secrets.CODACY_REPOSITORY_TOKEN }}  # Replace with your secret token

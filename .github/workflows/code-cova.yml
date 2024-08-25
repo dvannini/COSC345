@@ -33,7 +33,7 @@ jobs:
 
     - name: Run tests with coverage
       run: |
-        dotnet test --collect:"XPlat Code Coverage"
+        dotnet test "drum machine/drum machine.sln" --collect:"XPlat Code Coverage"
 
     - name: Install ReportGenerator
       run: |

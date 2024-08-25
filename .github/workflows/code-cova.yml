@@ -1,0 +1,51 @@
+name: Code Coverage
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '6.x'  # Adjust according to your .NET version
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.2
+      
+    - name: Install dependencies
+      run: |
+        nuget restore "drum machine/drum machine.sln"
+        
+    - name: Build solution
+      run: |
+        msbuild /m /p:Configuration=Release "drum machine/drum machine.sln"
+
+    - name: Run tests with coverage
+      run: |
+        dotnet test --collect:"XPlat Code Coverage"
+
+    - name: Install ReportGenerator
+      run: |
+        dotnet tool install --global dotnet-reportgenerator-globaltool
+
+    - name: Generate coverage report
+      run: |
+        reportgenerator "-reports:**/coverage.cobertura.xml" "-targetdir:coverage-report" -reporttypes:Cobertura
+
+    - name: Upload coverage to Codacy
+      env:
+        CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+      run: |
+        dotnet tool install --global Codacy.Coverage
+        codacy-coverage-reporter report -r coverage-report/Cobertura.xml

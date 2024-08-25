@@ -7,11 +7,13 @@
 class Sequence {
 public:
 	Sequence();
-	Sequence(std::vector<int>);
-	std::vector<int> getSequence();
-	void setSequence(std::vector<int>);
+	~Sequence();
+	Sequence(std::vector<std::vector<int>>);
+	std::vector<std::vector<int>> getSequence();
+	void setSequence(std::vector<std::vector<int>>);
 	void playSequence(int, int);
+	std::vector<int> getColumn(int playhead);
 	static int test_();
 private:
-	std::vector<int> sequence;
+	std::vector<std::vector<int>> sequence;
 };

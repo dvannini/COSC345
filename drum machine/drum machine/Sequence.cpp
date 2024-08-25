@@ -1,4 +1,5 @@
 #include "Sequence.h"
+#include "Clock.h"
 
 /**
  * Default Constructor function
@@ -6,7 +7,15 @@
  */
 Sequence::Sequence()
 {
-    sequence = { 1, 0, 2, 0, 0, 1, 2, 0 };
+    sequence = {
+        {1, 0, 0, 0, 0, 1, 0, 0},
+        {0, 0, 2, 0, 0, 0, 2, 0},
+        {0, 0, 0, 0, 3, 0, 0, 0}
+    }; //doubly vector of ints
+}
+
+Sequence::~Sequence() {
+
 }
 
 /**
@@ -14,7 +23,7 @@ Sequence::Sequence()
  *
  * \param sequenceIn an Int vector which contains the 1-based index of each sound to play (0 is nothing).
  */
-Sequence::Sequence(std::vector<int> sequenceIn)
+Sequence::Sequence(std::vector<std::vector<int>> sequenceIn)
 {
 	sequence = sequenceIn;
 }
@@ -24,7 +33,7 @@ Sequence::Sequence(std::vector<int> sequenceIn)
  *
  * \return sequence variable
  */
-std::vector<int> Sequence::getSequence()
+std::vector<std::vector<int>> Sequence::getSequence()
 {
     return sequence;
 }
@@ -34,48 +43,59 @@ std::vector<int> Sequence::getSequence()
  *
  * \param sequence variable to be updated
  */
-void Sequence::setSequence(std::vector<int> sequenceIn)
+void Sequence::setSequence(std::vector<std::vector<int>> sequenceIn)
 {
     sequence = sequenceIn;
 }
 
 /**
- * Plays the saved sequence until the numberOfLoops is reached, with the BPM decided by the msPerBeat variable
+ * Plays the sequence with a given BPM
  *
  * \param msPerBeat how many milliseconds per beat, which essentially determines the BPM of playback.
  * \param numberOfLoops how many times the loop will play.
  */
-void Sequence::playSequence(int msPerBeat, int numberOfLoops)
+void Sequence::playSequence(int bpm, int numberOfLoops)
 {
-    Audio_Engine engine = Audio_Engine::Audio_Engine();
-    // Time at beginning of loop
-    uint64_t startTime = std::chrono::duration_cast<std::chrono::milliseconds>(
-        std::chrono::system_clock::now().time_since_epoch()
-    ).count();
+    
+    //Audio_Engine engine = Audio_Engine::Audio_Engine();
+    //// Time at beginning of loop
+    //uint64_t startTime = std::chrono::duration_cast<std::chrono::milliseconds>(
+    //    std::chrono::system_clock::now().time_since_epoch()
+    //).count();
 
-    int soundIndex = 0;
-    engine.Preload("../Assets/Snare 70s MPC 3.wav", "snare");
-    engine.Preload("../Assets/Kick 70s 1.wav", "kick");
-    engine.Preload("../Assets/Hihat Closed 80s UK Disco Vinyl.wav", "hat");
-    std::vector<const char*> t = {"kick", "snare", "hat"};
-    while (soundIndex / sequence.size() < numberOfLoops) {
-        // Time at current point in loop
-        uint64_t currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::system_clock::now().time_since_epoch()
-        ).count();
-        // Once the time passed is greater than or equal to the ms per beat
-        if (currentTime - startTime >= msPerBeat) {
-            std::cout << soundIndex << std::endl;
-            // Play the sound and increment the index variable
-            int index = sequence[soundIndex % sequence.size()];
-            if (index != 0) engine.PlaySound_(t[index - 1]);//sequence[soundIndex % sequence.size()]);
-            soundIndex++;
-            // Add the ms per beat to the start time
-            startTime += msPerBeat;
-        }
-    }
+    //int soundIndex = 0;
+    //engine.Preload("../Assets/Snare 70s MPC 3.wav", "snare");
+    //engine.Preload("../Assets/Kick 70s 1.wav", "kick");
+    //engine.Preload("../Assets/Hihat Closed 80s UK Disco Vinyl.wav", "hat");
+    //std::vector<const char*> t = {"kick", "snare", "hat"};
+    //while (soundIndex / sequence.size() < numberOfLoops) {
+    //    // Time at current point in loop
+    //    uint64_t currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(
+    //        std::chrono::system_clock::now().time_since_epoch()
+    //    ).count();
+    //    // Once the time passed is greater than or equal to the ms per beat
+    //    if (currentTime - startTime >= msPerBeat) {
+    //        std::cout << soundIndex << std::endl;
+    //        // Play the sound and increment the index variable
+    //        int index = sequence[soundIndex % sequence.size()];
+    //        if (index != 0) engine.PlaySound_(t[index - 1]);//sequence[soundIndex % sequence.size()]);
+    //        soundIndex++;
+    //        // Add the ms per beat to the start time
+    //        startTime += msPerBeat;
+    //    }
+    //}
 }
-
+/**
+ * Gets a column of sounds to play at a given playhead in the sequence.
+ * 
+ * \param playhead - the index of the sequence to grab sounds from
+ * \return a vector of ints representing the sound IDs to play
+ */
+std::vector<int> Sequence::getColumn(int playhead) {
+    std::vector<int> data = { sequence[0][playhead], sequence[1][playhead], sequence[2][playhead] };
+    
+    return data;
+}
 
 /**
  * Test function
@@ -84,15 +104,19 @@ void Sequence::playSequence(int msPerBeat, int numberOfLoops)
  */
 int Sequence::test_()
 {
-    std::vector<int> testSequence = { 0,1,2,3 };
+    std::vector<std::vector<int>> testSequence = {
+        {1, 0, 0, 0},
+        {0, 0, 2, 0},
+        {0, 0, 0, 0}
+    }; //doubly vector of ints
     Sequence testDefaultCon = Sequence::Sequence();
     Sequence testCon = Sequence::Sequence(testSequence);
     // test default constructor (and getter)
-    if (testDefaultCon.getSequence().size() != 8) return 1;
+    if (testDefaultCon.getSequence().size() != 3 ) return 1;
     // test constructor with given sequence
-    if (testCon.getSequence().size() != 4) return 2;
+    if (testCon.getSequence().size() != 3) return 2;
     // test setter function
     testDefaultCon.setSequence(testSequence);
-    if (testDefaultCon.getSequence().size() != 4) return 3;
+    if (testDefaultCon.getSequence().size() != 3) return 3;
     return 0;
 }

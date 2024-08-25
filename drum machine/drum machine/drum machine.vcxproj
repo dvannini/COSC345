@@ -129,6 +129,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Audio_Engine.cpp" />
+    <ClCompile Include="Clock.cpp" />
     <ClCompile Include="drum machine.cpp" />
     <ClCompile Include="Interface.cpp" />
     <ClCompile Include="Keyboard.cpp" />
@@ -146,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio_Engine.h" />
+    <ClInclude Include="Clock.h" />
     <ClInclude Include="Interface.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Sequence.h" />

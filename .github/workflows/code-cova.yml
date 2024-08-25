@@ -25,7 +25,7 @@ jobs:
     - name: Install Code Coverage Tools
       run: |
         choco install codecov -y
-        choco install reportgenerator -y
+        choco install reportgenerator.portable --version 5.3.8 -y
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
       

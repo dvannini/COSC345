@@ -16,10 +16,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Set up .NET SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '6.x'  # Adjust according to your .NET version
+    - name: Install Chocolatey
+      run: |
+        Set-ExecutionPolicy Bypass -Scope Process -Force; `
+        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; `
+        iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+    - name: Install Code Coverage Tools
+      run: |
+        choco install codecov -y
+        choco install reportgenerator -y
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
       
@@ -29,23 +35,18 @@ jobs:
         
     - name: Build solution
       run: |
-        msbuild /m /p:Configuration=Release "drum machine/drum machine.sln"
+        msbuild /m /p:Configuration=Release "drum machine/drum machine.sln" /p:EnableCodeCoverage=true
 
-    - name: Run tests with coverage
+    - name: Run Tests
       run: |
-        dotnet test "drum machine/drum machine.sln" --collect:"XPlat Code Coverage"
+        vstest.console.exe "bin/x64/Release/drum machine.dll" /EnableCodeCoverage
 
-    - name: Install ReportGenerator
+    - name: Generate Code Coverage Report
       run: |
-        dotnet tool install --global dotnet-reportgenerator-globaltool
-
-    - name: Generate coverage report
-      run: |
-        reportgenerator "-reports:**/coverage.cobertura.xml" "-targetdir:coverage-report" -reporttypes:Cobertura
+        reportgenerator "-reports:**\*.coveragexml" "-targetdir:coverage-report" -reporttypes:Cobertura
 
     - name: Upload coverage to Codacy
       env:
         CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
       run: |
-        dotnet tool install --global Codacy.Coverage
         codacy-coverage-reporter report -r coverage-report/Cobertura.xml

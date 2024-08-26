@@ -24,5 +24,9 @@ namespace UnitTesting
 		{
 			Assert::AreEqual(0, Audio_Engine::_test());
 		}
+		TEST_METHOD(TestKeyboard)
+		{
+			Assert::AreEqual(0, Keyboard::test_());
+		}
 	};
 }

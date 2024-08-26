@@ -5,9 +5,9 @@
 
 class Keyboard {
 public:
-    void testKeyboardInvalidInput();
-    void testKeyboardValidInput();
-    void runKeyBoardTests();
+    static int testKeyboardInvalidInput();
+    static int testKeyboardValidInput();
+    static int test_();
     // Function to handle keyboard input for the drum sequence
     void handleKeyboardInput(std::vector<int>& sequence);
 };

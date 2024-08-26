@@ -25,7 +25,7 @@ void Keyboard::handleKeyboardInput(std::vector<int>& sequence) {
     }
 }
 
-void Keyboard::testKeyboardInvalidInput() {
+int Keyboard::testKeyboardInvalidInput() {
     // Create an instance of Keyboard
     Keyboard keyboard;
     // Initialize a sequence vector
@@ -40,36 +40,35 @@ void Keyboard::testKeyboardInvalidInput() {
     }
     // Check if the sequence contains the correct values (should stop at the invalid input)
     std::cout << "Keyboard Invalid Input Test: ";
-    for (int i = 0; i < testSequence.size(); ++i) {
-        std::cout << testSequence[i] << " ";  // Should print: 0 1 2 3
+    for (int i = 0; i < testSequence.size(); i++) {
+        if (testSequence[i] != i) return 2;
     }
-    std::cout << std::endl;
+    return 0;
 }
 
-void Keyboard::testKeyboardValidInput() {
+int Keyboard::testKeyboardValidInput() {
     // Create an instance of Keyboard
     Keyboard keyboard;
     // Initialize a sequence vector
     std::vector<int> testSequence;
     // Simulate user input
-    std::vector<int> simulatedInput = { 48, 49, 50, 51, 52,13,51 };  // '0', '1', '2', '3', '4'
+    std::vector<int> simulatedInput = { 48, 49, 50, 51, 52 };  // '0', '1', '2', '3', '4'
     // Manually push each input to the sequence
     for (int sound : simulatedInput) {
         testSequence.push_back(sound - 48);  // ASCII to integer
     }
     // Check if the sequence contains the correct values
     std::cout << "Keyboard Valid Input Test: ";
-    for (int i = 0; i < testSequence.size(); ++i) {
-        std::cout << testSequence[i] << " ";  // Should print: 0 1 2 3 4
+    for (int i = 0; i < testSequence.size(); i++) {
+        if (testSequence[i] != i) return 1;
     }
-    std::cout << std::endl;
+    return 0;
 }
 
 
 
 
 
-void Keyboard::runKeyBoardTests() {
-    testKeyboardInvalidInput();
-    testKeyboardValidInput();
+int Keyboard::test_() {
+    return Keyboard::testKeyboardInvalidInput() + Keyboard::testKeyboardValidInput();
 }

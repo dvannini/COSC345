@@ -178,12 +178,12 @@ int Audio_Engine::_test() {
     }
     catch (std::exception& e) {
         std::cout << "Audio Engine waveHeaders has failed. Details: " << e.what();
-        return 1;
+        return 2;
     }
     try { //load invalid waveform
         Audio_Engine a;
         a.LoadWave("this will fail");
-        return 1;
+        return 3;
     }
     catch (std::exception& e) {
         std::cout << "Loadwave Failed Succesfully and as expected. ";

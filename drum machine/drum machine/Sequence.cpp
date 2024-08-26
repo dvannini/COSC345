@@ -48,43 +48,7 @@ void Sequence::setSequence(std::vector<std::vector<int>> sequenceIn)
     sequence = sequenceIn;
 }
 
-/**
- * Plays the sequence with a given BPM
- *
- * \param msPerBeat how many milliseconds per beat, which essentially determines the BPM of playback.
- * \param numberOfLoops how many times the loop will play.
- */
-void Sequence::playSequence(int bpm, int numberOfLoops)
-{
-    
-    //Audio_Engine engine = Audio_Engine::Audio_Engine();
-    //// Time at beginning of loop
-    //uint64_t startTime = std::chrono::duration_cast<std::chrono::milliseconds>(
-    //    std::chrono::system_clock::now().time_since_epoch()
-    //).count();
 
-    //int soundIndex = 0;
-    //engine.Preload("../Assets/Snare 70s MPC 3.wav", "snare");
-    //engine.Preload("../Assets/Kick 70s 1.wav", "kick");
-    //engine.Preload("../Assets/Hihat Closed 80s UK Disco Vinyl.wav", "hat");
-    //std::vector<const char*> t = {"kick", "snare", "hat"};
-    //while (soundIndex / sequence.size() < numberOfLoops) {
-    //    // Time at current point in loop
-    //    uint64_t currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(
-    //        std::chrono::system_clock::now().time_since_epoch()
-    //    ).count();
-    //    // Once the time passed is greater than or equal to the ms per beat
-    //    if (currentTime - startTime >= msPerBeat) {
-    //        std::cout << soundIndex << std::endl;
-    //        // Play the sound and increment the index variable
-    //        int index = sequence[soundIndex % sequence.size()];
-    //        if (index != 0) engine.PlaySound_(t[index - 1]);//sequence[soundIndex % sequence.size()]);
-    //        soundIndex++;
-    //        // Add the ms per beat to the start time
-    //        startTime += msPerBeat;
-    //    }
-    //}
-}
 /**
  * Gets a column of sounds to play at a given playhead in the sequence.
  * 

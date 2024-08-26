@@ -13,7 +13,7 @@ public:
     ~Audio_Engine();
     void Preload(const std::string& filename, int id);
     void PlaySound_(int id);
-    int _test();
+    static int _test();
 
 private:
     static const int NUM_BUFFERS = 8; //8 sound events simulataneously max

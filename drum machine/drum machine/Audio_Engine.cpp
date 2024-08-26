@@ -167,7 +167,7 @@ int Audio_Engine::_test() {
     }
     catch (std::exception& e) {
         std::cout << "Audio engine constructor failed. Details: " << e.what();
-        status += 1;
+        return 1;
     }
     try { //headers all good
         Audio_Engine a;
@@ -178,27 +178,17 @@ int Audio_Engine::_test() {
     }
     catch (std::exception& e) {
         std::cout << "Audio Engine waveHeaders has failed. Details: " << e.what();
-        status += 1;
+        return 1;
     }
     try { //load invalid waveform
         Audio_Engine a;
         a.LoadWave("this will fail");
-        status += 1;
+        return 1;
     }
     catch (std::exception& e) {
         std::cout << "Loadwave Failed Succesfully and as expected. ";
 
     }
-
-    try { //final test to make sure all previous tests have passed
-
-        assert(status == 0); //should be 0 if all tests pass
-    }
-    catch (std::exception& e) {
-        std::cout << "Audio Engine tests have failed.";
-        return 1;
-    }
-
     return 0;
 }
 /**

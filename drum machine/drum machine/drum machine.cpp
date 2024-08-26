@@ -84,7 +84,6 @@ int main() {
     engine.Preload("../Assets/Hihat Closed 80s UK Disco Vinyl.wav", 3);
 
     Keyboard keyboard;
-    keyboard.runKeyBoardTests();
     std::vector<int> mainSequence;
     std::vector<int> additionalSequence;
 

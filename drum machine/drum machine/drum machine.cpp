@@ -74,9 +74,9 @@ void setBpm() {
 
 
 int main() {
-    Audio_Engine engine = Audio_Engine::Audio_Engine();
-    Clock c = Clock::Clock(bpm);
-    Sequence seq = Sequence::Sequence();
+    Audio_Engine engine;
+    Clock c(bpm);
+    Sequence seq;
     
 
     engine.Preload("../Assets/Snare 70s MPC 3.wav", 2);

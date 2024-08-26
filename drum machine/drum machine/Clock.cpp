@@ -73,7 +73,7 @@ int Clock::test_() {
 
 	}
 	catch (std::exception& e) {
-		throw std::exception("interval function failed")
+		throw std::exception("interval function failed");
 	}
 	
 	

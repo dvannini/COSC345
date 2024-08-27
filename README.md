@@ -10,3 +10,5 @@ To create docs for CMDrum, ensure Doxygen is installed locally and run
 And the documentation will be written to the /docs folder locally.
 
 The Doxygen online docs can be found [here](https://codedocs.xyz/Percussion-Protocols/COSC345)
+
+You may need to clear the cache in your browser to see most recent changes.

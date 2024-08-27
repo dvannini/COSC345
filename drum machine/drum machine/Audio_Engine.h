@@ -7,6 +7,9 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
+/**
+ * The backend for for audio related functions.
+ */
 class Audio_Engine {
 public:
     /**

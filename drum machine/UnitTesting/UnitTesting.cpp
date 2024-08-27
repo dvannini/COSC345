@@ -6,6 +6,7 @@
 #include "../drum machine/Keyboard.cpp"
 #include "../drum machine/Timeline.cpp"
 #include "../drum machine/Utils.cpp"
+#include "../drum machine/Clock.cpp"
 #pragma comment(lib, "winmm.lib")
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -27,6 +28,10 @@ namespace UnitTesting
 		TEST_METHOD(TestKeyboard)
 		{
 			Assert::AreEqual(0, Keyboard::test_());
+		}
+		TEST_METHOD(TestClock)
+		{
+			Assert::AreEqual(0, Clock::test_());
 		}
 	};
 }

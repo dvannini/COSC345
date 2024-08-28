@@ -1,7 +1,6 @@
 #include "Keyboard.h"
 #include <iostream>
 #include <conio.h>
-#include "utils.h"  // Include the header where clearScreen is declared
 #include <vector>
 #include <Windows.h>
 
@@ -11,8 +10,6 @@ void Keyboard::handleKeyboardInput(std::vector<int>& sequence) {
     while (sound >= 48 && sound <= 52) {  // ASCII values for '0'-'4'
         sequence.push_back(sound - 48);    // Convert char to int
 
-        //displaySoundOptions();
-       
         std::cout << "Current Sequence: ";
 
         for (int i = 0; i < sequence.size(); ++i) {

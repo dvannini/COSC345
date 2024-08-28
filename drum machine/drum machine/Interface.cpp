@@ -211,7 +211,7 @@ int Interface::playSequence(const std::map<std::string, std::array<bool, 8>>& se
     return 0;
 }
 
-int Interface::setBPM(const std::map<std::string, std::array<bool, 8>> sequence, bool edit) {
+int Interface::setBPM(const std::map<std::string, const std::array<bool, 8>> sequence, bool edit) {
     clearScreen();
     displayMainMenu(sequence);
     if (edit) {

@@ -33,5 +33,10 @@ namespace UnitTesting
 		{
 			Assert::AreEqual(0, Clock::test_());
 		}
+		TEST_METHOD(TestInterface)
+		{
+			Assert::AreEqual(0, Interface::_test());
+
+		}
 	};
 }

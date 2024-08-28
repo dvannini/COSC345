@@ -319,3 +319,94 @@ int Interface::performAction(char choice, std::map<std::string, std::array<bool,
     }
     return 0;
 }
+
+
+
+int Interface::_test() {
+    int status = 0;
+
+    // Test 1: Constructor
+    try {
+        Interface a;
+    }
+    catch (std::exception& e) {
+        std::cout << "Interface constructor failed. Details: " << e.what() << std::endl;
+        return 1;
+    }
+
+    // Test 2: getKeyByIndex
+    try {
+        Interface a;
+        std::map<std::string, std::array<bool, 8>> testSequence;
+        testSequence["Kick"] = { true, false, true, false, true, false, true, false };
+        testSequence["Snare"] = { false, true, false, true, false, true, false, true };
+
+        auto result = a.getKeyByIndex(1, testSequence);
+        if (result.first != "Kick" || result.second != std::array<bool, 8>{true, false, true, false, true, false, true, false}) {
+            throw std::runtime_error("getKeyByIndex returned unexpected result.");
+        }
+    }
+    catch (std::exception& e) {
+        std::cout << "getKeyByIndex test failed. Details: " << e.what() << std::endl;
+        return 2;
+    }
+
+    // Test 3: addSound
+    try {
+        Interface a;
+        std::map<std::string, std::array<bool, 8>> sequence;
+        a.addSound(1, sequence);
+        if (sequence.size() != 1 || sequence.find("Kick 70s 1.wav") == sequence.end()) {
+            throw std::runtime_error("addSound did not add the expected sound.");
+        }
+    }
+    catch (std::exception& e) {
+        std::cout << "addSound test failed. Details: " << e.what() << std::endl;
+        return 3;
+    }
+
+    // Test 4: setBPM
+    try {
+        Interface a;
+        std::map<std::string, std::array<bool, 8>> testSequence;
+        int newBPM = a.setBPM(testSequence, true);
+        if (newBPM <= 0) {
+            throw std::runtime_error("setBPM returned an invalid BPM value.");
+        }
+    }
+    catch (std::exception& e) {
+        std::cout << "setBPM test failed. Details: " << e.what() << std::endl;
+        return 4;
+    }
+
+    // Test 5: performAction (exit)
+    try {
+        Interface a;
+        std::map<std::string, std::array<bool, 8>> testSequence;
+        int result = a.performAction('4', testSequence);
+        if (result != -1) {
+            throw std::runtime_error("performAction did not return expected value for exit action.");
+        }
+    }
+    catch (std::exception& e) {
+        std::cout << "performAction (exit) test failed. Details: " << e.what() << std::endl;
+        return 5;
+    }
+
+    // Test 6: performAction (invalid action)
+    try {
+        Interface a;
+        std::map<std::string, std::array<bool, 8>> testSequence;
+        int result = a.performAction('9', testSequence);
+        if (result != 0) {
+            throw std::runtime_error("performAction did not return expected value for invalid action.");
+        }
+    }
+    catch (std::exception& e) {
+        std::cout << "performAction (invalid action) test failed. Details: " << e.what() << std::endl;
+        return 6;
+    }
+
+    std::cout << "All tests passed successfully." << std::endl;
+    return 0;
+}

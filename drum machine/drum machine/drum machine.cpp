@@ -31,13 +31,11 @@ int main() {
     int choice = 0;
     while (choice != 5) {
         Interface::displayMainMenu(sequence);
-        
-        std::cin >> choice;
-        int newBPM = Interface::performAction(choice, sequence);
+        char ch = _getch();
+        int newBPM = Interface::performAction(ch, sequence);
         if (newBPM == -1) {
-            choice = 4;
+            choice = 5;
         }
     }   
     return 0;
-
 }

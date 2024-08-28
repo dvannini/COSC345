@@ -10,10 +10,13 @@
 #include "Audio_Engine.h"
 
 // Declarations of a few strings which will be used multiple times
-std::string mainMenu = "please select (using the adjacent key) an action from the options below:\n-(1)Edit Sequence\n-(2)Play Sequence\n-(3)Set BPM\n(-4)Set Pattern name\n-(5)Exit\n";
+
+std::string mainMenu = "please select (using the adjacent key) an action from the options below, press SPACE to play and then any key pause:\n-(1)Edit Sequence\n-(2)Set BPM\n-(3)Set Pattern Name\n-(4)Exit\n";
 int BPM = 175;
 bool sequenceSet = false;
 std::string patternName = "New Pattern";
+bool playing = false;
+
 
 /*method to display the contents of the current sequence
 @param sequence; the currrent sequence, the string is the name of the sound, and the array is the pattern
@@ -24,10 +27,10 @@ void Interface::displaySequence(const std::map<std::string, std::array<bool, 8>>
     std::cout << "BPM: " << BPM << "      Pattern name: " << patternName << "\n";
     for (auto i = sequence.begin(); i != sequence.end(); i++) {
         std::cout << "-(" << index << ")";
-        std::cout << i->first << ": ";
         for (int n = 0; n < 40 - i->first.size(); n++) {
             std::cout << " "; //aligns all paterns accounting for different name lengths of sounds
         }
+        std::cout << i->first << ": ";
         index++;
         for (bool value : i->second) {
             std::cout << (value ? "0" : "_");
@@ -52,25 +55,55 @@ void Interface::displayMainMenu(const std::map<std::string, std::array<bool, 8>>
 @param keyAndVals; a pair, where the string is the key of the sound, and the array is the pattern
 of the sound. 
 */
-void Interface::soundEditDisplay(const std::pair<std::string, std::array<bool, 8>>& keyAndVals) {
+void Interface::soundEditDisplay(const std::map<std::string, std::array<bool, 8>>& sequence, int editing, std::pair<std::string, std::array<bool, 8>>& keyAndVals) {
     clearScreen();
-    // Displays the sequence we are editing:
-    std::cout << keyAndVals.first << ": ";
-    for (bool i : keyAndVals.second) {
-        if (i) {
-            std::cout<<"0";
+    int index = 1;
+    std::cout << "BPM: " << BPM << "      Pattern name: " << patternName << "\n";
+    for (auto i = sequence.begin(); i != sequence.end(); i++) {
+        if (index != editing) {
+            std::cout << "-(" << index << ")";
+            for (int n = 0; n < 40 - i->first.size(); n++) {
+                std::cout << " "; //aligns all paterns accounting for different name lengths of sounds
+            }
+            std::cout << i->first << ": ";
+            
+            for (bool value : i->second) {
+                std::cout << (value ? "0" : "_");
+            }
+            std::cout << "\n";
         }
         else {
-            std::cout<<"_";
+            // Displays the sequence we are editing:
+            std::cout << "(->)";
+            for (int n = 0; n < 40 - i->first.size(); n++) {
+                std::cout << " "; //aligns all paterns accounting for different name lengths of sounds
+            }
+            std::cout<< keyAndVals.first << ": ";
+            for (bool i : keyAndVals.second) {
+                if (i) {
+                    std::cout << "0";
+                }
+                else {
+                    std::cout << "_";
+                }
+            }
+            std::cout << "\n";
         }
+        index++;
+        
     }
-    std::cout << "\nPress Enter to save.\nEnter 1-8 to add or delete a sound in slots 1-8:\n" << std::endl;
+    std::cout << "Press Enter to save.\nEnter 1 - 8 to add or delete a sound in slots 1 - 8:\n" << std::endl;
+
+
+
+
+    
 }
 
 /*
 */
-void Interface::editSound(std::map<std::string, std::array<bool, 8>>& sequence, std::pair<std::string, std::array<bool, 8>>& keyAndVals) {
-    soundEditDisplay(keyAndVals);
+void Interface::editSound(std::map<std::string, std::array<bool, 8>>& sequence, std::pair<std::string, std::array<bool, 8>>& keyAndVals, int soundIndex) {
+    soundEditDisplay(sequence, soundIndex, keyAndVals);
      // Convert from char to int
     while (true) {
         char ch = _getch();
@@ -78,11 +111,12 @@ void Interface::editSound(std::map<std::string, std::array<bool, 8>>& sequence, 
         if (ch == 13) {
             break;
         }
+        int index = toChange - 1;
         if (toChange >= 1 && toChange <= 8) {
-            int index = toChange - 1; // Convert char to int index
-            keyAndVals.second[index] = !keyAndVals.second[index];
+             // Convert char to int index
+            keyAndVals.second[index] = !keyAndVals.second[index];     
         }
-        soundEditDisplay(keyAndVals);
+        soundEditDisplay(sequence, soundIndex, keyAndVals);
     }
     // Updates the actual sequence
     auto a = sequence.find(keyAndVals.first);
@@ -134,33 +168,33 @@ int Interface::editSequence(std::map<std::string, std::array<bool, 8>>& sequence
     clearScreen();
     if (!sequenceSet) {
         std::cout << "No Sequence has been set. Please select your first sound to add to a new sequence:\n";
-        std::cout << "-(1)Kick\n-(2)Snare\n-(3)Hat";
+        std::cout << "-(1)Kick\n-(2)Snare\n-(3)Hat\n";
         int newSound = 0;
         std::cin >> newSound;
         clearScreen();
         addSound(newSound, sequence);
         sequenceSet = true;
-        editSequence(sequence);
+        return editSequence(sequence);
     }
     displaySequence(sequence);
     int soundIndex;
     std::cout << "Which sound would you like to edit (enter the corresponding number)?\n(Or enter a to add a new sound, or Enter to save and exit to main menu)";
     char ch = _getch();
     soundIndex = ch - '0';
+    if (ch == 13) {
+        return 0;
+    }
     if (ch == 97) {
         int newSound;
         clearScreen();
-        std::cout << "which sound would you like to add?\n-(1)Kick\n-(2)Snare\n-(3)Hat";
+        std::cout << "which sound would you like to add?\n-(1)Kick\n-(2)Snare\n-(3)Hat\n";
         std::cin >> newSound;
         addSound(newSound, sequence);
         return editSequence(sequence);//returns to editor
     }
-    if (ch == 13) {
-        return 0;
-    }
     std::pair<std::string, std::array<bool, 8>> keyAndVals = getKeyByIndex(soundIndex, sequence);
     if (keyAndVals.first != "") {
-        editSound(sequence, keyAndVals);
+        editSound(sequence, keyAndVals, soundIndex);
     }
     // Flip the value in the map of the index entered (minus 1 for zero indexing)
     return editSequence(sequence);
@@ -202,12 +236,10 @@ int Interface::playSequence(const std::map<std::string, std::array<bool, 8>>& se
             index = 0;
         }
         if (_kbhit()) {
-            ch = _getch();
-            if (ch == 32) {
-                running = false;
-            }
+            running = false;
         }
     }
+    playing = !playing;
     return 0;
 }
 
@@ -245,33 +277,39 @@ int Interface::setBPM(const std::map<std::string, std::array<bool, 8>>& sequence
 
 int Interface::setNewName() {
     clearScreen();
-    std::cout << "Please enter a name for your pattern";
-    std::string name;
-    std::cin >> name;
+    std::cout << "Please enter a name for your pattern:\n";
+    std::string name = "";
+    while (name == "") {
+        std::getline(std::cin, name);
+    }
+    std::cout << "Confirm name change to: \"" << name << "\" by pressing Enter, or cancel by pressing any other key";
+    char ch = _getch();
+    if (ch != 13) {
+        return 0;
+    }
     patternName = name;
     return 0;
 }
 // Note: 1 edit, 2 play, 3 bpm, 4 exit
-int Interface::performAction(int choice, std::map<std::string, std::array<bool, 8>>& sequence) {
+int Interface::performAction(char choice, std::map<std::string, std::array<bool, 8>>& sequence) {
     bool exit = false;
     switch (choice) {
-    case 1: {
+    case 49: {
         return editSequence(sequence);
         break;
     }
-    case 2: {
+    case 32: {
         return playSequence(sequence);
         break;
     }
-    case 3: {
+    case 50: {
         return setBPM(sequence, false);
         break;
     }
-    case 4: {
-        setNewName();
-        return 0;
+    case 51: {
+        return setNewName();
     }
-    case 5: {
+    case 52: {
         return -1;
         break;
     }

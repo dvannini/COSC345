@@ -51,16 +51,17 @@ Audio_Engine::~Audio_Engine() { //needs tests is headers deallocate successfully
         waveOutClose(hWaveOut);
     }
 }
-
-void Audio_Engine::Preload(const std::string& filename, int id) {
+/**
+ * Used to load sounds into memory at project init for playback later.
+ *
+ * \param filename the sound to preload into memory
+ * \param id the identification to reference the sound data
+ */
+void Audio_Engine::Preload(const std::string& filename, const std::string& id) {
     sounds_[id] = LoadWave(filename);
     return;
 }
-
-void Audio_Engine::PlaySound_(int id) {
-    if (id == 0) {
-        return;
-    }
+void Audio_Engine::PlaySound_(std::string id) {
     if (waveOutReset(hWaveOut) != MMSYSERR_NOERROR) { // stop waveform and reset waveform playhead to beginning
         std::cout << "could not stop playback successfully.";
         throw std::runtime_error("program has carked it");
@@ -164,13 +165,12 @@ int Audio_Engine::_test() {
     try { 
         Audio_Engine a;
         a.LoadWave("this will fail");
-        
+        return 3;
     }
     catch (std::exception& e) {
         std::cout << "Loadwave Failed Succesfully and as expected. ";
-        return 3;
-
     }
+
     return 0;
 }
 

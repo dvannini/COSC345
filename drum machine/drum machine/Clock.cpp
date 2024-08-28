@@ -42,6 +42,7 @@ int Clock::test_() {
 	}
 	catch (std::exception& e) {
 		std::cerr << "Constructor failed" << e.what();
+		return 1;
 	}
 	try {
 		Clock c(bpm);
@@ -50,8 +51,9 @@ int Clock::test_() {
 	}
 	catch (std::exception& e) {
 		throw std::exception("interval function failed");
+		return 2;
 	}
-	
+	return 0;
 	
 
 }

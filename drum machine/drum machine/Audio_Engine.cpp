@@ -57,7 +57,7 @@ Audio_Engine::~Audio_Engine() { //needs tests is headers deallocate successfully
  * \param filename the sound to preload into memory
  * \param id the identification to reference the sound data
  */
-void Audio_Engine::Preload(const std::string& filename, const std::string id) {
+void Audio_Engine::Preload(const std::string& filename, const std::string& id) {
     sounds_[id] = LoadWave(filename);
     return;
 }

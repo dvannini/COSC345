@@ -37,7 +37,7 @@ public:
      * Frees up audio headers and closes the wave output device.
      */
     ~Audio_Engine();
-    void Preload(const std::string& filename, const std::string id);
+    void Preload(const std::string& filename, const std::string& id);
     void PlaySound_(std::string id);
     static int _test();
 

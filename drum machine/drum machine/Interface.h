@@ -16,7 +16,8 @@ public:
     static int editSequence(std::map<std::string, std::array<bool, 8>>& sequence);
     static int playSequence(const std::map<std::string, std::array<bool, 8>>& sequence);
     static int setBPM(const std::map<std::string, std::array<bool, 8>> sequenc, bool edite);
-    static int performAction(int choice, std::map<std::string, std::array<bool, 8>>& sequence, int newBPM);
+    static int setNewName();
+    static int performAction(int choice, std::map<std::string, std::array<bool, 8>>& sequence);
 };
 
 #endif // INTERFACE_H

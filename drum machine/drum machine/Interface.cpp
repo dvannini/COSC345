@@ -5,24 +5,19 @@
 #include <conio.h>
 #include <map>
 #include <array>
-
-#include "utils.h"  // Include the header where clearScreen is declared
-#include <vector>   
-#include <iostream>
-#include <Windows.h>
-#include <conio.h>
-#include "Keyboard.h"
-#include "Sequence.h"
 #include "Clock.h"
 #include "Interface.h"
-#include <map>
+#include "Audio_Engine.h"
 
 // Declarations of a few strings which will be used multiple times
-std::string mainMenu = "please select (using the adjacent key) an action from the options below:\n-(1)Edit Sequence\n-(2)Play Sequence\n-(3)Set BPM\n-(4)Exit\n";
+std::string mainMenu = "please select (using the adjacent key) an action from the options below:\n-(1)Edit Sequence\n-(2)Play Sequence\n-(3)Set BPM\n(-4)Set Pattern name\n-(5)Exit\n";
 int BPM = 175;
 bool sequenceSet = false;
 std::string patternName = "New Pattern";
 
+/*method to display the contents of the current sequence
+@param sequence; the currrent sequence, the string is the name of the sound, and the array is the pattern
+*/
 void Interface::displaySequence(const std::map<std::string, std::array<bool, 8>>& sequence) {
     clearScreen();
     int index = 1;
@@ -30,7 +25,7 @@ void Interface::displaySequence(const std::map<std::string, std::array<bool, 8>>
     for (auto i = sequence.begin(); i != sequence.end(); i++) {
         std::cout << "-(" << index << ")";
         std::cout << i->first << ": ";
-        for (int n = 0; n < 10 - i->first.size(); n++) {
+        for (int n = 0; n < 40 - i->first.size(); n++) {
             std::cout << " "; //aligns all paterns accounting for different name lengths of sounds
         }
         index++;
@@ -41,6 +36,9 @@ void Interface::displaySequence(const std::map<std::string, std::array<bool, 8>>
     }
 }
 
+/*method to display the main menu when no sequence has been loaded
+@param sequence; the currrent sequence, the string is the name of the sound, and the array is the pattern
+*/
 void Interface::displayMainMenu(const std::map<std::string, std::array<bool, 8>>& sequence) {
     clearScreen();
     std::cout << "Welcome to CMDrum\n";
@@ -50,6 +48,10 @@ void Interface::displayMainMenu(const std::map<std::string, std::array<bool, 8>>
     std::cout << mainMenu;
 }
 
+/*Method to show the display for editing a specific sound
+@param keyAndVals; a pair, where the string is the key of the sound, and the array is the pattern
+of the sound. 
+*/
 void Interface::soundEditDisplay(const std::pair<std::string, std::array<bool, 8>>& keyAndVals) {
     clearScreen();
     // Displays the sequence we are editing:
@@ -65,6 +67,8 @@ void Interface::soundEditDisplay(const std::pair<std::string, std::array<bool, 8
     std::cout << "\nPress Enter to save.\nEnter 1-8 to add or delete a sound in slots 1-8:\n" << std::endl;
 }
 
+/*
+*/
 void Interface::editSound(std::map<std::string, std::array<bool, 8>>& sequence, std::pair<std::string, std::array<bool, 8>>& keyAndVals) {
     soundEditDisplay(keyAndVals);
      // Convert from char to int
@@ -87,6 +91,11 @@ void Interface::editSound(std::map<std::string, std::array<bool, 8>>& sequence, 
     }
 }
 
+/*Helper method to find the key corresponding to a certain index in the map
+@params soundINdex, the index of the sound whos key we want, \sequence; the currrent sequence, the string is the name of the sound, and the array is the pattern
+@returns a pair consisting of the name of the sound at the specified index, and an array 
+representing the pattern
+*/
 std::pair<std::string, std::array<bool, 8>> Interface::getKeyByIndex(int soundIndex, const std::map<std::string, std::array<bool, 8>>& sequence) {
     int index = 1;
     for (auto i = sequence.begin(); i != sequence.end(); i++) {
@@ -98,20 +107,29 @@ std::pair<std::string, std::array<bool, 8>> Interface::getKeyByIndex(int soundIn
     return std::make_pair("", std::array<bool, 8>{});
 }
 
+/*Helper method to add a new sound to the sequence
+@param sequence; the currrent sequence, the string is the name of the sound, and the array is 
+the pattern
+*/
 void Interface::addSound(int newSound, std::map<std::string, std::array<bool, 8>>& sequence) {
     switch (newSound) {
     case 1:
-        sequence.insert(std::make_pair("Kick", std::array<bool, 8>{false, false, false, false, false, false, false, false}));
+        sequence.insert(std::make_pair("Kick 70s 1.wav", std::array<bool, 8>{false, false, false, false, false, false, false, false}));
         break;
     case 2:
-        sequence.insert(std::make_pair("Snare", std::array<bool, 8>{false, false, false, false, false, false, false, false}));
+        sequence.insert(std::make_pair("Snare 70s MPC 3.wav", std::array<bool, 8>{false, false, false, false, false, false, false, false}));
         break;
     case 3:
-        sequence.insert(std::make_pair("Hat", std::array<bool, 8>{false, false, false, false, false, false, false, false}));
+        sequence.insert(std::make_pair("Hihat Closed 80s UK Disco Vinyl.wav", std::array<bool, 8>{false, false, false, false, false, false, false, false}));
         break;
     }
 }
 
+/*called when the user selects the edit sequence option. It will display the sequence editor, or if no
+* sounds have been added, will prompt the user to add a sound. 
+@param sequence; the currrent sequence, the string is the name of the sound, and the array is the 
+pattern
+*/
 int Interface::editSequence(std::map<std::string, std::array<bool, 8>>& sequence) {
     clearScreen();
     if (!sequenceSet) {
@@ -122,6 +140,7 @@ int Interface::editSequence(std::map<std::string, std::array<bool, 8>>& sequence
         clearScreen();
         addSound(newSound, sequence);
         sequenceSet = true;
+        editSequence(sequence);
     }
     displaySequence(sequence);
     int soundIndex;
@@ -148,6 +167,47 @@ int Interface::editSequence(std::map<std::string, std::array<bool, 8>>& sequence
 }
 
 int Interface::playSequence(const std::map<std::string, std::array<bool, 8>>& sequence) {
+    Clock c = Clock::Clock(BPM);
+    Audio_Engine E = Audio_Engine::Audio_Engine();
+    std::vector<std::string> names;
+    std::vector<std::array<bool, 8>> patterns;
+    for (auto i = sequence.begin(); i != sequence.end(); i++) {
+        E.Preload("../Assets/" + i->first, i->first);
+        names.push_back(i->first);
+        patterns.push_back(i->second);
+
+    }
+    
+    int index = 0;
+    char ch = 'c';
+    c.startClock();
+    bool running = true;
+    while (running) {
+        if (c.interval()) {
+            //std::vector<std::string> thisBeat; for multiple sounds
+            for (int i = 0; i < patterns.size()/sizeof(bool); i++) {
+                if (patterns[i][index]) {
+                    std::string name = names[i];
+                    //thisBeat.push_back(name); for multiple sounds
+                    //add sound into merge
+                    E.PlaySound_(name);
+                    //break;
+                }
+            }
+            //E.mixDataNice(thisBeat); for multiple sounds
+            index++;
+        }
+        //reset index when it reaches the end
+        if (index > 7) {
+            index = 0;
+        }
+        if (_kbhit()) {
+            ch = _getch();
+            if (ch == 32) {
+                running = false;
+            }
+        }
+    }
     return 0;
 }
 
@@ -183,8 +243,16 @@ int Interface::setBPM(const std::map<std::string, std::array<bool, 8>> sequence,
     return BPM;
 }
 
+int Interface::setNewName() {
+    clearScreen();
+    std::cout << "Please enter a name for your pattern";
+    std::string name;
+    std::cin >> name;
+    patternName = name;
+    return 0;
+}
 // Note: 1 edit, 2 play, 3 bpm, 4 exit
-int Interface::performAction(int choice, std::map<std::string, std::array<bool, 8>>& sequence, int newBPM) {
+int Interface::performAction(int choice, std::map<std::string, std::array<bool, 8>>& sequence) {
     bool exit = false;
     switch (choice) {
     case 1: {
@@ -196,11 +264,14 @@ int Interface::performAction(int choice, std::map<std::string, std::array<bool, 
         break;
     }
     case 3: {
-        BPM = newBPM;
         return setBPM(sequence, false);
         break;
     }
     case 4: {
+        setNewName();
+        return 0;
+    }
+    case 5: {
         return -1;
         break;
     }

@@ -11,9 +11,9 @@ class Audio_Engine {
 public:
     Audio_Engine();
     ~Audio_Engine();
-    void Preload(const std::string& filename, int id);
-    void PlaySound_(int id);
-    static int _test();
+    void Preload(const std::string& filename, std::string id);
+    void PlaySound_(std::string id);
+    int _test();
 
 private:
     static const int NUM_BUFFERS = 8; //8 sound events simulataneously max
@@ -31,7 +31,7 @@ private:
         std::vector<BYTE> audioData;
     };
 
-    std::unordered_map<int, WaveData> sounds_;
+    std::unordered_map<std::string, WaveData> sounds_;
 
     WaveData LoadWave(const std::string& filename);
 

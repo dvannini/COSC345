@@ -63,14 +63,11 @@ Audio_Engine::~Audio_Engine() {
  * \param filename the sound to preload into memory
  * \param id the identification to reference the sound data
  */
-void Audio_Engine::Preload(const std::string& filename, int id) {
+void Audio_Engine::Preload(const std::string& filename, std::string id) {
     sounds_[id] = LoadWave(filename);
     return;
 }
-void Audio_Engine::PlaySound_(int id) {
-    if (id == 0) {
-        return;
-    }
+void Audio_Engine::PlaySound_(std::string id) {
     if (waveOutReset(hWaveOut) != MMSYSERR_NOERROR) { // stop waveform and reset waveform playhead to beginning
         std::cout << "could not stop playback successfully.";
         throw std::runtime_error("program has carked it");
@@ -167,7 +164,7 @@ int Audio_Engine::_test() {
     }
     catch (std::exception& e) {
         std::cout << "Audio engine constructor failed. Details: " << e.what();
-        return 1;
+        status += 1;
     }
     try { //headers all good
         Audio_Engine a;
@@ -178,17 +175,27 @@ int Audio_Engine::_test() {
     }
     catch (std::exception& e) {
         std::cout << "Audio Engine waveHeaders has failed. Details: " << e.what();
-        return 2;
+        status += 1;
     }
     try { //load invalid waveform
         Audio_Engine a;
         a.LoadWave("this will fail");
-        return 3;
+        status += 1;
     }
     catch (std::exception& e) {
         std::cout << "Loadwave Failed Succesfully and as expected. ";
 
     }
+
+    try { //final test to make sure all previous tests have passed
+
+        assert(status == 0); //should be 0 if all tests pass
+    }
+    catch (std::exception& e) {
+        std::cout << "Audio Engine tests have failed.";
+        return 1;
+    }
+
     return 0;
 }
 /**

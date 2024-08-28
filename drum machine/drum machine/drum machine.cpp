@@ -30,7 +30,6 @@ int main() {
     bool playing = false;
     int choice = 0;
     while (choice != 5) {
-
         Interface::displayMainMenu(sequence);
         char ch = _getch();
         int newBPM = Interface::performAction(ch, sequence);
@@ -39,5 +38,4 @@ int main() {
         }
     }   
     return 0;
-
 }

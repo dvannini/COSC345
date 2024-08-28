@@ -10,11 +10,13 @@
 #include "Audio_Engine.h"
 
 // Declarations of a few strings which will be used multiple times
+
 std::string mainMenu = "please select (using the adjacent key) an action from the options below, press SPACE to play and then any key pause:\n-(1)Edit Sequence\n-(2)Set BPM\n-(3)Set Pattern Name\n-(4)Exit\n";
 int BPM = 175;
 bool sequenceSet = false;
 std::string patternName = "New Pattern";
 bool playing = false;
+
 
 /*method to display the contents of the current sequence
 @param sequence; the currrent sequence, the string is the name of the sound, and the array is the pattern
@@ -234,11 +236,6 @@ int Interface::playSequence(const std::map<std::string, std::array<bool, 8>>& se
             index = 0;
         }
         if (_kbhit()) {
-            //ch = _getch();
-            //if (ch == 32) {
-            //    running = false;
-            //    //E.~Audio_Engine();
-            //}
             running = false;
         }
     }

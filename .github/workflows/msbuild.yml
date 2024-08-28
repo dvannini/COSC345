@@ -46,11 +46,13 @@ jobs:
     - name: Build
       run: msbuild /m /p:Configuration=${{ env.BUILD_CONFIGURATION }} "${{ env.SOLUTION_FILE_PATH }}"
 
+    - name: Find vstest.console.exe using vswhere
+      run: |
+        $vsTestConsole = &"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -find **/vstest.console.exe
+        echo "##vso[task.setvariable variable=VsTestConsolePath]$vsTestConsole"
+      shell: powershell
+
     - name: Run unit tests
       run: |
-        # Find vstest.console.exe for Visual Studio 2022 Enterprise edition
-        $vsTestConsole = "$Env:ProgramFiles(x86)\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe"
-
-        # Run the test DLLs produced by the build
-        & $vsTestConsole "./drum machine/UnitTesting/bin/${{ env.BUILD_CONFIGURATION }}/UnitTesting.dll"
+        & $Env:VsTestConsolePath "./drum machine/UnitTesting/bin/${{ env.BUILD_CONFIGURATION }}/UnitTesting.dll"
       shell: powershell

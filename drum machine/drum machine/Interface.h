@@ -15,7 +15,7 @@ public:
     static void addSound(int newSound, std::map<std::string, std::array<bool, 8>>& sequence);
     static int editSequence(std::map<std::string, std::array<bool, 8>>& sequence);
     static int playSequence(const std::map<std::string, std::array<bool, 8>>& sequence);
-    static int setBPM(const std::map<std::string, std::array<bool, 8>> sequenc, bool edite);
+    static int setBPM(const std::map<std::string, std::array<bool, 8>> sequence, bool edite);
     static int setNewName();
     static int performAction(int choice, std::map<std::string, std::array<bool, 8>>& sequence);
 };

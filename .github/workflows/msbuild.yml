@@ -48,6 +48,6 @@ jobs:
 
     - name: Run unit tests
       run: |
-        $vsTestConsole = "${{ env.ProgramFiles(x86) }}\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe"
+        $vsTestConsole = "$Env:ProgramFiles(x86)\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\Extensions\TestPlatform\vstest.console.exe"
         & $vsTestConsole "./drum machine/UnitTesting/bin/${{ env.BUILD_CONFIGURATION }}/UnitTesting.dll"
       shell: powershell

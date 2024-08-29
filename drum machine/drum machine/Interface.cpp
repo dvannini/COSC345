@@ -336,6 +336,12 @@ void Interface::playSequence(const std::map<std::string, std::array<bool, 8>>& s
     return;
 }
 
+/**
+* @brief method to set the bpm based on user input
+* @param[in] sequence, the current sequence
+* @param[in] edit, a boolean used for recursive calls to tell the function if it should take input from typing or from the arrow keys
+* @return void
+*/
 void Interface::setBPM(const std::map<std::string, std::array<bool, 8>>& sequence, bool edit) {
     clearScreen();
     displayMainMenu(sequence);
@@ -368,6 +374,9 @@ void Interface::setBPM(const std::map<std::string, std::array<bool, 8>>& sequenc
     return;
 }
 
+/**
+* @brief a method to name the pattern
+*/
 void Interface::setNewName() {
     clearScreen();
     std::cout << "Please enter a name for your pattern:\n";
@@ -383,7 +392,13 @@ void Interface::setNewName() {
     patternName = name;
     return;
 }
-// Note: 1 edit, 2 play, 3 bpm, 4 exit
+
+/**
+* @brief a method to perform an action based on user input
+* @param[in] sequence, the seequence we will be performing actions on
+* @param[in] E, the audio engine we will use to play sounds
+* @return int, -1 if we should close the program, 0 otherwise
+*/
 int Interface::performAction(char choice, std::map<std::string, std::array<bool, 8>>& sequence, Audio_Engine& E) {
     bool exit = false;
     switch (choice) {
@@ -414,10 +429,12 @@ int Interface::performAction(char choice, std::map<std::string, std::array<bool,
 }
 
 
-
+/**
+* @brief class to perform unit tests
+*/
 int Interface::_test() {
     int status = 0;
-
+    Audio_Engine E = Audio_Engine::Audio_Engine();
     // Test 1: Constructor
     try {
         Interface a;
@@ -447,10 +464,8 @@ int Interface::_test() {
     // Test 3: addSound
     try {
         Interface a;
-        Audio_Engine e;
-        
         std::map<std::string, std::array<bool, 8>> sequence;
-        a.addSound(1, sequence, e);
+        a.addSound(1, sequence, E);
         if (sequence.size() != 1 || sequence.find("Kick 70s 1.wav") == sequence.end()) {
             throw std::runtime_error("addSound did not add the expected sound.");
         }
@@ -475,9 +490,8 @@ int Interface::_test() {
     // Test 5: performAction (exit)
     try {
         Interface a;
-        Audio_Engine e;
         std::map<std::string, std::array<bool, 8>> testSequence;
-        int result = a.performAction('4', testSequence, e);
+        int result = a.performAction('4', testSequence, E);
         if (result != -1) {
             throw std::runtime_error("performAction did not return expected value for exit action.");
         }
@@ -490,9 +504,8 @@ int Interface::_test() {
     // Test 6: performAction (invalid action)
     try {
         Interface a;
-        Audio_Engine e;
         std::map<std::string, std::array<bool, 8>> testSequence;
-        int result = a.performAction('9', testSequence, e);
+        int result = a.performAction('9', testSequence, E);
         if (result != 0) {
             throw std::runtime_error("performAction did not return expected value for invalid action.");
         }

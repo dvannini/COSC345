@@ -447,8 +447,10 @@ int Interface::_test() {
     // Test 3: addSound
     try {
         Interface a;
+        Audio_Engine e;
+        
         std::map<std::string, std::array<bool, 8>> sequence;
-        a.addSound(1, sequence);
+        a.addSound(1, sequence, e);
         if (sequence.size() != 1 || sequence.find("Kick 70s 1.wav") == sequence.end()) {
             throw std::runtime_error("addSound did not add the expected sound.");
         }
@@ -462,10 +464,8 @@ int Interface::_test() {
     try {
         Interface a;
         std::map<std::string, std::array<bool, 8>> testSequence;
-        int newBPM = a.setBPM(testSequence, true);
-        if (newBPM <= 0) {
-            throw std::runtime_error("setBPM returned an invalid BPM value.");
-        }
+        a.setBPM(testSequence, true);
+        
     }
     catch (std::exception& e) {
         std::cout << "setBPM test failed. Details: " << e.what() << std::endl;
@@ -475,8 +475,9 @@ int Interface::_test() {
     // Test 5: performAction (exit)
     try {
         Interface a;
+        Audio_Engine e;
         std::map<std::string, std::array<bool, 8>> testSequence;
-        int result = a.performAction('4', testSequence);
+        int result = a.performAction('4', testSequence, e);
         if (result != -1) {
             throw std::runtime_error("performAction did not return expected value for exit action.");
         }
@@ -489,8 +490,9 @@ int Interface::_test() {
     // Test 6: performAction (invalid action)
     try {
         Interface a;
+        Audio_Engine e;
         std::map<std::string, std::array<bool, 8>> testSequence;
-        int result = a.performAction('9', testSequence);
+        int result = a.performAction('9', testSequence, e);
         if (result != 0) {
             throw std::runtime_error("performAction did not return expected value for invalid action.");
         }

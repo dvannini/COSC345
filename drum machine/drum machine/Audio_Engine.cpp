@@ -5,6 +5,9 @@
 #include <stdexcept>
 #include <cstring>
 #include <assert.h>
+#include <exception>
+#include <map>
+#include <array>
 #pragma comment(lib, "winmm.lib")
 
 
@@ -219,3 +222,4 @@ void mixData(std::vector<WAVEHDR> q, WAVEHDR* sumHeader) {
     delete[] mixedData;
     return;
 }
+

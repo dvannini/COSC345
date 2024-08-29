@@ -197,7 +197,7 @@ void Interface::addSound(int newSound, std::map<std::string, std::array<bool, 8>
         break;
     case 2:
         sequence.insert(std::make_pair("Snare 70s MPC 3.wav", std::array<bool, 8>{false, false, false, false, false, false, false, false}));
-        E.Preload("../Assets/Snare 70s MPC 3.wav 70s 1.wav", "Snare 70s MPC 3.wav");
+        E.Preload("../Assets/Snare 70s MPC 3.wav", "Snare 70s MPC 3.wav");
         break;
     case 3:
         sequence.insert(std::make_pair("Hihat Closed 80s UK Disco Vinyl.wav", std::array<bool, 8>{false, false, false, false, false, false, false, false}));
@@ -213,15 +213,33 @@ void Interface::addSound(int newSound, std::map<std::string, std::array<bool, 8>
 */
 void Interface::editSequence(std::map<std::string, std::array<bool, 8>>& sequence, Audio_Engine& E) {
     clearScreen();
+    int newSound;
     if (!sequenceSet) {
         std::cout << "No Sequence has been set. Please select your first sound to add to a new sequence:\n";
-        std::cout << "-(1)Kick\n-(2)Snare\n-(3)Hat\n";
-        int newSound = 0;
-        std::cin >> newSound;
-        clearScreen();
-        addSound(newSound, sequence, E);
+        std::cout << "which sound would you like to add?\n-(1)Kick\n-(2)Snare\n-(3)Hat\n";
         sequenceSet = true;
-        return editSequence(sequence, E);
+        char ch = _getch();
+        while (true) {
+            if (ch - '0' == 1) {
+                newSound = ch - '0';
+                addSound(newSound, sequence, E);
+                return editSequence(sequence, E);
+                break;
+            }
+            else if (ch - '0' == 2) {
+                newSound = ch - '0';
+                addSound(newSound, sequence, E);
+                return editSequence(sequence, E);
+                break;
+            }
+            else if (ch - '0' == 3) {
+                newSound = ch - '0';
+                addSound(newSound, sequence, E);
+                return editSequence(sequence, E);
+                break;
+            }
+            ch = _getch();
+        }
     }
     displaySequence(sequence);
     int soundIndex;
@@ -232,12 +250,29 @@ void Interface::editSequence(std::map<std::string, std::array<bool, 8>>& sequenc
         return;
     }
     if (ch == 97) {
-        int newSound;
         clearScreen();
         std::cout << "which sound would you like to add?\n-(1)Kick\n-(2)Snare\n-(3)Hat\n";
-        std::cin >> newSound;
-        addSound(newSound, sequence, E);
-        return editSequence(sequence, E);//returns to editor
+        char ch = _getch();
+        while (true) {
+            if (ch - '0' == 1) {
+                newSound = ch - '0';
+                addSound(newSound, sequence, E);
+                return editSequence(sequence, E);
+            }
+            else if (ch - '0' == 2) {
+                newSound = ch - '0';
+                addSound(newSound, sequence, E);
+                return editSequence(sequence, E);
+            }
+            else if (ch - '0' == 3) {
+                newSound = ch - '0';
+                addSound(newSound, sequence, E);
+                return editSequence(sequence, E);
+            }
+            ch = _getch();
+        }
+        //std::cin >> newSound;
+        //returns to editor
     }
     std::pair<std::string, std::array<bool, 8>> keyAndVals = getKeyByIndex(soundIndex, sequence);
     if (keyAndVals.first != "") {
@@ -258,12 +293,12 @@ void Interface::playSequence(const std::map<std::string, std::array<bool, 8>>& s
     Clock c = Clock::Clock(BPM);
     std::vector<std::string> names;
     std::vector<std::array<bool, 8>> patterns;
-    /* for (auto i = sequence.begin(); i != sequence.end(); i++) {
-         E.Preload("../Assets/" + i->first, i->first);
+    for (auto i = sequence.begin(); i != sequence.end(); i++) {
+         /*E.Preload("../Assets/" + i->first, i->first);*/
          names.push_back(i->first);
          patterns.push_back(i->second);
 
-     }*/
+     }
 
     int index = 0;
     char ch = 'c';
@@ -298,7 +333,6 @@ void Interface::playSequence(const std::map<std::string, std::array<bool, 8>>& s
         }
     }
     playing = !playing;
-    E.~Audio_Engine();
     return;
 }
 

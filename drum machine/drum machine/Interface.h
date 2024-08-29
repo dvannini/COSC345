@@ -1,3 +1,4 @@
+#pragma once
 #ifndef INTERFACE_H
 #define INTERFACE_H
 
@@ -23,6 +24,7 @@ public:
     static void setBPM(const std::map<std::string, std::array<bool, 8>>& sequence, bool edit);
     static void setNewName();
     static int performAction(char choice, std::map<std::string, std::array<bool, 8>>& sequence, Audio_Engine& E);
+
     static int _test();
 };
 

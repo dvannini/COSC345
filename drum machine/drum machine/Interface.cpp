@@ -294,11 +294,11 @@ void Interface::playSequence(const std::map<std::string, std::array<bool, 8>>& s
     std::vector<std::string> names;
     std::vector<std::array<bool, 8>> patterns;
     for (auto i = sequence.begin(); i != sequence.end(); i++) {
-         /*E.Preload("../Assets/" + i->first, i->first);*/
-         names.push_back(i->first);
-         patterns.push_back(i->second);
+        /*E.Preload("../Assets/" + i->first, i->first);*/
+        names.push_back(i->first);
+        patterns.push_back(i->second);
 
-     }
+    }
 
     int index = 0;
     char ch = 'c';
@@ -480,9 +480,7 @@ int Interface::_test() {
         Interface a;
         std::map<std::string, std::array<bool, 8>> testSequence;
         a.setBPM(testSequence, true);
-        /*if (a.BPM <= 0) {
-            throw std::runtime_error("setBPM returned an invalid BPM value.");
-        }*/
+
     }
     catch (std::exception& e) {
         std::cout << "setBPM test failed. Details: " << e.what() << std::endl;

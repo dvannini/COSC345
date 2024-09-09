@@ -11,6 +11,22 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
+// Mock functions
+
+// Mock input for _getch
+int inputs[] = {0, 72, 80, 13, 0, 0, 0, 0, 0, 0, 0, 0, 32};
+int counter = -1;
+// Mock _getch() function
+int _getch() {
+	counter++;
+	return inputs[counter];
+}
+
+// Mock _kbhit() function
+int _kbhit() {
+	return 1;
+}
+
 namespace UnitTesting
 {
 	TEST_CLASS(UnitTesting)

@@ -476,18 +476,17 @@ int Interface::_test() {
     }
 
     // Test 4: setBPM (not using, as requires user input)
-    /*
+    
     try {
         Interface a;
         std::map<std::string, std::array<bool, 8>> testSequence;
-        a.setBPM(testSequence, true);
-        
+        a.setBPM(testSequence, false);
     }
     catch (std::exception& e) {
         std::cout << "setBPM test failed. Details: " << e.what() << std::endl;
         return 4;
     }
-    */
+    
 
     // Test 5: performAction (exit)
     try {
@@ -515,6 +514,17 @@ int Interface::_test() {
     catch (std::exception& e) {
         std::cout << "performAction (invalid action) test failed. Details: " << e.what() << std::endl;
         return 6;
+    }
+
+    // Test 7: playSequence
+    try {
+        Interface a;
+        std::map<std::string, std::array<bool, 8>> testSequence;
+        playSequence(testSequence, E);
+    }
+    catch (std::exception& e) {
+        std::cout << "playSequence didn't run as expected." << e.what() << std::endl;
+        return 7;
     }
 
     std::cout << "All tests passed successfully." << std::endl;

@@ -350,7 +350,7 @@ void Interface::setBPM(const std::map<std::string, std::array<bool, 8>>& sequenc
         std::cin >> BPM;
         if (BPM == 0) {
             std::cout << "\nBPM cannot be zero\n";
-            setBPM(sequence, false);
+            setBPM(sequence, true);
         }
         return;
     }
@@ -475,7 +475,8 @@ int Interface::_test() {
         return 3;
     }
 
-    // Test 4: setBPM
+    // Test 4: setBPM (not using, as requires user input)
+    /*
     try {
         Interface a;
         std::map<std::string, std::array<bool, 8>> testSequence;
@@ -486,6 +487,7 @@ int Interface::_test() {
         std::cout << "setBPM test failed. Details: " << e.what() << std::endl;
         return 4;
     }
+    */
 
     // Test 5: performAction (exit)
     try {

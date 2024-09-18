@@ -480,7 +480,9 @@ int Interface::_test() {
         Interface a;
         std::map<std::string, std::array<bool, 8>> testSequence;
         a.setBPM(testSequence, true);
-
+        
+            throw std::runtime_error("setBPM returned an invalid BPM value.");
+        }*/
     }
     catch (std::exception& e) {
         std::cout << "setBPM test failed. Details: " << e.what() << std::endl;

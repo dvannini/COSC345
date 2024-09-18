@@ -12,3 +12,7 @@ And the documentation will be written to the /docs folder locally.
 The Doxygen online docs can be found [here](https://codedocs.xyz/Percussion-Protocols/COSC345)
 
 You may need to clear the cache in your browser to see most recent changes.
+
+# How to use
+
+Chuck any sound files (.WAV) into the ./assets folder

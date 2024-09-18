@@ -14,7 +14,7 @@
 #include <iostream>
 #include <Windows.h>
 #include <conio.h>
-#include "Keyboard.h"
+#include "Keyboard.h" //8
 #include "Sequence.h"
 #include "Clock.h"
 #include "Interface.h"
@@ -26,13 +26,13 @@ int main() {
 
     const int N = 8;
     std::map<std::string, std::array<bool, N>> sequence;
-
+    Audio_Engine E = Audio_Engine::Audio_Engine();
     bool playing = false;
     int choice = 0;
     while (choice != 5) {
         Interface::displayMainMenu(sequence);
         char ch = _getch();
-        int newBPM = Interface::performAction(ch, sequence);
+        int newBPM = Interface::performAction(ch, sequence, E);
         if (newBPM == -1) {
             choice = 5;
         }

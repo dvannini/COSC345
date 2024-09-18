@@ -19,6 +19,7 @@ public:
     static int setNewName();
     static int performAction(char choice, std::map<std::string, std::array<bool, 8>>& sequence);
     static int _test();
+    static void displaySequenceWithIndicator(const std::map<std::string, std::array<bool, 8>>& sequence, int currentBeat);
 };
 
 #endif // INTERFACE_H

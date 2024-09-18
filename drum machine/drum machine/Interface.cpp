@@ -200,45 +200,63 @@ int Interface::editSequence(std::map<std::string, std::array<bool, 8>>& sequence
     return editSequence(sequence);
 }
 
+void Interface::displaySequenceWithIndicator(const std::map<std::string, std::array<bool, 8>>& sequence, int currentBeat) {
+    clearScreen();
+    int index = 1;
+    std::cout << "BPM: " << BPM << "      Pattern name: " << patternName << "\n";
+    for (const auto& i : sequence) {
+        std::cout << "-(" << index << ")";
+        for (int n = 0; n < 40 - i.first.size(); n++) {
+            std::cout << " "; // aligns all patterns accounting for different name lengths of sounds
+        }
+        std::cout << i.first << ": ";
+        index++;
+        for (int j = 0; j < 8; j++) {
+            if (j == currentBeat) {
+                std::cout << (i.second[j] ? "|" : "|");
+            }
+            else {
+                std::cout << (i.second[j] ? "O" : "_");
+            }
+        }
+        std::cout << std::endl;
+    }
+}
+
 int Interface::playSequence(const std::map<std::string, std::array<bool, 8>>& sequence) {
-    Clock c = Clock::Clock(BPM);
-    Audio_Engine E = Audio_Engine::Audio_Engine();
+    Clock c(BPM);
+    Audio_Engine E;
     std::vector<std::string> names;
     std::vector<std::array<bool, 8>> patterns;
-    for (auto i = sequence.begin(); i != sequence.end(); i++) {
-        E.Preload("../Assets/" + i->first, i->first);
-        names.push_back(i->first);
-        patterns.push_back(i->second);
 
+    for (const auto& item : sequence) {
+        E.Preload("../Assets/" + item.first, item.first);
+        names.push_back(item.first);
+        patterns.push_back(item.second);
     }
-    
-    int index = 0;
-    char ch = 'c';
+
+    int currentBeat = 0;
     c.startClock();
     bool running = true;
+
     while (running) {
         if (c.interval()) {
-            //std::vector<std::string> thisBeat; for multiple sounds
-            for (int i = 0; i < patterns.size()/sizeof(bool); i++) {
-                if (patterns[i][index]) {
-                    std::string name = names[i];
-                    //thisBeat.push_back(name); for multiple sounds
-                    //add sound into merge
-                    E.PlaySound_(name);
-                    //break;
+            displaySequenceWithIndicator(sequence, currentBeat);
+
+            for (size_t i = 0; i < patterns.size(); i++) {
+                if (patterns[i][currentBeat]) {
+                    E.PlaySound_(names[i]);
                 }
             }
-            //E.mixDataNice(thisBeat); for multiple sounds
-            index++;
+
+            currentBeat = (currentBeat + 1) % 8;
         }
-        //reset index when it reaches the end
-        if (index > 7) {
-            index = 0;
-        }
+
         if (_kbhit()) {
             running = false;
         }
     }
+
     playing = !playing;
     return 0;
 }

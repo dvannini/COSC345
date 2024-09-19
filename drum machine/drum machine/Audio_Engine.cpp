@@ -54,6 +54,7 @@ Audio_Engine::Audio_Engine() : hWaveOut(nullptr), voiceIndex(0) {
  *
  */
 Audio_Engine::~Audio_Engine() { //needs tests is headers deallocate successfully
+    /*
     for (auto& header : waveHeaders) {
         if (header.dwFlags & WHDR_PREPARED) {
             waveOutUnprepareHeader(hWaveOut, &header, sizeof(WAVEHDR));
@@ -62,16 +63,15 @@ Audio_Engine::~Audio_Engine() { //needs tests is headers deallocate successfully
             delete[] header.lpData;
         }
 
-    }
-    if (hWaveOut) {
-        waveOutClose(hWaveOut);
-    }
-    /*for (auto& header : waveHeaders) {
-            waveOutUnprepareHeader(hWaveOut, &header, sizeof(WAVEHDR));
-        }
-    if (hWaveOut) {
-        waveOutClose(hWaveOut);
     }*/
+
+    for (auto& header : waveHeaders) {
+        waveOutUnprepareHeader(hWaveOut, &header, sizeof(WAVEHDR));
+    }
+    if (hWaveOut) {
+        waveOutClose(hWaveOut);
+    }
+    
 }
 /**
  * Used to load sounds into memory at project init for playback later.

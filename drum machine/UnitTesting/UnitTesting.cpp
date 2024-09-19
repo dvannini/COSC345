@@ -39,6 +39,10 @@ namespace UnitTesting
 		}
 		TEST_METHOD(TestAudioEngine)
 		{
+			Audio_Engine E;
+			E.Preload("../Assets/Kick 70s 1.wav", "Kick");
+			E.PlaySound_("Kick");
+			E.tick();
 			Assert::AreEqual(0, Audio_Engine::_test());
 		}
 		TEST_METHOD(TestKeyboard)

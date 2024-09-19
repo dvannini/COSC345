@@ -11,13 +11,17 @@
 
 // Declarations of a few strings which will be used multiple times
 
-std::string mainMenu = "please select (using the adjacent key) an action from the options below, press SPACE to play and pause:\n-(1)Edit Sequence\n-(2)Set BPM\n-(3)Set Pattern Name\n-(4)Exit\n";
+std::string mainMenu = "Select an option (numbers 1-4)\n\n-(1)\x1b[93mEdit Sequence\x1b[97m\n-(2)\x1b[93mChange BPM\x1b[97m\n-(3)\x1b[93mSet Pattern Name\x1b[97m\n-(4)\x1b[93mExit\x1b[97m\n\nSPACE:\x1b[93mPlay/Pause\x1b[97m";
 int BPM = 175;
 bool sequenceSet = false;
 std::string patternName = "New Pattern";
 bool playing = false;
+HANDLE Interface::hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
-
+Interface::Interface() {
+    
+    
+}
 /**
 * @brief Method to display the contents of the current sequence
 *
@@ -36,7 +40,7 @@ void Interface::displaySequence(const std::map<std::string, std::array<bool, 8>>
         std::cout << i->first << ": ";
         index++;
         for (bool value : i->second) {
-            std::cout << (value ? "0" : "_");
+            std::cout << (value ? "\x1b[94m0\x1b[97m" : "_");
         }
         std::cout << std::endl;
     }
@@ -57,7 +61,7 @@ void Interface::displayPlayerSequence(const std::map<std::string, std::array<boo
                 std::cout << "|";
             }
             if (value) {
-                std::cout << "0";
+                std::cout << "\x1b[94m0\x1b[97m";
             }
             else {
                 std::cout << "_";
@@ -73,7 +77,11 @@ void Interface::displayPlayerSequence(const std::map<std::string, std::array<boo
 */
 void Interface::displayMainMenu(const std::map<std::string, std::array<bool, 8>>& sequence) {
     clearScreen();
-    std::cout << "Welcome to CMDrum\n";
+    SetConsoleTextAttribute(hConsole, YELLOW | BACKGROUND_BLUE | FOREGROUND_INTENSITY);
+    std::cout << "Welcome to CMDrum - Command Line Drum Machine\n";
+    SetConsoleTextAttribute(hConsole, WHITE);
+    
+
     if (sequenceSet) {
         displaySequence(sequence);
     }
@@ -82,7 +90,9 @@ void Interface::displayMainMenu(const std::map<std::string, std::array<bool, 8>>
 
 void Interface::displayPlayerMenu(const std::map<std::string, std::array<bool, 8>>& sequence, int index) {
     clearScreen();
-    std::cout << "Welcome to CMDrum\n";
+    SetConsoleTextAttribute(hConsole, YELLOW | BACKGROUND_BLUE | FOREGROUND_INTENSITY);
+    std::cout << "Welcome to CMDrum - Command Line Drum Machine\n";
+    SetConsoleTextAttribute(hConsole, WHITE);
     if (sequenceSet) {
         displayPlayerSequence(sequence, index);
     }
@@ -106,7 +116,7 @@ void Interface::soundEditDisplay(const std::map<std::string, std::array<bool, 8>
             std::cout << i->first << ": ";
 
             for (bool value : i->second) {
-                std::cout << (value ? "0" : "_");
+                std::cout << (value ? "\x1b[94m0\x1b[97m" : "_");
             }
             std::cout << "\n";
         }
@@ -119,7 +129,7 @@ void Interface::soundEditDisplay(const std::map<std::string, std::array<bool, 8>
             std::cout << keyAndVals.first << ": ";
             for (bool i : keyAndVals.second) {
                 if (i) {
-                    std::cout << "0";
+                    std::cout << "\x1b[94m0\x1b[97m";
                 }
                 else {
                     std::cout << "_";
@@ -215,8 +225,8 @@ void Interface::editSequence(std::map<std::string, std::array<bool, 8>>& sequenc
     clearScreen();
     int newSound;
     if (!sequenceSet) {
-        std::cout << "No Sequence has been set. Please select your first sound to add to a new sequence:\n";
-        std::cout << "which sound would you like to add?\n-(1)Kick\n-(2)Snare\n-(3)Hat\n";
+        std::cout << "Select a sound to add to the sequence:\n";
+        std::cout << "\n-(1)\x1b[5;93mKick\x1b[0;97m\n-(2)\x1b[5;93mSnare\x1b[0;97m\n-(3)\x1b[5;93mHat\x1b[0;97m\n";
         sequenceSet = true;
         char ch = _getch();
         while (true) {
@@ -243,7 +253,7 @@ void Interface::editSequence(std::map<std::string, std::array<bool, 8>>& sequenc
     }
     displaySequence(sequence);
     int soundIndex;
-    std::cout << "Which sound would you like to edit (enter the corresponding number)?\n(Or enter a to add a new sound, or Enter to save and exit to main menu)";
+    std::cout << "Which sound would you like to edit? (enter corresponding number)\n\n'A': \x1b[93mAdd new sound\x1b[97m\n'Enter': \x1b[93mSave and exit\x1b[97m";
     char ch = _getch();
     soundIndex = ch - '0';
     if (ch == 13) {
@@ -251,7 +261,7 @@ void Interface::editSequence(std::map<std::string, std::array<bool, 8>>& sequenc
     }
     if (ch == 97) {
         clearScreen();
-        std::cout << "which sound would you like to add?\n-(1)Kick\n-(2)Snare\n-(3)Hat\n";
+        std::cout << "Select sound to add.\n-(1)\x1b[93mKick\x1b[97m\n-(2)\x1b[93mSnare\x1b[97m\n-(3)\x1b[93mHat\x1b[97m\n";
         char ch = _getch();
         while (true) {
             if (ch - '0' == 1) {
@@ -281,7 +291,34 @@ void Interface::editSequence(std::map<std::string, std::array<bool, 8>>& sequenc
     // Flip the value in the map of the index entered (minus 1 for zero indexing)
     return editSequence(sequence, E);
 }
-
+/**
+ * During playback, this displays a small playhead to show when a step creates sound.
+ * 
+ * \param sequence - the sequence
+ * \param currentBeat - the index of the playhead
+ */
+void Interface::displaySequenceWithIndicator(const std::map<std::string, std::array<bool, 8>>& sequence, int currentBeat) {
+    clearScreen();
+    int index = 1;
+    std::cout << "BPM: " << BPM << "      Pattern name: " << patternName << "\n";
+    for (const auto& i : sequence) {
+        std::cout << "-(" << index << ")";
+        for (int n = 0; n < 40 - i.first.size(); n++) {
+            std::cout << " "; // aligns all patterns accounting for different name lengths of sounds
+        }
+        std::cout << i.first << ": ";
+        index++;
+        for (int j = 0; j < 8; j++) {
+            if (j == currentBeat) {
+                std::cout << (i.second[j] ? "|" : "|");
+            }
+            else {
+                std::cout << (i.second[j] ? "\x1b[94m0\x1b[97m" : "_");
+            }
+        }
+        std::cout << std::endl;
+    }
+}
 /**
 * @brief function to play the sequence out loud
 * @param[in] sequence the sequence we will be playing
@@ -306,23 +343,20 @@ void Interface::playSequence(const std::map<std::string, std::array<bool, 8>>& s
     bool running = true;
     while (running) {
         if (c.interval()) {
-            //std::vector<std::string> thisBeat; for multiple sounds
-            //displayPlayerMenu(sequence, index);
+            displaySequenceWithIndicator(sequence, index);
             for (int i = 0; i < patterns.size() / sizeof(bool); i++) {
                 if (patterns[i][index]) {
                     std::string name = names[i];
-                    //thisBeat.push_back(name); for multiple sounds
-                    //add sound into merge
+                    
                     E.PlaySound_(name);
-                    //break;
+                    
                 }
             }
             E.tick();
 
-            //E.mixDataNice(thisBeat); for multiple sounds
             index++;
         }
-        //reset index when it reaches the end
+        
         if (index > 7) {
             index = 0;
         }
@@ -352,12 +386,14 @@ void Interface::setBPM(const std::map<std::string, std::array<bool, 8>>& sequenc
         std::cout << "Type in your bpm and press Enter to save:\n";
         std::cin >> BPM;
         if (BPM == 0) {
-            std::cout << "\nBPM cannot be zero\n";
+            clearScreen();
+            std::cout << "\x1b[91mBPM cannot be zero\x1b[97m\n";
+            Sleep(750);
             setBPM(sequence, true);
         }
         return;
     }
-    std::cout << "Press the up and down arrows to scroll bpm, or press E to type bpm.\nPress Enter to save\n";
+    std::cout << "\nPress the up and down arrows to scroll BPM.\n\n'E': Type it\n'Enter': Confirm\n";
     char ch = _getch();
     while (ch != 13) {
         if (ch == 101) {
@@ -365,11 +401,11 @@ void Interface::setBPM(const std::map<std::string, std::array<bool, 8>>& sequenc
             return setBPM(sequence, true);
         }
         if (ch == 72) {
-            BPM = BPM + 1;
+            BPM = BPM + 10;
             return setBPM(sequence, false);
         }
         if (ch == 80) {
-            BPM = BPM - 1;
+            BPM = BPM - 10;
             return setBPM(sequence, false);
         }
         ch = _getch();
@@ -410,11 +446,29 @@ int Interface::performAction(char choice, std::map<std::string, std::array<bool,
         break;
     }
     case 32: {
-        playSequence(sequence, E);
+        if (!sequence.empty()) {
+            playSequence(sequence, E);
+        }
+        else {
+            clearScreen();
+            std::cout << "Sequence is Empty.";
+            Sleep(750);
+            
+        }
+        
         break;
     }
     case 50: {
-        setBPM(sequence, false);
+        if (!sequence.empty()) {
+            setBPM(sequence, false);
+        }
+        else {
+            clearScreen();
+            std::cout << "\x1b[91mSequence is Empty.\x1b[97m";
+            Sleep(750);
+
+        }
+        
         break;
     }
     case 51: {
@@ -422,11 +476,17 @@ int Interface::performAction(char choice, std::map<std::string, std::array<bool,
         break;
     }
     case 52: {
+        clearScreen();
+        std::cout << "\x1b[92mHave a good day.\x1b[97m";
+        Sleep(1000);
         return -1;
         break;
     }
     default:
-        std::cout << "Invalid choice. Please try again.\n";
+        clearScreen();
+        std::cout << "\x1b[91mInvalid choice. Please try again.\x1b[97m\n";
+        Sleep(750);
+
     }
     return 0;
 }

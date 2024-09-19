@@ -8,9 +8,17 @@
 #include "Clock.h"
 #include "Interface.h"
 #include "Audio_Engine.h"
+#include <Windows.h>
+
+//color macros for terminal writing
+#define YELLOW 14 
+#define RED 12
+#define WHITE 15
+#define GREEN 10
 
 class Interface {
 public:
+    Interface();
     static void displaySequence(const std::map<std::string, std::array<bool, 8>>& sequence);
     static void displayPlayerSequence(const std::map<std::string, std::array<bool, 8>>& sequence, int headIndex);
     static void displayMainMenu(const std::map<std::string, std::array<bool, 8>>& sequence);
@@ -25,7 +33,12 @@ public:
     static void setNewName();
     static int performAction(char choice, std::map<std::string, std::array<bool, 8>>& sequence, Audio_Engine& E);
 
+    static void displaySequenceWithIndicator(const std::map<std::string, std::array<bool, 8>>& sequence, int currentBeat);
+    
     static int _test();
+private:
+    static HANDLE hConsole;
+    
 };
 
 #endif // INTERFACE_H

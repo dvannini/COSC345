@@ -32,29 +32,3 @@ bool Clock::interval() {
 		return false;
 	}
 }
-
-
-int Clock::test_() {
-	int bpm = 120;
-	try {
-		Clock c(bpm);
-		c.startClock();
-	}
-	catch (std::exception& e) {
-		std::cerr << "Constructor failed" << e.what();
-		return 1;
-	}
-	try {
-		Clock c(bpm);
-		c.startClock();
-
-	}
-	catch (std::exception& e) {
-		throw std::exception("interval function failed");
-		return 2;
-	}
-	return 0;
-	
-
-}
-

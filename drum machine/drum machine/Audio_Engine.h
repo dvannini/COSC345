@@ -79,6 +79,7 @@ private:
     std::queue<WAVEHDR> soundQueue; ///< The queue of sound events for simultaneous playback
     int voiceIndex; ///< Index of the current buffer.
     std::vector<char> mixedBuffer;
+
     struct WaveData {
         WAVEFORMATEX waveFormat; ///< Audio format information.
         std::vector<BYTE> audioData; ///< Audio data.
@@ -110,6 +111,7 @@ private:
     static void mixData(HWAVEOUT hwaveout, std::vector<WAVEHDR>& q, WAVEHDR* sumHeader);
     
     void mixAudio(std::queue<WAVEHDR>& q, WAVEHDR* mixedHeader);
+
     /**
      * @brief Processes and sends sound events to be mixed.
      *
@@ -117,6 +119,7 @@ private:
      *
      * @param q The queue of sound events.
      */
+
     void Process_(std::queue<WAVEHDR>& q); //vector
     /**
      * Displays any errors when playing audio. for devs.
@@ -124,6 +127,7 @@ private:
      * \param error - the error code to interpret
      */
     void printWaveOutError(MMRESULT error);
+
 };
 
 #endif // AUDIO_ENGINE_H

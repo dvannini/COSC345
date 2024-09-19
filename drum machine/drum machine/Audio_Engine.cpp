@@ -16,6 +16,7 @@
  *
  */
 Audio_Engine::Audio_Engine() : hWaveOut(nullptr), voiceIndex(0) {
+
     // Initialize waveOut handle
     // Prepare the WAVEHDR structures
     // Open the waveform audio output device
@@ -47,6 +48,7 @@ Audio_Engine::Audio_Engine() : hWaveOut(nullptr), voiceIndex(0) {
         waveHeaders.push_back(waveHeader);
     }
 }
+
 /**
  * Destructor class frees up audio headers and closes waveout device
  *
@@ -59,6 +61,7 @@ Audio_Engine::~Audio_Engine() { //needs tests is headers deallocate successfully
         if (header.lpData) {
             delete[] header.lpData;
         }
+
     }
     if (hWaveOut) {
         waveOutClose(hWaveOut);
@@ -355,12 +358,7 @@ void Audio_Engine::mixData(HWAVEOUT hwaveout, std::vector<WAVEHDR>& q, WAVEHDR* 
     //delete[] mixedData;
     return;
 }
-/**
- * Loads a wave file with a given filename and prepends neccessary headers for the .WAV format.
- *
- * \param filename the file to load
- * \return the wavedata struct (headers and sample data)
- */
+
 Audio_Engine::WaveData Audio_Engine::LoadWave(const std::string& filename) {
     std::ifstream file(filename, std::ios::binary);
     if (!file) {
@@ -411,23 +409,19 @@ Audio_Engine::WaveData Audio_Engine::LoadWave(const std::string& filename) {
 
     return waveData;
 }
-/**
- * Test classes for the audio engine.
- *
- * \return 0 - if successful, 1 - if fail
- */
+
 int Audio_Engine::_test() {
-    //test cases in here
+    
     int status = 0;
-    try { //constructor all good
+    try { 
         Audio_Engine a;
 
     }
     catch (std::exception& e) {
         std::cout << "Audio engine constructor failed. Details: " << e.what();
-        status += 1;
+        return 1;
     }
-    try { //headers all good
+    try { 
         Audio_Engine a;
         if (a.waveHeaders.size() == 0) {
             throw std::exception("waveHeaders failed to initialize.");
@@ -436,35 +430,20 @@ int Audio_Engine::_test() {
     }
     catch (std::exception& e) {
         std::cout << "Audio Engine waveHeaders has failed. Details: " << e.what();
-        status += 1;
+        return 2;
     }
-    try { //load invalid waveform
+    try { 
         Audio_Engine a;
         a.LoadWave("this will fail");
-        status += 1;
+        return 3;
     }
     catch (std::exception& e) {
         std::cout << "Loadwave Failed Succesfully and as expected. ";
-
-    }
-
-    try { //final test to make sure all previous tests have passed
-
-        assert(status == 0); //should be 0 if all tests pass
-    }
-    catch (std::exception& e) {
-        std::cout << "Audio Engine tests have failed.";
-        return 1;
     }
 
     return 0;
 }
-/**
- * Takes a queue of sound events and sums their audio together.
- *
- * \param q - the queue of sound events
- * \param sumHeader - a pointer to the WAVEHDR to write the mixed data to
- */
+
 void mixData(std::vector<WAVEHDR> q, WAVEHDR* sumHeader) {
     int sampleCount = q.front().dwBufferLength / 3; // 3 bytes per 24-bit sample
     int32_t* mixedData = new int32_t[sampleCount]; // Use 32-bit integers for intermediate storage and more headroom
@@ -510,3 +489,4 @@ void mixData(std::vector<WAVEHDR> q, WAVEHDR* sumHeader) {
     delete[] mixedData;
     return;
 }
+

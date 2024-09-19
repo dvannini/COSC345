@@ -13,6 +13,7 @@
 #include <windows.h>
 #include <mmsystem.h>
 #include <vector>
+#include <queue>
 #include <string>
 #include <unordered_map>
 
@@ -37,18 +38,47 @@ public:
      * Frees up audio headers and closes the wave output device.
      */
     ~Audio_Engine();
+    /**
+     * Preloads the sound into memory for playback.
+     * 
+     * \param filename - the file path to the sound
+     * \param id - an identifier for the sound
+     */
     void Preload(const std::string& filename, const std::string& id);
+    /**
+     * Unloads a sound from memory.
+     * 
+     * \param id - the id to be unloaded
+     */
+    void Unload(const std::string& id);
+    /**
+     * Plays a sound.
+     * 
+     * \param id - the sound to play, shoudl be pre-loaded
+     */
     void PlaySound_(std::string id);
+    /**
+     * Test function for audio engine.
+     * 
+     * \return 
+     */
     static int _test();
+    /**
+     * tells the audio engine to stop adding sounds to the queue and play them..
+     * 
+     */
+    void tick();
 
 private:
-    static const int NUM_BUFFERS = 8; ///< Maximum number of simultaneous sound events.
-    static const int BUFFER_SIZE = 8192; ///< Buffer size in bytes.
 
+    static const int NUM_BUFFERS = 4; ///< Maximum number of simultaneous sound events.
+    static const int BUFFER_SIZE = 8192; ///< Buffer size in bytes.
     HWAVEOUT hWaveOut; ///< Handle to the wave output device.
 
     std::vector<WAVEHDR> waveHeaders; ///< Vector of wave headers for audio buffers.
-    int currentBufferIndex; ///< Index of the current buffer.
+    std::queue<WAVEHDR> soundQueue; ///< The queue of sound events for simultaneous playback
+    int voiceIndex; ///< Index of the current buffer.
+    std::vector<char> mixedBuffer;
 
     struct WaveData {
         WAVEFORMATEX waveFormat; ///< Audio format information.
@@ -78,7 +108,9 @@ private:
      * @param q The queue of sound events.
      * @param sumHeader A pointer to the WAVEHDR structure to write the mixed data to.
      */
-    void mixData(std::vector<WAVEHDR> q, WAVEHDR* sumHeader);
+    static void mixData(HWAVEOUT hwaveout, std::vector<WAVEHDR>& q, WAVEHDR* sumHeader);
+    
+    void mixAudio(std::queue<WAVEHDR>& q, WAVEHDR* mixedHeader);
 
     /**
      * @brief Processes and sends sound events to be mixed.
@@ -87,7 +119,15 @@ private:
      *
      * @param q The queue of sound events.
      */
-    void Process_(std::vector<WAVEHDR> q);
+
+    void Process_(std::queue<WAVEHDR>& q); //vector
+    /**
+     * Displays any errors when playing audio. for devs.
+     * 
+     * \param error - the error code to interpret
+     */
+    void printWaveOutError(MMRESULT error);
+
 };
 
 #endif // AUDIO_ENGINE_H

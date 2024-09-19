@@ -317,6 +317,8 @@ void Interface::playSequence(const std::map<std::string, std::array<bool, 8>>& s
                     //break;
                 }
             }
+            E.tick();
+
             //E.mixDataNice(thisBeat); for multiple sounds
             index++;
         }
@@ -324,14 +326,15 @@ void Interface::playSequence(const std::map<std::string, std::array<bool, 8>>& s
         if (index > 7) {
             index = 0;
         }
-        if (_kbhit()) {
-            ch = _getch();
-            if (ch == 32) {
-                running = false;
-            }
+            if (_kbhit()) {
+                ch = _getch();
+                if (ch == 32) {
+                    running = false;
+                }
 
+            }
         }
-    }
+
     playing = !playing;
     return;
 }
@@ -466,6 +469,7 @@ int Interface::_test() {
         Interface a;
         std::map<std::string, std::array<bool, 8>> sequence;
         a.addSound(1, sequence, E);
+
         a.addSound(2, sequence, E);
         a.addSound(3, sequence, E);
         if (sequence.size() != 3 || sequence.find("Kick 70s 1.wav") == sequence.begin()) {
@@ -477,11 +481,14 @@ int Interface::_test() {
         return 3;
     }
 
+
     // Test 4: editSequence, then setBPM
+
     
     try {
         Interface a;
         std::map<std::string, std::array<bool, 8>> testSequence;
+
         a.performAction(49, testSequence, E);
         a.performAction(50, testSequence, E);
     }

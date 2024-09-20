@@ -9,9 +9,9 @@
 #include "Interface.h"
 #include "Audio_Engine.h"
 
-// Declarations of a few strings which will be used multiple times
+// Declarations of a few strings which will be used multiple times \x1b[90m- Command Line Drum Machine\x1b[97m 93
 
-std::string mainMenu = "Select an option (numbers 1-4)\n\n-(1)\x1b[93mEdit Sequence\x1b[97m\n-(2)\x1b[93mChange BPM\x1b[97m\n-(3)\x1b[93mSet Pattern Name\x1b[97m\n-(4)\x1b[93mExit\x1b[97m\n\nSPACE:\x1b[93mPlay/Pause\x1b[97m";
+std::string mainMenu = "Select an option (numbers 1-4)\n\n\x1b[90m-(1)\x1b[93mEdit Sequence\x1b[97m\n\x1b[90m-(2)\x1b[93mChange BPM\x1b[97m\n\x1b[90m-(3)\x1b[93mSet Pattern Name\x1b[97m\n\x1b[90m-(4)\x1b[93mExit\x1b[97m\n\n\x1b[90mSPACE:\x1b[93mPlay/Pause\x1b[97m";
 int BPM = 175;
 bool sequenceSet = false;
 std::string patternName = "New Pattern";
@@ -85,9 +85,9 @@ void Interface::displayPlayerSequence(const std::map<std::string, std::array<boo
 */
 void Interface::displayMainMenu(const std::map<std::string, std::array<bool, 8>>& sequence) {
     clearScreen();
-    SetConsoleTextAttribute(hConsole, YELLOW | BACKGROUND_BLUE | FOREGROUND_INTENSITY);
-    std::cout << "Welcome to CMDrum - Command Line Drum Machine\n";
-    SetConsoleTextAttribute(hConsole, WHITE);
+    //SetConsoleTextAttribute(hConsole, YELLOW | BACKGROUND_BLUE | FOREGROUND_INTENSITY);
+    std::cout << "\x1b[92mWelcome to CMDrum\x1b[97m \x1b[90m- Command Line Drum Machine\x1b[97m\n";
+    //SetConsoleTextAttribute(hConsole, WHITE);
     
 
     if (sequenceSet) {
@@ -148,7 +148,7 @@ void Interface::soundEditDisplay(const std::map<std::string, std::array<bool, 8>
         index++;
 
     }
-    std::cout << "Press Enter to save.\nEnter \x1b[93m1 - 8\x1b[97m to add or delete a sound in slots \x1b[93m1 - 8.\x1b[97m\n" << std::endl;
+    std::cout << "\x1b[90m'Enter'\x1b[93m : Save\nEnter \x1b[93m1 - 8\x1b[97m to add or delete a sound in slots \x1b[93m1 - 8.\x1b[97m\n" << std::endl;
 
 
 
@@ -234,7 +234,7 @@ void Interface::editSequence(std::map<std::string, std::array<bool, 8>>& sequenc
     int newSound;
     if (!sequenceSet) {
         std::cout << "Select a sound to add to the sequence:\n";
-        std::cout << "\n-(1)\x1b[5;93mKick\x1b[0;97m\n-(2)\x1b[5;93mSnare\x1b[0;97m\n-(3)\x1b[5;93mHat\x1b[0;97m\n";
+        std::cout << "\n\x1b[90m-(1)\x1b[93m\x1b[93mKick\x1b[97m\n\x1b[90m-(2)\x1b[93m\x1b[93mSnare\x1b[97m\n\x1b[90m-(3)\x1b[93m\x1b[93mHat\x1b[97m\n";
         sequenceSet = true;
         char ch = _getch();
         while (true) {
@@ -261,7 +261,7 @@ void Interface::editSequence(std::map<std::string, std::array<bool, 8>>& sequenc
     }
     displaySequence(sequence);
     int soundIndex;
-    std::cout << "Which sound would you like to edit? (enter corresponding number)\n\n'A': \x1b[93mAdd new sound\x1b[97m\n'Enter': \x1b[93mSave and exit\x1b[97m";
+    std::cout << "Which sound would you like to edit? (enter corresponding number)\n\n\x1b[90m'A'\x1b[93m: \x1b[93mAdd new sound\x1b[97m\n\x1b[90m'Enter'\x1b[93m: \x1b[93mSave and exit\x1b[97m";
     char ch = _getch();
     soundIndex = ch - '0';
     if (ch == 13) {

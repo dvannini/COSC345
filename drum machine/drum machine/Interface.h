@@ -40,7 +40,7 @@ public:
     static void displaySequenceWithIndicator(const std::map<std::string, std::array<bool, 8>>& sequence, int currentBeat);
     
     static int _test();
-    static void clearScreen_();
+    
 private:
     static HANDLE hConsole;
     static CHAR_INFO* screen;

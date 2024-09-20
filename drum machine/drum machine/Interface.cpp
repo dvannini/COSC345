@@ -130,11 +130,11 @@ void Interface::soundEditDisplay(const std::map<std::string, std::array<bool, 8>
         }
         else {
             // Displays the sequence we are editing:
-            std::cout << "\x1b[96m(->)\x1b[97m";
+            std::cout << "\x1b[92m(->)\x1b[97m";
             for (int n = 0; n < 40 - i->first.size(); n++) {
                 std::cout << " "; //aligns all paterns accounting for different name lengths of sounds
             }
-            std::cout << keyAndVals.first << ": ";
+            std::cout << "\x1b[92m" << keyAndVals.first << "\x1b[97m" << ": ";
             for (bool i : keyAndVals.second) {
                 if (i) {
                     std::cout << "\x1b[94m0\x1b[97m";

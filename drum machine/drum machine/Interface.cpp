@@ -16,12 +16,20 @@ int BPM = 175;
 bool sequenceSet = false;
 std::string patternName = "New Pattern";
 bool playing = false;
+
 HANDLE Interface::hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+CHAR_INFO* Interface::screen = new CHAR_INFO[SCREEN_SIZE];
 
 Interface::Interface() {
-    
+    //fill screen with blank chars
+    for (int i = 0; i < WIDTH + 1; i++) {
+        for (int j = 0; j < HEIGHT + 1; j++) {
+            screen[i * WIDTH + j].Char.UnicodeChar = ' ';
+        }
+    }
     
 }
+
 /**
 * @brief Method to display the contents of the current sequence
 *
@@ -122,7 +130,7 @@ void Interface::soundEditDisplay(const std::map<std::string, std::array<bool, 8>
         }
         else {
             // Displays the sequence we are editing:
-            std::cout << "(->)";
+            std::cout << "\x1b[96m(->)\x1b[97m";
             for (int n = 0; n < 40 - i->first.size(); n++) {
                 std::cout << " "; //aligns all paterns accounting for different name lengths of sounds
             }
@@ -140,7 +148,7 @@ void Interface::soundEditDisplay(const std::map<std::string, std::array<bool, 8>
         index++;
 
     }
-    std::cout << "Press Enter to save.\nEnter 1 - 8 to add or delete a sound in slots 1 - 8:\n" << std::endl;
+    std::cout << "Press Enter to save.\nEnter \x1b[93m1 - 8\x1b[97m to add or delete a sound in slots \x1b[93m1 - 8.\x1b[97m\n" << std::endl;
 
 
 
@@ -298,26 +306,44 @@ void Interface::editSequence(std::map<std::string, std::array<bool, 8>>& sequenc
  * \param currentBeat - the index of the playhead
  */
 void Interface::displaySequenceWithIndicator(const std::map<std::string, std::array<bool, 8>>& sequence, int currentBeat) {
-    clearScreen();
+    
     int index = 1;
-    std::cout << "BPM: " << BPM << "      Pattern name: " << patternName << "\n";
-    for (const auto& i : sequence) {
-        std::cout << "-(" << index << ")";
-        for (int n = 0; n < 40 - i.first.size(); n++) {
-            std::cout << " "; // aligns all patterns accounting for different name lengths of sounds
-        }
-        std::cout << i.first << ": ";
-        index++;
+    /*for (int i = 0; i < sequence.size(); i++) {
         for (int j = 0; j < 8; j++) {
             if (j == currentBeat) {
-                std::cout << (i.second[j] ? "|" : "|");
-            }
-            else {
-                std::cout << (i.second[j] ? "\x1b[94m0\x1b[97m" : "_");
+                screen[i * 8 + j] = (sequence[].second[j] ? "\x1b[94m0\x1b[97m" : "_");
             }
         }
-        std::cout << std::endl;
+    }*/
+    int row = 0;
+    for (const auto& i : sequence) {
+        //std::cout << "-(" << index << ")";
+        //for (int n = 0; n < 40 - i.first.size(); n++) {
+        //    std::cout << " "; // aligns all patterns accounting for different name lengths of sounds
+        //}
+        //std::cout << i.first << ": ";
+        //index++;
+        
+        for (int j = 0; j < 8; j++) {
+            if (j == currentBeat) {
+                screen[row * 8 + j].Attributes = YELLOW | FOREGROUND_INTENSITY; // White color
+                screen[row * 8 + j].Char.UnicodeChar = (WCHAR)(i.second[j] ? '|' :  '|');
+            }
+            else {
+                screen[row * 8 + j].Attributes = (i.second[j] ? FOREGROUND_BLUE | FOREGROUND_INTENSITY : WHITE | FOREGROUND_INTENSITY); // White color
+                screen[row * 8 + j].Char.UnicodeChar = (WCHAR)(i.second[j] ? '0' : '_');//L"\x1b[94m0\x1b[97m" : L"_");
+            }
+            
+            
+        }
+        row =row + 1;
+        int hOffset = 46;
+        int vOffset = 1;
+        SMALL_RECT writeRegion = { 0 + hOffset, 0 + vOffset, 8 - 1 + hOffset, sequence.size() - 1 + vOffset};
+        WriteConsoleOutput(hConsole, screen, {8,3}, {0,0}, &writeRegion);
+        
     }
+    
 }
 /**
 * @brief function to play the sequence out loud
@@ -341,6 +367,8 @@ void Interface::playSequence(const std::map<std::string, std::array<bool, 8>>& s
     char ch = 'c';
     c.startClock();
     bool running = true;
+    //clearScreen();
+    //std::cout << "BPM: " << BPM << "      Pattern name: " << patternName << "\n";
     while (running) {
         if (c.interval()) {
             displaySequenceWithIndicator(sequence, index);

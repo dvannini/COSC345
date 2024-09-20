@@ -16,6 +16,10 @@
 #define WHITE 15
 #define GREEN 10
 
+#define WIDTH 8
+#define HEIGHT 3
+#define SCREEN_SIZE WIDTH*HEIGHT //width x height
+
 class Interface {
 public:
     Interface();
@@ -36,8 +40,10 @@ public:
     static void displaySequenceWithIndicator(const std::map<std::string, std::array<bool, 8>>& sequence, int currentBeat);
     
     static int _test();
+    static void clearScreen_();
 private:
     static HANDLE hConsole;
+    static CHAR_INFO* screen;
     
 };
 

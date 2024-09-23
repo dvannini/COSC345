@@ -5,6 +5,7 @@
 #include <array>
 #include <map>
 #include <string>
+#include <windows.h>
 #include "Clock.h"
 #include "Interface.h"
 #include "Audio_Engine.h"
@@ -18,7 +19,8 @@ public:
     static void soundEditDisplay(const std::map<std::string, std::array<bool, 8>>& sequence, int toChange, std::pair<std::string, std::array<bool, 8>>& keyAndVals);
     static void editSound(std::map<std::string, std::array<bool, 8>>& sequence, std::pair<std::string, std::array<bool, 8>>& keyAndVals, int soundIndex);
     static std::pair<std::string, std::array<bool, 8>> getKeyByIndex(int soundIndex, const std::map<std::string, std::array<bool, 8>>& sequence);
-    static void addSound(int newSound, std::map<std::string, std::array<bool, 8>>& sequence, Audio_Engine& E);
+    static void soundAddDisplay(std::map<std::string, std::array<bool, 8>>& sequence, Audio_Engine& E);
+    static void addSound(std::string newSound, std::map<std::string, std::array<bool, 8>>& sequence, Audio_Engine& E);
     static void editSequence(std::map<std::string, std::array<bool, 8>>& sequence, Audio_Engine& E);
     static void playSequence(const std::map<std::string, std::array<bool, 8>>& sequence, Audio_Engine& E);
     static void setBPM(const std::map<std::string, std::array<bool, 8>>& sequence, bool edit);

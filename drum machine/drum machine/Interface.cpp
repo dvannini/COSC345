@@ -2,13 +2,13 @@
 #include "utils.h"  // Include the header where clearScreen is declared
 #include <iostream>
 #include <Windows.h>
+#include <windows.h>
 #include <conio.h>
 #include <map>
 #include <array>
 #include "Clock.h"
 #include "Interface.h"
 #include "Audio_Engine.h"
-
 // Declarations of a few strings which will be used multiple times
 
 std::string mainMenu = "please select (using the adjacent key) an action from the options below, press SPACE to play and pause:\n-(1)Edit Sequence\n-(2)Set BPM\n-(3)Set Pattern Name\n-(4)Exit\n";
@@ -16,6 +16,8 @@ int BPM = 175;
 bool sequenceSet = false;
 std::string patternName = "New Pattern";
 bool playing = false;
+std::vector<std::string> allFiles;
+bool allFilesFilled = false;
 
 
 /**
@@ -184,26 +186,67 @@ std::pair<std::string, std::array<bool, 8>> Interface::getKeyByIndex(int soundIn
     return std::make_pair("", std::array<bool, 8>{});
 }
 
+
+std::wstring ConvertToWideString(const std::string& narrow) {
+    int size_needed = MultiByteToWideChar(CP_UTF8, 0, narrow.c_str(), -1, NULL, 0);
+    std::wstring wide_string(size_needed, 0);
+    MultiByteToWideChar(CP_UTF8, 0, narrow.c_str(), -1, &wide_string[0], size_needed);
+    return wide_string;
+}
+
+//method to dsplay the menu for adding new sounds. displays all sounds available to add
+void Interface::soundAddDisplay(std::map<std::string, std::array<bool, 8>>& sequence, Audio_Engine& E) {
+    clearScreen();
+
+    // Convert directory path to wide string
+    std::string directory = "../Assets/*"; // Use wildcard to match .wav files
+    std::wstring wide_directory = ConvertToWideString(directory);
+
+    WIN32_FIND_DATA findFileData;
+    HANDLE hFind = FindFirstFile(wide_directory.c_str(), &findFileData);
+
+    if (hFind == INVALID_HANDLE_VALUE) {
+        std::cerr << "Failed to open directory or no .wav files found in: " << directory << std::endl;
+        return;
+    }
+    std::vector<std::string> soundNames;
+    std::cout << "Which sound would you like to add?\n";
+    int i = 0;
+    do {
+        std::wstring wsFileName = findFileData.cFileName;
+        std::string fileName(wsFileName.begin(), wsFileName.end()); // Conversion from wstring to string
+        if (fileName == "." || fileName == "..") {
+            continue;
+        }
+        // Print the file name
+        std::wcout << findFileData.cFileName << std::endl;
+
+        // Add to folder (after converting to narrow string)
+        soundNames.push_back(fileName);
+    } while (FindNextFile(hFind, &findFileData) != 0);
+
+    FindClose(hFind);  // Close the file handle after you're done
+    char ch = _getch();
+    while (true) {
+        int index = ch - '0';
+        if (index <= soundNames.size()) {
+            addSound(soundNames[index - 1], sequence, E);
+            return;
+        }
+        ch = _getch();
+    }
+    return;
+}
+
 /**
 * @brief Helper method to add a new sound to the sequence
 * @param sequence; the currrent sequence, the string is the name of the sound, and the array is the pattern
 * @return void
 */
-void Interface::addSound(int newSound, std::map<std::string, std::array<bool, 8>>& sequence, Audio_Engine& E) {
-    switch (newSound) {
-    case 1:
-        sequence.insert(std::make_pair("Kick 70s 1.wav", std::array<bool, 8>{false, false, false, false, false, false, false, false}));
-        E.Preload("../Assets/Kick 70s 1.wav", "Kick 70s 1.wav");
-        break;
-    case 2:
-        sequence.insert(std::make_pair("Snare 70s MPC 3.wav", std::array<bool, 8>{false, false, false, false, false, false, false, false}));
-        E.Preload("../Assets/Snare 70s MPC 3.wav", "Snare 70s MPC 3.wav");
-        break;
-    case 3:
-        sequence.insert(std::make_pair("Hihat Closed 80s UK Disco Vinyl.wav", std::array<bool, 8>{false, false, false, false, false, false, false, false}));
-        E.Preload("../Assets/Hihat Closed 80s UK Disco Vinyl.wav", "Hihat Closed 80s UK Disco Vinyl.wav");
-        break;
-    }
+void Interface::addSound(std::string newSound, std::map<std::string, std::array<bool, 8>>& sequence, Audio_Engine& E) {
+    sequence.insert(std::make_pair(newSound, std::array<bool, 8>{false, false, false, false, false, false, false, false}));
+    E.Preload("../Assets/" + newSound, newSound);
+    return;
 }
 
 /**
@@ -216,30 +259,9 @@ void Interface::editSequence(std::map<std::string, std::array<bool, 8>>& sequenc
     int newSound;
     if (!sequenceSet) {
         std::cout << "No Sequence has been set. Please select your first sound to add to a new sequence:\n";
-        std::cout << "which sound would you like to add?\n-(1)Kick\n-(2)Snare\n-(3)Hat\n";
+        /*std::cout << "which sound would you like to add?\n-(1)Kick\n-(2)Snare\n-(3)Hat\n";*/
+        soundAddDisplay(sequence, E);
         sequenceSet = true;
-        char ch = _getch();
-        while (true) {
-            if (ch - '0' == 1) {
-                newSound = ch - '0';
-                addSound(newSound, sequence, E);
-                return editSequence(sequence, E);
-                break;
-            }
-            else if (ch - '0' == 2) {
-                newSound = ch - '0';
-                addSound(newSound, sequence, E);
-                return editSequence(sequence, E);
-                break;
-            }
-            else if (ch - '0' == 3) {
-                newSound = ch - '0';
-                addSound(newSound, sequence, E);
-                return editSequence(sequence, E);
-                break;
-            }
-            ch = _getch();
-        }
     }
     displaySequence(sequence);
     int soundIndex;
@@ -251,26 +273,7 @@ void Interface::editSequence(std::map<std::string, std::array<bool, 8>>& sequenc
     }
     if (ch == 97) {
         clearScreen();
-        std::cout << "which sound would you like to add?\n-(1)Kick\n-(2)Snare\n-(3)Hat\n";
-        char ch = _getch();
-        while (true) {
-            if (ch - '0' == 1) {
-                newSound = ch - '0';
-                addSound(newSound, sequence, E);
-                return editSequence(sequence, E);
-            }
-            else if (ch - '0' == 2) {
-                newSound = ch - '0';
-                addSound(newSound, sequence, E);
-                return editSequence(sequence, E);
-            }
-            else if (ch - '0' == 3) {
-                newSound = ch - '0';
-                addSound(newSound, sequence, E);
-                return editSequence(sequence, E);
-            }
-            ch = _getch();
-        }
+        soundAddDisplay(sequence, E);
         //std::cin >> newSound;
         //returns to editor
     }
@@ -443,7 +446,7 @@ int Interface::_test() {
         std::cout << "Interface constructor failed. Details: " << e.what() << std::endl;
         return 1;
     }
-
+        
     // Test 2: getKeyByIndex
     try {
         Interface a;
@@ -465,7 +468,7 @@ int Interface::_test() {
     try {
         Interface a;
         std::map<std::string, std::array<bool, 8>> sequence;
-        a.addSound(1, sequence, E);
+        a.addSound("Kick 70s 1.wav", sequence, E);
         if (sequence.size() != 1 || sequence.find("Kick 70s 1.wav") == sequence.end()) {
             throw std::runtime_error("addSound did not add the expected sound.");
         }
@@ -482,7 +485,6 @@ int Interface::_test() {
         a.setBPM(testSequence, true);
         
             throw std::runtime_error("setBPM returned an invalid BPM value.");
-        }*/
     }
     catch (std::exception& e) {
         std::cout << "setBPM test failed. Details: " << e.what() << std::endl;

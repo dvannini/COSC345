@@ -144,6 +144,7 @@
     <Media Include="..\Assets\Hihat Closed 80s UK Disco Vinyl.wav" />
     <Media Include="..\Assets\Kick 70s 1.wav" />
     <Media Include="..\Assets\Snare 70s MPC 3.wav" />
+    <Media Include="..\Assets\very-fat-808.wav" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio_Engine.h" />

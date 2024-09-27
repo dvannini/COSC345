@@ -133,9 +133,6 @@
     <ClCompile Include="Clock.cpp" />
     <ClCompile Include="drum machine.cpp" />
     <ClCompile Include="Interface.cpp" />
-    <ClCompile Include="Sequence.cpp" />
-    <ClCompile Include="Timeline.cpp" />
-    <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="..\..\..\..\..\Desktop\Samples\One Shots\Drums\Hihat\Hihat Closed 56 TL.wav" />
@@ -149,9 +146,6 @@
     <ClInclude Include="Audio_Engine.h" />
     <ClInclude Include="Clock.h" />
     <ClInclude Include="Interface.h" />
-    <ClInclude Include="Sequence.h" />
-    <ClInclude Include="Timeline.h" />
-    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

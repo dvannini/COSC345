@@ -1,10 +1,7 @@
 #include "pch.h"
 #include "CppUnitTest.h"
-#include "../drum machine/Sequence.cpp"
 #include "../drum machine/Audio_Engine.cpp"
 #include "../drum machine/Interface.cpp"
-#include "../drum machine/Timeline.cpp"
-#include "../drum machine/Utils.cpp"
 #include "../drum machine/Clock.cpp"
 #pragma comment(lib, "winmm.lib")
 
@@ -15,7 +12,13 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 // Mock input for _getch
 int inputs[] = {
 
-	0, 49, 97, 50, 49, 49, 13, 13, 72, 80, 13, 0, 0, 0, 0, 0, 0, 0, 0, 32 // Inputs for interface testing
+	-32, 72, -32, 80, // Changing sound selection
+	32, 32, // Play, then pause
+	'a', '1', 8, '\r', 'a', '\r', // Change BPM, then cancel changing BPM in both ways.
+	's', 'h', 'e', 'l', 'l', 'o', 8, '\r', // Change sequence name to hello
+	'b', // Invalid character
+	'1', // Add note to sequence
+	'z' // Exit
 };
 int counter = -1;
 // Mock _getch() function
@@ -34,11 +37,6 @@ namespace UnitTesting
 	TEST_CLASS(UnitTesting)
 	{
 	public:
-		
-		TEST_METHOD(TestSequence)
-		{
-			Assert::AreEqual(0, Sequence::test_());
-		}
 		TEST_METHOD(TestAudioEngine)
 		{
 			Audio_Engine E;
@@ -61,7 +59,12 @@ namespace UnitTesting
 		}
 		TEST_METHOD(TestInterface)
 		{
-			Assert::AreEqual(0, Interface::_test());
+			Audio_Engine Eng = Audio_Engine::Audio_Engine();
+			Interface::E = &Eng;
+			std::map<std::string, std::array<bool, 8>> testSequence;
+			Interface::performAction('\r', testSequence);
+			Interface::performAction('z', testSequence);
+			Interface::performAction('a', testSequence);
 
 		}
 	};

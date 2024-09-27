@@ -40,39 +40,40 @@ public:
     ~Audio_Engine();
     /**
      * Preloads the sound into memory for playback.
-     * 
+     *
      * \param filename - the file path to the sound
      * \param id - an identifier for the sound
      */
     void Preload(const std::string& filename, const std::string& id);
     /**
      * Unloads a sound from memory.
-     * 
+     *
      * \param id - the id to be unloaded
      */
     void Unload(const std::string& id);
     /**
      * Plays a sound.
-     * 
+     *
      * \param id - the sound to play, shoudl be pre-loaded
      */
     void PlaySound_(std::string id);
     /**
      * Test function for audio engine.
-     * 
-     * \return 
+     *
+     * \return
      */
     static int _test();
     /**
      * tells the audio engine to stop adding sounds to the queue and play them..
-     * 
+     *
      */
     void tick();
 
 private:
 
-    static const int NUM_BUFFERS = 4; ///< Maximum number of simultaneous sound events.
+    static const int NUM_BUFFERS = 2; ///< Maximum number of simultaneous sound events.
     static const int BUFFER_SIZE = 8192; ///< Buffer size in bytes.
+    static constexpr size_t maxBufferSize = 1024 * 1024; //1mb
     HWAVEOUT hWaveOut; ///< Handle to the wave output device.
 
     std::vector<WAVEHDR> waveHeaders; ///< Vector of wave headers for audio buffers.
@@ -108,7 +109,7 @@ private:
      * @param sumHeader A pointer to the WAVEHDR structure to write the mixed data to.
      */
     static void mixData(HWAVEOUT hwaveout, std::vector<WAVEHDR>& q, WAVEHDR* sumHeader);
-    
+
     void mixAudio(std::queue<WAVEHDR>& q, WAVEHDR* mixedHeader);
     /**
      * @brief Processes and sends sound events to be mixed.
@@ -120,7 +121,7 @@ private:
     void Process_(std::queue<WAVEHDR>& q); //vector
     /**
      * Displays any errors when playing audio. for devs.
-     * 
+     *
      * \param error - the error code to interpret
      */
     void printWaveOutError(MMRESULT error);

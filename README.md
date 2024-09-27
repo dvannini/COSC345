@@ -15,4 +15,9 @@ You may need to clear the cache in your browser to see most recent changes.
 
 # How to use
 
-Chuck any sound files (.WAV) into the ./assets folder
+Once in the editor, 
+- a - set bpm
+- s - set pattern name
+- arrow keys select the sound to edit
+- numbers 1-8 toggle steps
+- space to play/pause

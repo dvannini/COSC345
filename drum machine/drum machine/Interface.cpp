@@ -44,9 +44,9 @@ Audio_Engine* Interface::E = nullptr;
 
 
 void Interface::refresh() {
-    printf(CSI "?1049h"); //enter alternate buffer
-    printf(CSI "0;0f");
-    printf(CSI "2j");
+    printf("\x1b[" "?1049h"); //enter alternate buffer
+    printf("\x1b[" "0;0f");
+    printf("\x1b[" "2j");
     
     
 }
@@ -63,25 +63,25 @@ void Interface::showEditor(std::map<std::string, std::array<bool, 8>>& sequence,
         
 
         //pattern name
-        printf(CSI "%d;%dH", originX, originY);
-        printf(CSI "1B"); 
-        printf(CSI "13C"); 
+        printf("\x1b[" "%d;%dH", originX, originY);
+        printf("\x1b[" "1B"); 
+        printf("\x1b[" "13C"); 
         printf("\x1b[93mPattern:\x1b[0m %s", patternName.c_str());
 
-        printf(CSI "%d;%dH", originX + 3, originY + 2);
+        printf("\x1b[" "%d;%dH", originX + 3, originY + 2);
         printf("\x1b[96mTracks\x1b[0m");
         
 
         drawLine({ (SHORT)(windowX - 16),2 }, 2, false, true);
 
-        printf(CSI "%d;%df", 1, 4);
+        printf("\x1b[" "%d;%df", 1, 4);
         printf("\x1b[90mBack to Menu:\x1b[0m 'Z'");
 
        
     }
     else if (segment == 1) {//sound list
 
-        printf(CSI "%d;%dH", originX + 5, originY + 7);
+        printf("\x1b[" "%d;%dH", originX + 5, originY + 7);
         int l = 0;
         for (auto i = sequence.begin(); i != sequence.end(); i++) {
             std::string s = i->first;
@@ -97,8 +97,8 @@ void Interface::showEditor(std::map<std::string, std::array<bool, 8>>& sequence,
                 printf("\x1b[90m%d\x1b[0m  %s", l+1, s.c_str());
             }
 
-            printf(CSI "%dG", originY + 7);
-            printf(CSI "3B"); 
+            printf("\x1b[" "%dG", originY + 7);
+            printf("\x1b[" "3B"); 
             l++;
 
         }
@@ -149,7 +149,7 @@ void Interface::showEditor(std::map<std::string, std::array<bool, 8>>& sequence,
         WriteConsoleOutput(hConsole, screen, { WIDTH,HEIGHT }, { 0,0 }, &writeRegion);
     }
     else if (segment == 3) { 
-        printf(CSI "%d;%df", 3, windowX-11 );
+        printf("\x1b[" "%d;%df", 3, windowX-11 );
         if (status == false) {
             printf("Status:\x1b[91mStopped\x1b[0m");
         }
@@ -159,7 +159,7 @@ void Interface::showEditor(std::map<std::string, std::array<bool, 8>>& sequence,
     }
     else if (segment == 4) { //bpm
         
-        printf(CSI "%d;%dH", originX + 1, originY + 2);
+        printf("\x1b[" "%d;%dH", originX + 1, originY + 2);
         printf("\x1b[93mBPM:\x1b[0m %d", BPM);
         drawLine({ 12,2 }, 2, false, true);
     }
@@ -202,7 +202,7 @@ void Interface::selectSound(std::map<std::string, std::array<bool, 8>>& sequence
         }
         else if (ch == 'a') {
             
-            printf(CSI "%d;%dH", windowY/3, windowX/2);
+            printf("\x1b[" "%d;%dH", windowY/3, windowX/2);
             printf("new bpm: ");
             
             char buf[4];
@@ -225,8 +225,8 @@ void Interface::selectSound(std::map<std::string, std::array<bool, 8>>& sequence
                 if (ch_ == 8 && c >= 1) {
                     c--;
                     buf[c] = '\0';
-                    printf(CSI "1D");
-                    printf(CSI "1X");
+                    printf("\x1b[" "1D");
+                    printf("\x1b[" "1X");
                 }
 
             }
@@ -245,7 +245,7 @@ void Interface::selectSound(std::map<std::string, std::array<bool, 8>>& sequence
             showEditor(sequence, 4); 
         }
         else if (ch == 's') { //pattern name
-            printf(CSI "%d;%dH", windowY / 3, windowX / 2);
+            printf("\x1b[" "%d;%dH", windowY / 3, windowX / 2);
             printf("new pattern name: ");
             const int maxSize = 20;
             char buf[maxSize];
@@ -268,8 +268,8 @@ void Interface::selectSound(std::map<std::string, std::array<bool, 8>>& sequence
                 if (ch_ == 8 && c >= 1) {
                     c--;
                     buf[c] = '\0';
-                    printf(CSI "1D");
-                    printf(CSI "1X");
+                    printf("\x1b[" "1D");
+                    printf("\x1b[" "1X");
                 }
                 
 
@@ -285,7 +285,7 @@ void Interface::selectSound(std::map<std::string, std::array<bool, 8>>& sequence
         }
         else if (ch == 'z') {
             refresh();
-            printf(CSI "0;0f");
+            printf("\x1b[" "0;0f");
             displayMainMenu(sequence);
             break;
         }
@@ -345,66 +345,66 @@ void Interface::drawCell(int v, int h, bool on) {
 void Interface::drawBox(COORD pos, int sizeX, int sizeY) {
     int px = (int)pos.X;
     int py = (int)pos.Y;
-    printf(ESC "(0");//line draw mode
-    printf(CSI "%d;%dH", px, py);
+    printf("\x1b" "(0");//line draw mode
+    printf("\x1b[" "%d;%dH", px, py);
     for (int i = 0; i < sizeY; i++) { //vertical
-        printf(CSI "%d;%df", px+i, py);
+        printf("\x1b[" "%d;%df", px+i, py);
         printf("x");
-        printf(CSI "%d;%df", px+i, py+sizeX);
+        printf("\x1b[" "%d;%df", px+i, py+sizeX);
         printf("x");
     }
     for (int i = 0; i < sizeX; i++) { //horizontal
-        printf(CSI "%d;%df", px + sizeY, py+i);
+        printf("\x1b[" "%d;%df", px + sizeY, py+i);
         printf("q");
-        printf(CSI "%d;%df", px, py+i);
+        printf("\x1b[" "%d;%df", px, py+i);
         printf("q");
     }
     //corners
-    printf(CSI "%d;%dH", px, py);
+    printf("\x1b[" "%d;%dH", px, py);
     printf("l");
-    printf(CSI "%d;%df", px, py + sizeX);
+    printf("\x1b[" "%d;%df", px, py + sizeX);
     printf("k");
-    printf(CSI "%d;%df", px+sizeY, py + sizeX);
+    printf("\x1b[" "%d;%df", px+sizeY, py + sizeX);
     printf("j");
-    printf(CSI "%d;%df", px + sizeY, py);
+    printf("\x1b[" "%d;%df", px + sizeY, py);
     printf("m");
     //reset cursor position to pos
-    printf(CSI "%d;%df", px, py);
-    printf(ESC "(B"); // exit drawing mode
+    printf("\x1b[" "%d;%df", px, py);
+    printf("\x1b" "(B"); // exit drawing mode
 
 }
 void Interface::drawLine(COORD pos, int length, bool horizontal, bool ends) {
     int px = (int)pos.Y;
     int py = (int)pos.X+3;
-    printf(ESC "(0");//line draw mode
-    printf(CSI "%d;%dH", px, py);
+    printf("\x1b" "(0");//line draw mode
+    printf("\x1b[" "%d;%dH", px, py);
     if (horizontal) {
         for (int i = 0; i < length-1; i++) { //horizontal
             
             printf("q");
         }
-        printf(CSI "%d;%df", px, py-1);
+        printf("\x1b[" "%d;%df", px, py-1);
 
         if (ends) {    
             printf("t");
-            printf(CSI "%d;%df", px, py+length-1);
+            printf("\x1b[" "%d;%df", px, py+length-1);
             printf("u");
         }
     }
     else {
         for (int i = 1; i < length; i++) { //vertical
-            printf(CSI "%d;%df", px+i, py);
+            printf("\x1b[" "%d;%df", px+i, py);
             printf("x");
         }
-        printf(CSI "%d;%df", px, py);
+        printf("\x1b[" "%d;%df", px, py);
         if (ends) {
             printf("w");
-            printf(CSI "%d;%df", px + length, py);
+            printf("\x1b[" "%d;%df", px + length, py);
             printf("v");
         }
     }
-    printf(CSI "%d;%dH", px, py);
-    printf(ESC "(B");
+    printf("\x1b[" "%d;%dH", px, py);
+    printf("\x1b" "(B");
     
     
 }

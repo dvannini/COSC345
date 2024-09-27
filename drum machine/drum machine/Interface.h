@@ -31,7 +31,6 @@
 #define CSI "\x1b["
 class Interface {
 public:
-    Interface();
     
     static void displayMainMenu(const std::map<std::string, std::array<bool, 8>>& sequence);
     
@@ -65,7 +64,6 @@ public:
      */
     static void drawCell(int v, int h, bool on);
     static void drawPlayhead(int i, int size);
-    static int _test();
     static Audio_Engine* E;
     
 private:

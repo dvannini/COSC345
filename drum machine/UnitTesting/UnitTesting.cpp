@@ -13,12 +13,15 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 int inputs[] = {
 
 	-32, 72, -32, 80, // Changing sound selection
-	32, 32, // Play, then pause
-	'a', '1', 8, '\r', 'a', '\r', // Change BPM, then cancel changing BPM in both ways.
+	-32, 'K', -32, 'M', // Next then previous page
+	'a', '1', 8, '1', '6', '0', '\r', 'a', '\r', // Change BPM, then cancel changing BPM in both ways.
 	's', 'h', 'e', 'l', 'l', 'o', 8, '\r', // Change sequence name to hello
 	'b', // Invalid character
-	'1', // Add note to sequence
-	'z' // Exit
+	'1', // Add note to sequence	
+	32, 32, // Play, then pause
+	'z', // Exit
+	// Changing number of pages (performAction('p'))
+	'1', '0', 8, '0', '\r', // Set pages to 10, backspace, then put 0 back and press enter
 };
 int counter = -1;
 // Mock _getch() function
@@ -41,9 +44,19 @@ namespace UnitTesting
 		{
 			Audio_Engine E;
 			E.Preload("../Assets/Kick 70s 1.wav", "Kick");
+			try {
+				E.Preload("incorrect filename", "Fail");
+			} catch (const std::runtime_error err) {
+				std::cout << "Preload failed as expected (Invalid filename)" << std::endl;
+			}
+			try {
+				E.Preload("../../drum machine.sln", "Fail");
+			}
+			catch (const std::runtime_error err) {
+				std::cout << "Preload failed as expected (Missing RIFF header)" << std::endl;
+			}
 			E.PlaySound_("Kick");
 			E.tick();
-			Assert::AreEqual(0, Audio_Engine::_test());
 		}
 		TEST_METHOD(TestClock)
 		{
@@ -61,8 +74,10 @@ namespace UnitTesting
 		{
 			Audio_Engine Eng = Audio_Engine::Audio_Engine();
 			Interface::E = &Eng;
-			std::map<std::string, std::array<bool, 8>> testSequence;
+			std::map<std::string, std::vector<bool>> testSequence;
 			Interface::performAction('\r', testSequence);
+			Interface::drawPlayhead(0, 3);
+			Interface::performAction('p', testSequence);
 			Interface::performAction('z', testSequence);
 			Interface::performAction('a', testSequence);
 

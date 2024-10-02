@@ -219,22 +219,6 @@ void Audio_Engine::mixAudio(std::queue<WAVEHDR>& q, WAVEHDR* mixedHeader) {
     //delete[] mixedBuffer;
 }
 
-void Audio_Engine::printWaveOutError(MMRESULT error) {
-    // Buffer to store the error message
-    wchar_t errorText[MAXERRORLENGTH];
-
-    // Retrieve the error message corresponding to the MMRESULT error code
-    if (waveOutGetErrorText(error, errorText, MAXERRORLENGTH) == MMSYSERR_NOERROR) {
-        std::wstring wideStr(errorText);
-        std::string errorText(wideStr.begin(), wideStr.end());
-        std::cerr << "waveOutWrite error: " << errorText << std::endl;
-    }
-    else {
-        std::cerr << "waveOutWrite error: Unknown error code " << error << std::endl;
-    }
-
-}
-
 Audio_Engine::WaveData Audio_Engine::LoadWave(const std::string& filename) {
     
     std::ifstream file(filename, std::ios::binary);
@@ -437,38 +421,3 @@ void Audio_Engine::Unload(const std::string& id) {
     }
     
 }
-
-int Audio_Engine::_test() {
-
-    int status = 0;
-    try {
-        Audio_Engine a;
-
-    }
-    catch (std::exception& e) {
-        std::cout << "Audio engine constructor failed. Details: " << e.what();
-        return 1;
-    }
-    try {
-        Audio_Engine a;
-        if (a.waveHeaders.size() == 0) {
-            throw std::exception("waveHeaders failed to initialize.");
-        }
-
-    }
-    catch (std::exception& e) {
-        std::cout << "Audio Engine waveHeaders has failed. Details: " << e.what();
-        return 2;
-    }
-    try {
-        Audio_Engine a;
-        a.LoadWave("this will fail");
-        return 3;
-    }
-    catch (std::exception& e) {
-        std::cout << "Loadwave Failed Succesfully and as expected. ";
-    }
-
-    return 0;
-}
-

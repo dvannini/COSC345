@@ -32,22 +32,22 @@
 class Interface {
 public:
     
-    static void displayMainMenu(const std::map<std::string, std::array<bool, 8>>& sequence);
+    static void displayMainMenu(const std::map<std::string, std::vector<bool>>& sequence);
     
-    static void addSound(std::string filename, std::map<std::string, std::array<bool, 8>>& sequence); //Audio_Engine& E
+    static void addSound(int newSound, std::map<std::string, std::vector<bool>>& sequence); //Audio_Engine& E
     
-    static void playSequence(std::map<std::string, std::array<bool, 8>>& sequence); //  Audio_Engine& E
+    static void playSequence(std::map<std::string, std::vector<bool>>& sequence); //  Audio_Engine& E
     
-    static int performAction(char choice, std::map<std::string, std::array<bool, 8>>& sequence); // Audio_Engine& E
+    static int performAction(char choice, std::map<std::string, std::vector<bool>>& sequence); // Audio_Engine& E
     
-    static void selectSound(std::map<std::string, std::array<bool, 8>>& sequence);
-    //static void editRow(std::map<std::string, std::array<bool, 8>>& sequence);
+    static void selectSound(std::map<std::string, std::vector<bool>>& sequence);
+    //static void editRow(std::map<std::string, std::vector<bool>>& sequence);
     /**
      * Shows the sequence editor.
      * 
      * \param sequence
      */
-    static void showEditor(std::map<std::string, std::array<bool, 8>>& sequence, int segment);
+    static void showEditor(std::map<std::string, std::vector<bool>>& sequence, int segment);
     /**
      * Updates the screen.
      * 
@@ -70,6 +70,27 @@ public:
     
     static Audio_Engine* E;
     
+    /** 
+     * @brief Setter for sequenceLength static variable
+     * Changing this value AFTER loading sounds may cause issues.
+     *
+     * \param length - new value for sequenceLength
+    */
+    static void setSequenceLength(int length);
+
+    /** 
+     * @brief Go to the next page in the sequence view. 
+     * 
+     * \param sequence - Sequence
+    */
+    static void nextPage(std::map<std::string, std::vector<bool>>& sequence);
+    /**
+     * @brief Go to the next page in the sequence view.
+     * 
+     * \param sequence - Sequence
+    */
+    static void prevPage(std::map<std::string, std::vector<bool>>& sequence);
+
 private:
     static HANDLE hConsole;
     static CHAR_INFO* screen; /// sequencer canvas
@@ -100,6 +121,8 @@ private:
 
     static std::vector<std::string> list; /// stores the cached sound files in the assets folder
     
+    static int sequenceLength; /// Number of beats in the sequence
+    static int pageNum; /// Current page
 };
 
 #endif // INTERFACE_H

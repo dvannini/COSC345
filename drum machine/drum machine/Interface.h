@@ -23,8 +23,8 @@
 #define SCREEN_SIZE WIDTH*HEIGHT //width x height
 
 //for sound list
-#define S_WIDTH 10
-#define S_HEIGHT 10
+#define S_WIDTH 27
+#define S_HEIGHT 22
 
 
 #define ESC "\x1b"
@@ -34,7 +34,7 @@ public:
     
     static void displayMainMenu(const std::map<std::string, std::array<bool, 8>>& sequence);
     
-    static void addSound(int newSound, std::map<std::string, std::array<bool, 8>>& sequence); //Audio_Engine& E
+    static void addSound(std::string filename, std::map<std::string, std::array<bool, 8>>& sequence); //Audio_Engine& E
     
     static void playSequence(std::map<std::string, std::array<bool, 8>>& sequence); //  Audio_Engine& E
     
@@ -64,6 +64,10 @@ public:
      */
     static void drawCell(int v, int h, bool on);
     static void drawPlayhead(int i, int size);
+
+    static void ListFiles(std::map<std::string, std::array<bool, 8>>& sequence);
+    
+    
     static Audio_Engine* E;
     
 private:
@@ -73,6 +77,7 @@ private:
 
     static void drawBox(COORD pos, int sizeX, int sizeY);
     static void drawLine(COORD pos, int length, bool horizontal = true, bool ends = false);
+    
     
     static int windowX;
     static int windowY;
@@ -85,12 +90,15 @@ private:
 
     static bool status;
 
+    static bool fileView;
+
     static int selection;
 
     static int pIndex; /// index of playhead when playing the pattenr
 
     static bool exit_;
 
+    static std::vector<std::string> list; /// stores the cached sound files in the assets folder
     
 };
 

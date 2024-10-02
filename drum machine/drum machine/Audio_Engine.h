@@ -62,6 +62,15 @@ public:
      *
      * \return
      */
+    /**
+     * Function to simply play audio when browsing sounds.
+     * 
+     * \param filename - the filename of the sound to play
+     */
+    void Preview(std::string filename);
+
+    void Stop();
+
     static int _test();
     /**
      * tells the audio engine to stop adding sounds to the queue and play them..
@@ -70,16 +79,18 @@ public:
     void tick();
 
 private:
-
+    int prevIndex = 0;
     static const int NUM_BUFFERS = 2; ///< Maximum number of simultaneous sound events.
     static const int BUFFER_SIZE = 8192; ///< Buffer size in bytes.
     static constexpr size_t maxBufferSize = 1024 * 1024; //1mb
     HWAVEOUT hWaveOut; ///< Handle to the wave output device.
 
     std::vector<WAVEHDR> waveHeaders; ///< Vector of wave headers for audio buffers.
+    WAVEHDR previewHeader = {};
     std::queue<WAVEHDR> soundQueue; ///< The queue of sound events for simultaneous playback
     int voiceIndex; ///< Index of the current buffer.
     std::vector<char> mixedBuffer;
+    std::vector<BYTE> previewBuf;
     struct WaveData {
         WAVEFORMATEX waveFormat; ///< Audio format information.
         std::vector<BYTE> audioData; ///< Audio data.
@@ -109,7 +120,12 @@ private:
      * @param sumHeader A pointer to the WAVEHDR structure to write the mixed data to.
      */
     static void mixData(HWAVEOUT hwaveout, std::vector<WAVEHDR>& q, WAVEHDR* sumHeader);
-
+    /**
+     * list the files in the current directory.
+     * 
+     * \param directory - the filepath
+     */
+    
     void mixAudio(std::queue<WAVEHDR>& q, WAVEHDR* mixedHeader);
     /**
      * @brief Processes and sends sound events to be mixed.
@@ -125,6 +141,10 @@ private:
      * \param error - the error code to interpret
      */
     void printWaveOutError(MMRESULT error);
+
+
+
+    void convert24(WaveData& waveData);
 };
 
 #endif // AUDIO_ENGINE_H

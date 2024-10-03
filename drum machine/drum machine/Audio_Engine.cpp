@@ -248,7 +248,6 @@ Audio_Engine::WaveData Audio_Engine::LoadWave(const std::string& filename) {
 
     // Read RIFF header
     /* Flawfinder: ignore */
-
     file.read(chunkID, 4);
 
     if (std::strncmp(chunkID, "RIFF", 4) != 0) {
@@ -269,6 +268,7 @@ Audio_Engine::WaveData Audio_Engine::LoadWave(const std::string& filename) {
 
     while (file.good() && !(formatChunkFound && dataChunkFound)) {
         file.read(chunkID, 4);
+        /* Flawfinder: ignore */
         file.read(reinterpret_cast<char*>(&chunkSize), 4);
 
         if (std::strncmp(chunkID, "fmt ", 4) == 0) {

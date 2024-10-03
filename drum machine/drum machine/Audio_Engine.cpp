@@ -247,13 +247,18 @@ Audio_Engine::WaveData Audio_Engine::LoadWave(const std::string& filename) {
     uint32_t chunkSize;
 
     // Read RIFF header
+    /* Flawfinder: ignore */
+
     file.read(chunkID, 4);
+
     if (std::strncmp(chunkID, "RIFF", 4) != 0) {
         throw std::runtime_error("Invalid WAVE file: RIFF header not found");
     }
 
+    // The creator of flawfinder says this is how you should resolve this issue. See https://github.com/david-a-wheeler/flawfinder/issues/59
+    /* Flawfinder: ignore */
     file.read(reinterpret_cast<char*>(&chunkSize), 4);
-
+    /* Flawfinder: ignore */
     file.read(chunkID, 4);
     if (std::strncmp(chunkID, "WAVE", 4) != 0) {
         throw std::runtime_error("Invalid WAVE file: WAVE format not found");
@@ -270,7 +275,7 @@ Audio_Engine::WaveData Audio_Engine::LoadWave(const std::string& filename) {
             if (chunkSize < 16) {
                 throw std::runtime_error("Invalid format chunk size");
             }
-
+            /* Flawfinder: ignore */
             file.read(reinterpret_cast<char*>(&waveData.waveFormat), 16);
 
             // Skip any extra format bytes
@@ -280,6 +285,7 @@ Audio_Engine::WaveData Audio_Engine::LoadWave(const std::string& filename) {
         }
         else if (std::strncmp(chunkID, "data", 4) == 0) {
             waveData.audioData.resize(chunkSize);
+            /* Flawfinder: ignore */
             file.read(reinterpret_cast<char*>(waveData.audioData.data()), chunkSize);
 
             dataChunkFound = true;

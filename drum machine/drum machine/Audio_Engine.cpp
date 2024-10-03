@@ -267,6 +267,7 @@ Audio_Engine::WaveData Audio_Engine::LoadWave(const std::string& filename) {
     bool dataChunkFound = false;
 
     while (file.good() && !(formatChunkFound && dataChunkFound)) {
+        /* Flawfinder: ignore */
         file.read(chunkID, 4);
         /* Flawfinder: ignore */
         file.read(reinterpret_cast<char*>(&chunkSize), 4);

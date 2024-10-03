@@ -733,7 +733,6 @@ int Interface::performAction(char choice, std::map<std::string, std::vector<bool
         std::cout << "\x1b[92mHave a good day.\x1b[97m";
         Sleep(1000);
         return -1;
-        break;
     }
     default:
         refresh();
@@ -741,8 +740,6 @@ int Interface::performAction(char choice, std::map<std::string, std::vector<bool
         Sleep(750);
         refresh();
         displayMainMenu(sequence);
-        
-
     }
     return 0;
 }

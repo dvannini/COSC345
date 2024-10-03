@@ -37,11 +37,15 @@ bool Interface::altView = false;
 
 bool Interface::status = false;
 
+bool Interface::fileView = false;
+
 int Interface::selection = 0;
 
 int Interface::pIndex = 0;
 
 bool Interface::exit_ = false;
+
+std::vector<std::string> Interface::list;
 
 Audio_Engine* Interface::E = nullptr;
 
@@ -53,7 +57,75 @@ void Interface::refresh() {
     
     
 }
+void Interface::ListFiles(std::map<std::string, std::vector<bool>>& sequence)
+{
+    list.clear();
+    list.shrink_to_fit(); //check this for issues
+    WIN32_FIND_DATA fileData;
+    std::wstring dir = L"../Assets/*";
+    
+    HANDLE hFind = FindFirstFile((dir).c_str(), & fileData);
 
+    if (hFind == INVALID_HANDLE_VALUE) {
+        std::wcerr << "Error opening directory: " << dir << std::endl;
+        return;
+    }
+
+    do {
+        const std::wstring fileName = fileData.cFileName;
+        std::string f(fileName.begin(), fileName.end());
+        //printf("\x1b[%d;%df", originY+5, originX+10);
+        if (fileName != L"." && fileName != L"..") { // Ignore "." and ".." directories
+            
+            
+            list.push_back(f);
+           
+        }
+        
+    } while (FindNextFile(hFind, &fileData) != 0);
+    
+    bool select_ = false;
+    selection = 0;
+    showEditor(sequence, 1);
+    
+    while (!select_) {
+        if (_kbhit()) {
+
+            char ch = _getch();
+        
+            if (ch == -32) {
+                ch = _getch();
+                if (ch == 72) {
+                    selection = (selection - 1 + ((list.size()-1) + 1)) % ((list.size() - 1) + 1);
+                    E->Preview("../Assets/" + list[selection]);
+
+                }
+                else if (ch == 80) {
+                    selection = (selection + 1 + ((list.size() - 1) + 1)) % ((list.size() - 1) + 1);
+                    E->Preview("../Assets/" + list[selection]);
+                }
+            
+            }
+            else if (ch == '\r') {
+                fileView = false;
+                addSound(list[selection], sequence);
+            
+                SMALL_RECT r = { 10, 6, 10 + S_WIDTH, 6 + S_HEIGHT };
+                WriteConsoleOutput(hConsole, bSounds, { S_WIDTH, S_HEIGHT }, { 0,0 }, &r);
+                E->Stop();
+                showEditor(sequence, 1); //update sound list display
+                showEditor(sequence, 2); //update sequencer display
+                break;
+
+            }
+            showEditor(sequence, 1); //update sound list display
+        }
+        
+
+    }
+
+    FindClose(hFind);
+}
 
 void Interface::showEditor(std::map<std::string, std::vector<bool>>& sequence, int segment) {
     if (segment == -1) {
@@ -79,6 +151,17 @@ void Interface::showEditor(std::map<std::string, std::vector<bool>>& sequence, i
 
         printf("\x1b[" "%d;%df", 1, 4);
         printf("\x1b[90mBack to Menu:\x1b[0m 'Z'");
+        for (int j = 0; j < S_HEIGHT; j++) {
+            for (int i = 0; i < S_WIDTH; i++) {
+                bSounds[j * S_WIDTH + i].Attributes = WHITE | FOREGROUND_INTENSITY;
+
+                bSounds[j * S_WIDTH + i].Char.UnicodeChar = 0x0020;
+
+
+            }
+
+
+        }
 
        
     }
@@ -86,25 +169,62 @@ void Interface::showEditor(std::map<std::string, std::vector<bool>>& sequence, i
 
         printf("\x1b[" "%d;%dH", originX + 5, originY + 7);
         int l = 0;
-        for (auto i = sequence.begin(); i != sequence.end(); i++) {
-            std::string s = i->first;
-            if (s.length() > 15) {
-                s.resize(15);
-                s = s + "... .wav";
+        if (!fileView) {
+            SMALL_RECT r = { 10, 6, 10 + S_WIDTH, 6 + S_HEIGHT };
+            WriteConsoleOutput(hConsole, bSounds, { S_WIDTH, S_HEIGHT }, { 0,0 }, &r);
+            for (auto i = sequence.begin(); i != sequence.end(); i++) {
+                std::string s = i->first;
+                if (s.length() > 15) {
+                    s.resize(15);
+                    s = s + "... .wav";
+                }
+                if (l == selection) {
+                    printf("\x1b[90m%d\x1b[0m  \x1b[107;30m%s\x1b[0;97m", l+1,s.c_str());
+                }
+                else {
+
+                    printf("\x1b[90m%d\x1b[0m  %s", l+1, s.c_str());
+                }
+
+                printf("\x1b[" "%dG", originY + 7);
+                printf("\x1b[" "3B"); 
+                l++;
+
             }
-            if (l == selection) {
-                printf("\x1b[90m%d\x1b[0m  \x1b[107;30m%s\x1b[0;97m", l+1,s.c_str());
+            printf("\x1b[14C");
+            if (selection == sequence.size()) {
+            
+                printf("\x1b[107;30m+\x1b[0;97m");
+            
             }
             else {
-
-                printf("\x1b[90m%d\x1b[0m  %s", l+1, s.c_str());
+                printf("+");
             }
+        }
+        else {
+            int l = 0;
+            
+            SMALL_RECT r = {10, 6, 10+S_WIDTH, 6+S_HEIGHT};
+            WriteConsoleOutput(hConsole, bSounds, { S_WIDTH, S_HEIGHT }, { 0,0 }, &r);
+            for (std::string s : list) {
 
-            printf("\x1b[" "%dG", originY + 7);
-            printf("\x1b[" "3B");
+                if (s.length() > 15) {
+                    s.resize(15);
+                    s = s + "... .wav";
+                }
+                if (l == selection) {
+                    printf("\x1b[90m%d\x1b[0m  \x1b[107;30m%s\x1b[0;97m", l + 1, s.c_str());
+                }
+                else {
 
-            l++;
+                    printf("\x1b[90m%d\x1b[0m  %s", l + 1, s.c_str());
+                }
 
+                printf("\x1b[" "%dG", originY + 7);
+                printf("\x1b[" "1B");
+                l++;
+
+            }
         }
         drawLine({ (SHORT)(originX + 35), (SHORT)(originY + 1) }, l + 7, false, false);
     }
@@ -208,10 +328,11 @@ void Interface::selectSound(std::map<std::string, std::vector<bool>>& sequence) 
         if (ch == -32) {  
             ch = _getch();  
             if (ch == 72) { 
-                selection = (selection - 1 + sequence.size()) % sequence.size();
+                selection = (selection - 1 + (sequence.size()+1)) % (sequence.size() + 1);
+                
             }
             else if (ch == 80) { 
-                selection = (selection + 1 + sequence.size()) % sequence.size();
+                selection = (selection + 1 + (sequence.size() + 1)) % (sequence.size() + 1);
             }
             else if (ch == 'K') { // left arrow
                 prevPage(sequence);
@@ -222,6 +343,22 @@ void Interface::selectSound(std::map<std::string, std::vector<bool>>& sequence) 
                 showEditor(sequence, 2); //update sequence display
             }
             showEditor(sequence, 1); //update sound list display
+        }
+        else if (ch == '\r' && selection == sequence.size()) { //open sound browser
+            fileView = true;
+            ListFiles(sequence);
+        }
+        else if (ch == '-' && selection != sequence.size()) {
+            
+            std::vector<std::string> l;
+            for (auto i = sequence.begin(); i != sequence.end(); i++) {
+                l.push_back(i->first);
+                
+            }
+            E->Unload(l[selection]);
+            sequence.erase(l[selection]);
+            showEditor(sequence, 2);
+            showEditor(sequence, 1);
         }
         else if (ch == 32) {
             
@@ -316,6 +453,7 @@ void Interface::selectSound(std::map<std::string, std::vector<bool>>& sequence) 
             showEditor(sequence, 5);
         }
         else if (ch == 'z') {
+            
             refresh();
             printf("\x1b[" "0;0f");
             displayMainMenu(sequence);
@@ -454,30 +592,12 @@ void Interface::displayMainMenu(const std::map<std::string, std::vector<bool>>& 
 * @param sequence; the currrent sequence, the string is the name of the sound, and the array is the pattern
 * @return void
 */
-void Interface::addSound(int newSound, std::map<std::string, std::vector<bool>>& sequence) {
-    switch (newSound) {
-    case 1:
-        sequence.insert(std::make_pair("Kick 70s 1.wav", std::vector<bool>{}));
-        for (int i = 0; i < sequenceLength; i++) {
-            sequence["Kick 70s 1.wav"].push_back(false);
-        }
-        E->Preload("../Assets/Kick 70s 1.wav", "Kick 70s 1.wav");
-        break;
-    case 2:
-        sequence.insert(std::make_pair("Snare 70s MPC 3.wav", std::vector<bool>{}));
-        for (int i = 0; i < sequenceLength; i++) {
-            sequence["Snare 70s MPC 3.wav"].push_back(false);
-        }
-        E->Preload("../Assets/Snare 70s MPC 3.wav", "Snare 70s MPC 3.wav");
-        break;
-    case 3:
-        sequence.insert(std::make_pair("Hihat Closed 80s UK Disco Vinyl.wav", std::vector<bool>{}));
-        for (int i = 0; i < sequenceLength; i++) {
-            sequence["Hihat Closed 80s UK Disco Vinyl.wav"].push_back(false);
-        }
-        E->Preload("../Assets/Hihat Closed 80s UK Disco Vinyl.wav", "Hihat Closed 80s UK Disco Vinyl.wav");
-        break;
+void Interface::addSound(std::string filename, std::map<std::string, std::vector<bool>>& sequence) {
+    sequence.insert(std::make_pair(filename, std::vector<bool>{}));
+    for (int i = 0; i < sequenceLength; i++) {
+        sequence[filename].push_back(false);
     }
+    E->Preload("../Assets/" + filename, filename); 
 }
 
 
@@ -555,9 +675,9 @@ int Interface::performAction(char choice, std::map<std::string, std::vector<bool
     switch (choice) {
     case '\r': { //1
         //start with 3 sounds
-        addSound(1, sequence);
-        addSound(2, sequence);
-        addSound(3, sequence);
+        addSound("Kick 70s 1.wav", sequence);
+        addSound("Snare 70s MPC 3.wav", sequence);
+        addSound("Hihat Closed 80s UK Disco Vinyl.wav", sequence);
 
 
         showEditor(sequence, -1); //init
@@ -613,7 +733,6 @@ int Interface::performAction(char choice, std::map<std::string, std::vector<bool
         std::cout << "\x1b[92mHave a good day.\x1b[97m";
         Sleep(1000);
         return -1;
-        break;
     }
     default:
         refresh();
@@ -621,8 +740,6 @@ int Interface::performAction(char choice, std::map<std::string, std::vector<bool
         Sleep(750);
         refresh();
         displayMainMenu(sequence);
-        
-
     }
     return 0;
 }

@@ -12,7 +12,8 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 // Mock input for _getch
 int inputs[] = {
 
-	-32, 72, -32, 80, // Changing sound selection
+	-32, 72, '\r', -32, 72, -32, 80, '\r', // Add sound
+	-32, 80, // Changing sound selection
 	-32, 'K', -32, 'M', // Next then previous page
 	'a', '1', 8, '1', '6', '0', '\r', 'a', '\r', // Change BPM, then cancel changing BPM in both ways.
 	's', 'h', 'e', 'l', 'l', 'o', 8, '\r', // Change sequence name to hello
@@ -44,6 +45,7 @@ namespace UnitTesting
 		{
 			Audio_Engine E;
 			E.Preload("../Assets/Kick 70s 1.wav", "Kick");
+			E.Preload("../Assets/Cash Register.wav", "Cash");
 			try {
 				E.Preload("incorrect filename", "Fail");
 			} catch (const std::runtime_error err) {
@@ -56,7 +58,10 @@ namespace UnitTesting
 				std::cout << "Preload failed as expected (Missing RIFF header)" << std::endl;
 			}
 			E.PlaySound_("Kick");
-			E.tick();
+			E.PlaySound_("Cash");
+			E.Preview("../Assets/Kick 70s 1.wav");
+			E.tick();	
+			E.Unload("Cash");
 		}
 		TEST_METHOD(TestClock)
 		{

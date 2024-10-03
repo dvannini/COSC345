@@ -57,7 +57,7 @@ void Interface::refresh() {
     
     
 }
-void Interface::ListFiles(std::map<std::string, std::array<bool, 8>>& sequence)
+void Interface::ListFiles(std::map<std::string, std::vector<bool>>& sequence)
 {
     list.clear();
     list.shrink_to_fit(); //check this for issues
@@ -592,34 +592,12 @@ void Interface::displayMainMenu(const std::map<std::string, std::vector<bool>>& 
 * @param sequence; the currrent sequence, the string is the name of the sound, and the array is the pattern
 * @return void
 */
-void Interface::addSound(std::string filename, std::map<std::string, std::array<bool, 8>>& sequence) {
-    sequence.insert(std::make_pair(filename, std::array<bool, 8>{false, false, false, false, false, false, false, false}));
-    E->Preload("../Assets/" + filename, filename);
-    /*switch (newSound) {
-void Interface::addSound(int newSound, std::map<std::string, std::vector<bool>>& sequence) {
-    switch (newSound) {
-    case 1:
-        sequence.insert(std::make_pair("Kick 70s 1.wav", std::vector<bool>{}));
-        for (int i = 0; i < sequenceLength; i++) {
-            sequence["Kick 70s 1.wav"].push_back(false);
-        }
-        E->Preload("../Assets/Kick 70s 1.wav", "Kick 70s 1.wav");
-        break;
-    case 2:
-        sequence.insert(std::make_pair("Snare 70s MPC 3.wav", std::vector<bool>{}));
-        for (int i = 0; i < sequenceLength; i++) {
-            sequence["Snare 70s MPC 3.wav"].push_back(false);
-        }
-        E->Preload("../Assets/Snare 70s MPC 3.wav", "Snare 70s MPC 3.wav");
-        break;
-    case 3:
-        sequence.insert(std::make_pair("Hihat Closed 80s UK Disco Vinyl.wav", std::vector<bool>{}));
-        for (int i = 0; i < sequenceLength; i++) {
-            sequence["Hihat Closed 80s UK Disco Vinyl.wav"].push_back(false);
-        }
-        E->Preload("../Assets/Hihat Closed 80s UK Disco Vinyl.wav", "Hihat Closed 80s UK Disco Vinyl.wav");
-        break;
-    }*/
+void Interface::addSound(std::string filename, std::map<std::string, std::vector<bool>>& sequence) {
+    sequence.insert(std::make_pair(filename, std::vector<bool>{}));
+    for (int i = 0; i < sequenceLength; i++) {
+        sequence[filename].push_back(false);
+    }
+    E->Preload("../Assets/" + filename, filename); 
 }
 
 

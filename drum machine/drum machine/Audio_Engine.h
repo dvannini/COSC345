@@ -50,21 +50,32 @@ public:
      *
      * \param id - the id to be unloaded
      */
+    void Unload(const std::string& id);
+    /**
+     * Plays a sound.
+     *
+     * \param id - the sound to play, shoudl be pre-loaded
+     */
     void PlaySound_(std::string id);
     /**
      * Test function for audio engine.
      *
      * \return
      */
-    /**
-     * Function to simply play audio when browsing sounds.
-     * 
-     * \param filename - the filename of the sound to play
-     */
+     /**
+      * Function to simply play audio when browsing sounds.
+      *
+      * \param filename - the filename of the sound to play
+      */
     void Preview(std::string filename);
 
     void Stop();
 
+    static int _test();
+    /**
+     * tells the audio engine to stop adding sounds to the queue and play them..
+     *
+     */
     void tick();
 
 private:
@@ -97,6 +108,23 @@ private:
      * @return The WaveData struct containing the audio format and data.
      */
     WaveData LoadWave(const std::string& filename);
+
+    /**
+     * @brief Mixes multiple sound events into one audio stream.
+     *
+     * This method takes a queue of sound events and sums their audio together
+     * before sending it to the wave output device. If there is only one sound,
+     * it is left unmodified.
+     *
+     * @param q The queue of sound events.
+     * @param sumHeader A pointer to the WAVEHDR structure to write the mixed data to.
+     */
+    static void mixData(HWAVEOUT hwaveout, std::vector<WAVEHDR>& q, WAVEHDR* sumHeader);
+    /**
+     * list the files in the current directory.
+     *
+     * \param directory - the filepath
+     */
 
     void mixAudio(std::queue<WAVEHDR>& q, WAVEHDR* mixedHeader);
     /**

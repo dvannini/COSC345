@@ -34,7 +34,7 @@ public:
     
     static void displayMainMenu(const std::map<std::string, std::vector<bool>>& sequence);
     
-    static void addSound(int newSound, std::map<std::string, std::vector<bool>>& sequence); //Audio_Engine& E
+    static void addSound(std::string filename, std::map<std::string, std::vector<bool>>& sequence); //Audio_Engine& E
     
     static void playSequence(std::map<std::string, std::vector<bool>>& sequence); //  Audio_Engine& E
     
@@ -65,7 +65,7 @@ public:
     static void drawCell(int v, int h, bool on);
     static void drawPlayhead(int i, int size);
 
-    static void ListFiles(std::map<std::string, std::array<bool, 8>>& sequence);
+    static void ListFiles(std::map<std::string, std::vector<bool>>& sequence);
     
     
     static Audio_Engine* E;

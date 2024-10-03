@@ -95,7 +95,7 @@ Audio_Engine::~Audio_Engine() { //needs tests is headers deallocate successfully
  * \param id the identification to reference the sound data
  */
 void Audio_Engine::Preload(const std::string& filename, const std::string& id) {
-    
+
     sounds_[id] = LoadWave(filename);
     return;
 }
@@ -119,27 +119,27 @@ void Audio_Engine::PlaySound_(std::string id) {
 void Audio_Engine::tick() {
     if (!soundQueue.empty()) {
         if (!(waveHeaders[voiceIndex].dwFlags & WHDR_DONE)) {
-        
-                    
+
+
             if (waveOutReset(hWaveOut) != MMSYSERR_NOERROR) { // stop waveform and reset waveform playhead to beginning
                 std::cout << "could not stop playback successfully.";
                 throw std::runtime_error("program has carked it");
             }
-        
+
         }
-        
+
         Process_(soundQueue);
-        
+
     }
-    
+
 }
 void Audio_Engine::Process_(std::queue<WAVEHDR>& q) {
 
-    
+
 
     WAVEHDR* mixedHeader = &q.front();
 
-    
+
     if (q.size() > 0) {
 
 
@@ -164,7 +164,7 @@ void Audio_Engine::Process_(std::queue<WAVEHDR>& q) {
 void Audio_Engine::mixAudio(std::queue<WAVEHDR>& q, WAVEHDR* mixedHeader) {
     if (q.empty()) return;
     if (q.size() == 1) return;
-    
+
     size_t maxLength = 0;
     std::vector<WAVEHDR> headers;
 
@@ -183,7 +183,7 @@ void Audio_Engine::mixAudio(std::queue<WAVEHDR>& q, WAVEHDR* mixedHeader) {
         mixedBuffer.resize(maxLength);
     }
     std::fill(mixedBuffer.begin(), mixedBuffer.begin() + maxLength, 0);
-    
+
     // Mix audio data
     for (const auto& header : headers) {
         for (DWORD i = 0; i < header.dwBufferLength; i += 3) { // Assuming 24-bit audio
@@ -219,8 +219,24 @@ void Audio_Engine::mixAudio(std::queue<WAVEHDR>& q, WAVEHDR* mixedHeader) {
     //delete[] mixedBuffer;
 }
 
+void Audio_Engine::printWaveOutError(MMRESULT error) {
+    // Buffer to store the error message
+    wchar_t errorText[MAXERRORLENGTH];
+
+    // Retrieve the error message corresponding to the MMRESULT error code
+    if (waveOutGetErrorText(error, errorText, MAXERRORLENGTH) == MMSYSERR_NOERROR) {
+        std::wstring wideStr(errorText);
+        std::string errorText(wideStr.begin(), wideStr.end());
+        std::cerr << "waveOutWrite error: " << errorText << std::endl;
+    }
+    else {
+        std::cerr << "waveOutWrite error: Unknown error code " << error << std::endl;
+    }
+
+}
+
 Audio_Engine::WaveData Audio_Engine::LoadWave(const std::string& filename) {
-    
+
     std::ifstream file(filename, std::ios::binary);
     if (!file) {
         throw std::runtime_error("Failed to open wave file: " + filename);
@@ -301,23 +317,23 @@ Audio_Engine::WaveData Audio_Engine::LoadWave(const std::string& filename) {
         waveData.waveFormat.nAvgBytesPerSec = waveData.waveFormat.nSamplesPerSec * waveData.waveFormat.nBlockAlign;
     }
 
-   
+
     if (waveData.waveFormat.wBitsPerSample != 24) {
         convert24(waveData);
-        
+
     }
 
     return waveData;
 }
 void Audio_Engine::Stop() {
     if (waveOutReset(hWaveOut) != MMSYSERR_NOERROR) { // Stop waveform and reset waveform playhead to beginning
-            waveOutUnprepareHeader(hWaveOut, &waveHeaders[prevIndex], sizeof(WAVEHDR));
-            std::cout << "Could not stop playback successfully.";
-            throw std::runtime_error("Program has failed to reset playback.");
+        waveOutUnprepareHeader(hWaveOut, &waveHeaders[prevIndex], sizeof(WAVEHDR));
+        std::cout << "Could not stop playback successfully.";
+        throw std::runtime_error("Program has failed to reset playback.");
     }
 }
 void Audio_Engine::Preview(std::string filename) {
-    
+
     {
 
         Stop(); //stop any playing audio
@@ -369,12 +385,12 @@ void Audio_Engine::Preview(std::string filename) {
 
 
 
-    
+
 }
 
 void Audio_Engine::convert24(WaveData& waveData) {
     if (waveData.waveFormat.wBitsPerSample == 24) {
-        return; 
+        return;
     }
 
     if (waveData.waveFormat.wBitsPerSample != 16) {
@@ -407,7 +423,7 @@ void Audio_Engine::convert24(WaveData& waveData) {
 
     // Replace the audio data
     waveData.audioData = std::move(newAudioData);
-    
+
     //waveData.audioData.clear();
     //waveData.audioData.insert(waveData.audioData.end(), newAudioData.begin(), newAudioData.end());
 }
@@ -419,5 +435,39 @@ void Audio_Engine::Unload(const std::string& id) {
     if (it != sounds_.end()) {
         sounds_.erase(it);  // This removes the entry and frees associated memory
     }
-    
+
+}
+
+int Audio_Engine::_test() {
+
+    int status = 0;
+    try {
+        Audio_Engine a;
+
+    }
+    catch (std::exception& e) {
+        std::cout << "Audio engine constructor failed. Details: " << e.what();
+        return 1;
+    }
+    try {
+        Audio_Engine a;
+        if (a.waveHeaders.size() == 0) {
+            throw std::exception("waveHeaders failed to initialize.");
+        }
+
+    }
+    catch (std::exception& e) {
+        std::cout << "Audio Engine waveHeaders has failed. Details: " << e.what();
+        return 2;
+    }
+    try {
+        Audio_Engine a;
+        a.LoadWave("this will fail");
+        return 3;
+    }
+    catch (std::exception& e) {
+        std::cout << "Loadwave Failed Succesfully and as expected. ";
+    }
+
+    return 0;
 }

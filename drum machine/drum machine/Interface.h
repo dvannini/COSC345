@@ -119,6 +119,8 @@ private:
 
     static bool exit_;
 
+    static int numTracks;
+
     static std::vector<std::string> list; /// stores the cached sound files in the assets folder
     
     static int sequenceLength; /// Number of beats in the sequence

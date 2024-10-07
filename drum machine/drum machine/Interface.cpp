@@ -45,6 +45,8 @@ int Interface::pIndex = 0;
 
 bool Interface::exit_ = false;
 
+int Interface::numTracks = 0;
+
 std::vector<std::string> Interface::list;
 
 Audio_Engine* Interface::E = nullptr;
@@ -109,7 +111,7 @@ void Interface::ListFiles(std::map<std::string, std::vector<bool>>& sequence)
             else if (ch == '\r') {
                 fileView = false;
                 addSound(list[selection], sequence);
-            
+                
                 SMALL_RECT r = { 10, 6, 10 + S_WIDTH, 6 + S_HEIGHT };
                 WriteConsoleOutput(hConsole, bSounds, { S_WIDTH, S_HEIGHT }, { 0,0 }, &r);
                 E->Stop();
@@ -117,7 +119,7 @@ void Interface::ListFiles(std::map<std::string, std::vector<bool>>& sequence)
                 showEditor(sequence, 2); //update sequencer display
                 break;
 
-            }
+            } else if (ch)
             showEditor(sequence, 1); //update sound list display
         }
         
@@ -346,10 +348,18 @@ void Interface::selectSound(std::map<std::string, std::vector<bool>>& sequence) 
         }
         else if (ch == '\r' && selection == sequence.size()) { //open sound browser
             fileView = true;
-            ListFiles(sequence);
+            if (numTracks < 8) {
+                ListFiles(sequence);
+                
+            }
+            else {
+                printf("max track count"); //maybe display current number of tracks
+            }
+            
+            
         }
         else if (ch == '-' && selection != sequence.size()) {
-            
+            numTracks -= 1;
             std::vector<std::string> l;
             for (auto i = sequence.begin(); i != sequence.end(); i++) {
                 l.push_back(i->first);
@@ -364,7 +374,10 @@ void Interface::selectSound(std::map<std::string, std::vector<bool>>& sequence) 
             
             
             status = !status;
+            //pageNum = 0;
             showEditor(sequence, 3); //playing status update
+            pageNum = 0;
+            showEditor(sequence, 5);
             playSequence(sequence);
             
 
@@ -593,11 +606,19 @@ void Interface::displayMainMenu(const std::map<std::string, std::vector<bool>>& 
 * @return void
 */
 void Interface::addSound(std::string filename, std::map<std::string, std::vector<bool>>& sequence) {
-    sequence.insert(std::make_pair(filename, std::vector<bool>{}));
-    for (int i = 0; i < sequenceLength; i++) {
-        sequence[filename].push_back(false);
+    if (sequence.find(filename) == sequence.end()) { //if sound not already loaded
+
+        sequence.insert(std::make_pair(filename, std::vector<bool>{}));
+        for (int i = 0; i < sequenceLength; i++) {
+            sequence[filename].push_back(false);
+        }
+        numTracks += 1;
+        E->Preload("../Assets/" + filename, filename); 
     }
-    E->Preload("../Assets/" + filename, filename); 
+    else {
+        printf("sound already exists."); //maybe make a pop-up function to display pop-ups
+    }
+
 }
 
 
@@ -657,6 +678,7 @@ void Interface::playSequence(std::map<std::string, std::vector<bool>>& sequence)
                 pIndex = 0;
                 showEditor(sequence, 2);
                 showEditor(sequence, 3);
+                showEditor(sequence, 5);
             }
         }
     }

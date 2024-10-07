@@ -303,9 +303,12 @@ void Interface::drawPlayhead(int i, int size) {
     }
 }
 
-void Interface::setSequenceLength(int length)
+void Interface::setSequenceLength(int length, std::map<std::string, std::vector<bool>>& sequence)
 {
     sequenceLength = length;
+    for (auto i = sequence.begin(); i != sequence.end(); i++) {
+        i->second.resize(length, false);
+    }
 }
 
 void Interface::nextPage(std::map<std::string, std::vector<bool>>& sequence)
@@ -744,7 +747,7 @@ int Interface::performAction(char choice, std::map<std::string, std::vector<bool
         if (buf[0] != '\0') {
 
             int n = std::stoi(buf);
-            setSequenceLength(n <= 99 && n > 0 ? n * 8 : sequenceLength);
+            setSequenceLength(n <= 99 && n > 0 ? n * 8 : sequenceLength, sequence);
         }
         refresh();
         displayMainMenu(sequence);

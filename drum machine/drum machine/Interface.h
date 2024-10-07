@@ -75,8 +75,9 @@ public:
      * Changing this value AFTER loading sounds may cause issues.
      *
      * \param length - new value for sequenceLength
+     * \param sequence - Sequence
     */
-    static void setSequenceLength(int length);
+    static void setSequenceLength(int length, std::map<std::string, std::vector<bool>>& sequence);
 
     /** 
      * @brief Go to the next page in the sequence view. 

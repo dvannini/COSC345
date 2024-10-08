@@ -79,8 +79,10 @@ void Interface::ListFiles(std::map<std::string, std::vector<bool>>& sequence)
         //printf("\x1b[%d;%df", originY+5, originX+10);
         if (fileName != L"." && fileName != L"..") { // Ignore "." and ".." directories
             
-            
-            list.push_back(f);
+            if (sequence.find(f) == sequence.end()) { //only list sounds that aren't in the sequence
+
+                list.push_back(f);
+            }
            
         }
         
@@ -108,9 +110,12 @@ void Interface::ListFiles(std::map<std::string, std::vector<bool>>& sequence)
                 }
             
             }
-            else if (ch == '\r') {
+            else if (ch == '\r' || ch == 27) {
                 fileView = false;
-                addSound(list[selection], sequence);
+                if (ch == '\r') {
+
+                    addSound(list[selection], sequence);
+                }
                 
                 SMALL_RECT r = { 10, 6, 10 + S_WIDTH, 6 + S_HEIGHT };
                 WriteConsoleOutput(hConsole, bSounds, { S_WIDTH, S_HEIGHT }, { 0,0 }, &r);
@@ -119,7 +124,8 @@ void Interface::ListFiles(std::map<std::string, std::vector<bool>>& sequence)
                 showEditor(sequence, 2); //update sequencer display
                 break;
 
-            } else if (ch)
+            }
+            
             showEditor(sequence, 1); //update sound list display
         }
         
@@ -194,13 +200,16 @@ void Interface::showEditor(std::map<std::string, std::vector<bool>>& sequence, i
 
             }
             printf("\x1b[14C");
-            if (selection == sequence.size()) {
+            if (numTracks < 8) {
+
+                if (selection == sequence.size()) {
             
-                printf("\x1b[107;30m+\x1b[0;97m");
+                    printf("\x1b[107;30m+\x1b[0;97m");
             
-            }
-            else {
-                printf("+");
+                }
+                else {
+                    printf("+");
+                }
             }
         }
         else {
@@ -333,11 +342,11 @@ void Interface::selectSound(std::map<std::string, std::vector<bool>>& sequence) 
         if (ch == -32) {  
             ch = _getch();  
             if (ch == 72) { 
-                selection = (selection - 1 + (sequence.size()+1)) % (sequence.size() + 1);
+                selection = (selection - 1 + (sequence.size()+(numTracks < 8 ? 1 : 0))) % (sequence.size() + (numTracks < 8 ? 1 : 0));
                 
             }
             else if (ch == 80) { 
-                selection = (selection + 1 + (sequence.size() + 1)) % (sequence.size() + 1);
+                selection = (selection + 1 + (sequence.size() + (numTracks < 8 ? 1 : 0))) % (sequence.size() + (numTracks < 8 ? 1 : 0));
             }
             else if (ch == 'K') { // left arrow
                 prevPage(sequence);
@@ -355,9 +364,7 @@ void Interface::selectSound(std::map<std::string, std::vector<bool>>& sequence) 
                 ListFiles(sequence);
                 
             }
-            else {
-                printf("max track count"); //maybe display current number of tracks
-            }
+            
             
             
         }
@@ -699,10 +706,7 @@ int Interface::performAction(char choice, std::map<std::string, std::vector<bool
     bool exit = false;
     switch (choice) {
     case '\r': { //1
-        //start with 3 sounds
-        addSound("Kick 70s 1.wav", sequence);
-        addSound("Snare 70s MPC 3.wav", sequence);
-        addSound("Hihat Closed 80s UK Disco Vinyl.wav", sequence);
+        
 
 
         showEditor(sequence, -1); //init

@@ -20,7 +20,7 @@
 #pragma comment(lib, "winmm.lib")
 
 int main() {
-
+    srand(time(0));
     std::map<std::string, std::vector<bool>> sequence;
     Audio_Engine Eng = Audio_Engine::Audio_Engine();
     Interface::E = &Eng;

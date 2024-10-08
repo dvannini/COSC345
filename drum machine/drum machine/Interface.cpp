@@ -160,17 +160,24 @@ void Interface::showEditor(std::map<std::string, std::vector<bool>>& sequence, i
         printf("\x1b[" "%d;%df", 1, 4);
         printf("\x1b[90mBack to Menu:\x1b[0m 'Z'");
         printf("\x1b[" "%d;%df", 3, windowX+6);
-        printf("'A': \x1b[90mChange BPM\x1b[0m");
-        //printf("\x1b[1B");
+        printf("'a': \x1b[90mChange BPM\x1b[0m");
+        
         printf("\x1b[" "%d;%df", 4, windowX + 6);
-        printf("'S': \x1b[90mSet Pattern Name\x1b[0m");
+        printf("'s': \x1b[90mSet Pattern Name\x1b[0m");
+        printf("\x1b[" "%d;%df", 5, windowX + 6);
+        printf("'r': \x1b[90mRandomize Row\x1b[0m");
 
-        printf("\x1b[" "%d;%df", 6, windowX + 6);
-        printf("'SPACE': \x1b[90mPlay/Pause\x1b[0m");
         printf("\x1b[" "%d;%df", 7, windowX + 6);
+        printf("'SPACE': \x1b[90mPlay/Pause\x1b[0m");
+        printf("\x1b[" "%d;%df", 8, windowX + 6);
         printf("'up down': \x1b[90mSelect Sound\x1b[0m");
         printf("\x1b[" "%d;%df", 9, windowX + 6);
+        printf("'left right: \x1b[90mScroll Page\x1b[0m");
+
+        printf("\x1b[" "%d;%df", 11, windowX + 6);
         printf("\x1b[90mSelect '+' To Load New Sounds\x1b[0m");
+
+        
         for (int j = 0; j < S_HEIGHT; j++) {
             for (int i = 0; i < S_WIDTH; i++) {
                 bSounds[j * S_WIDTH + i].Attributes = WHITE | FOREGROUND_INTENSITY;
@@ -511,6 +518,21 @@ void Interface::selectSound(std::map<std::string, std::vector<bool>>& sequence) 
             showEditor(sequence, 3); 
             showEditor(sequence, 4);
             showEditor(sequence, 5);
+        }
+        else if (ch == 'r') { //randomize pattern row
+            int n = 0;
+            
+;            for (auto& i : sequence) {
+                if (n == selection) {
+                    for (int a = 0; a < i.second.size(); a++) {
+                        //randomly choose between true or false for step entries (for each page too)
+                        bool s = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX) > 0.7 ? true : false);
+                        i.second.at(a) = s;
+                    }
+                }
+                n++;
+             }
+             showEditor(sequence, 2);
         }
         else if (ch == 'z') {
             

@@ -1,4 +1,4 @@
-#include "Interface.h"
+﻿#include "Interface.h"
 #include <iostream>
 #include <Windows.h>
 #include <conio.h>
@@ -159,6 +159,18 @@ void Interface::showEditor(std::map<std::string, std::vector<bool>>& sequence, i
 
         printf("\x1b[" "%d;%df", 1, 4);
         printf("\x1b[90mBack to Menu:\x1b[0m 'Z'");
+        printf("\x1b[" "%d;%df", 3, windowX+6);
+        printf("'A': \x1b[90mChange BPM\x1b[0m");
+        //printf("\x1b[1B");
+        printf("\x1b[" "%d;%df", 4, windowX + 6);
+        printf("'S': \x1b[90mSet Pattern Name\x1b[0m");
+
+        printf("\x1b[" "%d;%df", 6, windowX + 6);
+        printf("'SPACE': \x1b[90mPlay/Pause\x1b[0m");
+        printf("\x1b[" "%d;%df", 7, windowX + 6);
+        printf("'up down': \x1b[90mSelect Sound\x1b[0m");
+        printf("\x1b[" "%d;%df", 9, windowX + 6);
+        printf("\x1b[90mSelect '+' To Load New Sounds\x1b[0m");
         for (int j = 0; j < S_HEIGHT; j++) {
             for (int i = 0; i < S_WIDTH; i++) {
                 bSounds[j * S_WIDTH + i].Attributes = WHITE | FOREGROUND_INTENSITY;
@@ -200,17 +212,42 @@ void Interface::showEditor(std::map<std::string, std::vector<bool>>& sequence, i
 
             }
             printf("\x1b[14C");
+            printf(ESC "(0");
             if (numTracks < 8) {
 
                 if (selection == sequence.size()) {
-            
-                    printf("\x1b[107;30m+\x1b[0;97m");
+                    printf("\x1b[4D");
+                    for (int i = 0; i < 3; i++) {
+
+                        printf("q");
+                        
+                    }
+                    printf("\x1b[107;30m + \x1b[0;97m");
+                    for (int i = 0; i < 3; i++) {
+
+                        printf("q");
+
+                    }
             
                 }
                 else {
-                    printf("+");
+                    
+                    printf("\x1b[4D");
+                    for (int i = 0; i < 3; i++) {
+
+                        printf("q");
+
+                    }
+                    
+                    printf(" + ");
+                    for (int i = 0; i < 3; i++) {
+
+                        printf("q");
+
+                    }
                 }
             }
+            printf(ESC "(B"); // exit line drawing mode
         }
         else {
             int l = 0;
@@ -392,7 +429,7 @@ void Interface::selectSound(std::map<std::string, std::vector<bool>>& sequence) 
             
 
         }
-        else if (ch == 'a') {
+        else if (ch == 'a') { //bpm
             
             printf("\x1b[" "%d;%dH", windowY/3, windowX/2);
             printf("new bpm: ");
@@ -763,12 +800,12 @@ int Interface::performAction(char choice, std::map<std::string, std::vector<bool
         Sleep(1000);
         return -1;
     }
-    default:
+    /*default:
         refresh();
         std::cout << "\x1b[91mInvalid choice. Please try again.\x1b[97m\n";
         Sleep(750);
         refresh();
-        displayMainMenu(sequence);
+        displayMainMenu(sequence);*/
     }
     return 0;
 }

@@ -374,7 +374,9 @@ void Interface::setSequenceLength(int length, std::map<std::string, std::vector<
     sequenceLength = length;
     for (auto i = sequence.begin(); i != sequence.end(); i++) {
         i->second.resize(length, false);
+        i->second.shrink_to_fit();
     }
+
 }
 
 void Interface::nextPage(std::map<std::string, std::vector<bool>>& sequence)
@@ -496,7 +498,7 @@ void Interface::selectSound(std::map<std::string, std::vector<bool>>& sequence) 
         else if (ch == 's') { //pattern name
             printf("\x1b[" "%d;%dH", windowY / 3, windowX / 2);
             printf("new pattern name: ");
-            const int maxSize = 20;
+            const int maxSize = 18;
             char buf[maxSize];
             std::fill(buf, buf + maxSize, '\0');
             int c = 0;

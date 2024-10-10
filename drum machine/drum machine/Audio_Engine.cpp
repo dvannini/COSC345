@@ -40,10 +40,10 @@ Audio_Engine::Audio_Engine() : hWaveOut(nullptr), voiceIndex(0), mixedBuffer(max
         waveHeader.dwFlags = 0;
         waveHeader.dwLoops = 0;
 
-        /*if (waveOutPrepareHeader(hWaveOut, &waveHeader, sizeof(WAVEHDR)) != MMSYSERR_NOERROR) {
+        if (waveOutPrepareHeader(hWaveOut, &waveHeader, sizeof(WAVEHDR)) != MMSYSERR_NOERROR) {
             waveOutClose(hWaveOut);
             throw std::runtime_error("Failed to prepare wave header.");
-        }*/
+        }
 
         waveHeaders.push_back(waveHeader);
     }
@@ -78,11 +78,18 @@ Audio_Engine::~Audio_Engine() { //needs tests is headers deallocate successfully
             if (header.dwFlags & WHDR_PREPARED) {
                 waveOutUnprepareHeader(hWaveOut, &header, sizeof(WAVEHDR));
             }
+            if (header.lpData) {
+                delete[] header.lpData;
+                header.lpData = nullptr;
+            }
+
         }
 
         waveOutClose(hWaveOut);
         hWaveOut = nullptr;
     }
+    
+
 
     mixedBuffer.clear();  // Free the memory used by mixedBuffer
     sounds_.clear();  // Clear the preloaded sounds

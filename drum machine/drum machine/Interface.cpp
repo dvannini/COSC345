@@ -171,15 +171,17 @@ void Interface::showEditor(std::map<std::string, std::vector<bool>>& sequence, i
         printf("'s': \x1b[90mSet Pattern Name\x1b[0m");
         printf("\x1b[" "%d;%df", 5, windowX + 6);
         printf("'r': \x1b[90mRandomize Row\x1b[0m");
+        printf("\x1b[" "%d;%df", 6, windowX + 6);
+        printf("'< >': \x1b[90mChange Swing\x1b[0m");
 
-        printf("\x1b[" "%d;%df", 7, windowX + 6);
-        printf("'SPACE': \x1b[90mPlay/Pause\x1b[0m");
         printf("\x1b[" "%d;%df", 8, windowX + 6);
-        printf("'up down': \x1b[90mSelect Sound\x1b[0m");
+        printf("'SPACE': \x1b[90mPlay/Pause\x1b[0m");
         printf("\x1b[" "%d;%df", 9, windowX + 6);
+        printf("'up down': \x1b[90mSelect Sound\x1b[0m");
+        printf("\x1b[" "%d;%df", 10, windowX + 6);
         printf("'left right: \x1b[90mScroll Page\x1b[0m");
 
-        printf("\x1b[" "%d;%df", 11, windowX + 6);
+        printf("\x1b[" "%d;%df", 12, windowX + 6);
         printf("\x1b[90mSelect '+' To Load New Sounds\x1b[0m");
 
         

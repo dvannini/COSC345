@@ -225,7 +225,7 @@ void Interface::showEditor(std::map<std::string, std::vector<bool>>& sequence, i
             }
             printf("\x1b[14C");
             printf("\x1b" "(0");
-            if (numTracks < 8) {
+            if (numTracks < 8 && status != true) {
 
                 if (selection == sequence.size()) {
                     printf("\x1b[4D");

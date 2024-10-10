@@ -224,8 +224,8 @@ void Interface::showEditor(std::map<std::string, std::vector<bool>>& sequence, i
 
             }
             printf("\x1b[14C");
-            printf(ESC "(0");
-            if (numTracks < 8 && status != true) {
+            printf("\x1b" "(0");
+            if (numTracks < 8) {
 
                 if (selection == sequence.size()) {
                     printf("\x1b[4D");
@@ -259,7 +259,7 @@ void Interface::showEditor(std::map<std::string, std::vector<bool>>& sequence, i
                     }
                 }
             }
-            printf(ESC "(B"); // exit line drawing mode
+            printf("\x1b" "(B"); // exit line drawing mode
         }
         else {
             int l = 0;

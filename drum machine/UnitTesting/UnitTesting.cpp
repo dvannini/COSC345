@@ -13,13 +13,22 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 int inputs[] = {
 
 	-32, 72, '\r', -32, 72, -32, 80, '\r', // Add sound
-	-32, 80, // Changing sound selection
+	-32, 80, -32, 72, // Changing sound selection
 	-32, 'K', -32, 'M', // Next then previous page
+	',', '.', // Change swing
 	'a', '1', 8, '1', '6', '0', '\r', 'a', '\r', // Change BPM, then cancel changing BPM in both ways.
 	's', 'h', 'e', 'l', 'l', 'o', 8, '\r', // Change sequence name to hello
 	'b', // Invalid character
 	'1', // Add note to sequence	
-	32, 32, // Play, then pause
+	'r', // randomize sequence
+	32, // Play
+	'r', // randomise sequence
+	'1', // add note to sequence
+	-32, 80, -32, 72, // Changing sound selection
+	-32, 'K', -32, 'M', // Next then previous page
+	',', '.', // Change swing
+	32, // Pause
+	'-', // delete sound
 	'z', // Exit
 	// Changing number of pages (performAction('p'))
 	'1', '0', 8, '0', '\r', // Set pages to 10, backspace, then put 0 back and press enter
@@ -68,6 +77,7 @@ namespace UnitTesting
 			int bpm = 120;
 			Clock c(bpm);
 			c.setBPM(115);
+			c.setSwing(10);
 			c.startClock();
 			// If running infinitely, this test is failing. Check the interval function.
 			bool isReached = false;

@@ -41,16 +41,40 @@ public:
 	 */
 	bool interval();
 	/**
+	 * signal time intervals but for displays.
+	 * 
+	 * \return true if signals
+	 */
+	bool interval_d();
+	/**
 	 * Test class for the clock.
 	 *
 	 * \return 0 - tests pass, 1 - tests fail
 	 */
 	static int test_();
+	/**
+	 * helper method to return the swing statically cast.
+	 * 
+	 * \return - da swing mate
+	 */
+	static int getSwing();
+	/**
+	 * sets the swing value for the clock.
+	 * 
+	 * \param swing - the swing value to assign
+	 */
+	static void setSwing(int swing_);
 
+	static bool second;
+	static bool second_d;
 private:
 	
 	std::chrono::high_resolution_clock::time_point time; ///<the time measured from the system
 	uint64_t tempo_ms; ///< tempo converted into equivalent milliseconds
+	static int64_t swing;
+
+	uint64_t msOffset = 0;
+	uint64_t msOffset_d = 0;
 };
 #endif
 

@@ -151,6 +151,11 @@ void Interface::showEditor(std::map<std::string, std::vector<bool>>& sequence, i
         printf("\x1b[" "13C"); 
         printf("\x1b[93mPattern:\x1b[0m %s", patternName.c_str());
 
+        printf("\x1b[" "%d;%dH", originX, originY);
+        printf("\x1b[" "1B");
+        printf("\x1b[" "41C");
+        printf("\x1b[93mSwing:\x1b[0m %d", Clock::getSwing());
+
         printf("\x1b[" "%d;%dH", originX + 3, originY + 2);
         printf("\x1b[96mTracks\x1b[0m");
         
@@ -220,7 +225,7 @@ void Interface::showEditor(std::map<std::string, std::vector<bool>>& sequence, i
             }
             printf("\x1b[14C");
             printf(ESC "(0");
-            if (numTracks < 8) {
+            if (numTracks < 8 && status != true) {
 
                 if (selection == sequence.size()) {
                     printf("\x1b[4D");
@@ -342,8 +347,14 @@ void Interface::showEditor(std::map<std::string, std::vector<bool>>& sequence, i
     }
     else if (segment == 5) { // page
         int offset = pageNum >= 9 ? 50 : 51;
-        printf("\x1b[" "%d;%dH", originX + 1, originY + offset);
+        printf("\x1b[" "%d;%dH", originX + 1, originY + offset+1);
         printf("\x1b[93m Page:\x1b[0m %d/%d ", pageNum + 1, ((sequenceLength - 1) / 8) + 1);
+    }
+    else if (segment == 6) { // swing value
+        printf("\x1b[" "%d;%dH", originX, originY);
+        printf("\x1b[" "1B");
+        printf("\x1b[" "41C");
+        printf("\x1b[93mSwing:\x1b[0m %d%% ", Clock::getSwing());
     }
         
    
@@ -534,6 +545,18 @@ void Interface::selectSound(std::map<std::string, std::vector<bool>>& sequence) 
              }
              showEditor(sequence, 2);
         }
+        else if (ch == ',') { //lower swing - swing (add functionality to when sequence is stopped as well)
+
+            Clock::setSwing(-5);
+            showEditor(sequence, 6);
+
+        }
+        else if (ch == '.') { //increase swing - swing (add functionality to when sequence is stopped as well)
+
+                Clock::setSwing(5);
+                showEditor(sequence, 6);
+
+        }
         else if (ch == 'z') {
             
             refresh();
@@ -715,16 +738,19 @@ void Interface::playSequence(std::map<std::string, std::vector<bool>>& sequence)
     c.startClock();
     display.startClock();
     bool running = true;
-    
+
+    Clock::second = false;
+    Clock::second_d = false;
+    showEditor(sequence, 1);
     while (running) {
-        if (display.interval()) {
+        if (display.interval_d()) { //every beat for display
             showEditor(sequence, 2);
             pIndex = (pIndex + 1) % (sequenceLength * 2);
 
             if (pIndex % 16 == 0) nextPage(sequence);
         }
 
-        if (c.interval()) {
+        if (c.interval()) { //every beat for sound
             for (int i = 0; i < patterns.size() / sizeof(bool); i++) {
                 if (patterns[i][index]) {
                     std::string name = names[i];
@@ -739,16 +765,92 @@ void Interface::playSequence(std::map<std::string, std::vector<bool>>& sequence)
             index = 0;
         }
 
-        if (_kbhit()) {
+        if (_kbhit()) { //check keyboard input during play
             ch = _getch();
             if (ch == 32) {
                 running = false;
                 status = !status;
                 pIndex = 0;
+                showEditor(sequence, 1);
                 showEditor(sequence, 2);
                 showEditor(sequence, 3);
                 showEditor(sequence, 5);
             }
+            else if (ch == ',') { //lower swing - swing (add functionality to when sequence is stopped as well)
+                
+                Clock::setSwing(-5);
+                showEditor(sequence, 6);
+
+            }
+            else if (ch == '.') { //increase swing - swing (add functionality to when sequence is stopped as well)
+                
+                Clock::setSwing(5);
+                showEditor(sequence, 6);
+
+            } else if (ch == -32) { //select sounds NEEDS BUG CHECKING
+                ch = _getch();
+                if (ch == 72) {
+                    selection = (selection - 1 + (sequence.size())) % (sequence.size());
+
+                }
+                else if (ch == 80) {
+                    selection = (selection + 1 + (sequence.size())) % (sequence.size());
+                }
+                else if (ch == 'K') { // left arrow
+                    prevPage(sequence);
+                    showEditor(sequence, 2); //update sequence display
+                }
+                else if (ch == 'M') { // right arrow
+                    nextPage(sequence);
+                    showEditor(sequence, 2); //update sequence display
+                }
+                showEditor(sequence, 1); //update sound list display
+            }
+            else if (ch == 'r') {
+                int n = 0;
+
+                for (auto& i : sequence) {
+                    if (n == selection) {
+                        for (int a = 0; a < i.second.size(); a++) {
+                            //randomly choose between true or false for step entries (for each page too)
+                            bool s = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX) > 0.7 ? true : false);
+                            i.second.at(a) = s;
+                            patterns[selection][a] = s;
+                        }
+                    }
+                    n++;
+                }
+                showEditor(sequence, 2);
+            }
+
+            else { //NEEDS BUG CHECKING
+                int cmd = (int)(ch - '0');
+                if (cmd >= 1 && cmd <= 8) {
+                    int n = 0;
+                    int rowsPerSound = ((sequenceLength - 1) / 8) + 1;
+                    for (auto& i : sequence) {
+                        if (n == selection) {
+                            i.second[(8 * pageNum) + cmd - 1] = !i.second[(8 * pageNum) + cmd - 1];
+                            patterns[selection][(8 * pageNum) + cmd - 1] = !patterns[selection][(8 * pageNum) + cmd - 1];
+                        }
+                        n++;
+                    }
+                }
+                /*int cmd = (int)(ch - '0');
+                int n = 0;
+                if (cmd == 1) {
+
+                    for (auto& i : sequence) {
+                        if (n == selection) {
+                            i.second[(8 * pageNum) + index - 1] = !i.second[(8 * pageNum) + index - 1];
+                        }
+                        n++;
+                    }
+                }*/
+                showEditor(sequence, 2); //update sequence data
+
+            }
+            
         }
     }
 
